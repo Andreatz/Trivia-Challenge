@@ -1,15 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32">
   <defs>
     <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="2.2" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0 0 0 0.93  0 0 0 0 1  0 0 0 .85 0"/>
+      <feGaussianBlur stdDeviation="1.25" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0 0 0 0.93  0 0 0 0 1  0 0 0 .75 0"/>
       <feMerge>
         <feMergeNode/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <path filter="url(#glow)" d="M7 5 L36 28 L22 30 L17 43 L7 5 Z" fill="#06162f" stroke="#00e7ff" stroke-width="2.8" stroke-linejoin="round"/>
-  <path d="M13 12 L30 26 L20 27.5 L17 36 L13 12 Z" fill="#0df6ff" opacity="0.2"/>
-  <path d="M22 30 L31 42" stroke="#00e7ff" stroke-width="2.4" stroke-linecap="round" opacity="0.85"/>
+  <path filter="url(#glow)" d="M5 4 L24 19 L15 20.5 L11.5 29 L5 4 Z" fill="#06162f" stroke="#00e7ff" stroke-width="1.9" stroke-linejoin="round"/>
+  <path d="M9 8.5 L20 18 L13.5 19 L11.5 24 L9 8.5 Z" fill="#0df6ff" opacity="0.2"/>
+  <path d="M15 20.5 L21 29" stroke="#00e7ff" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>
 </svg>
