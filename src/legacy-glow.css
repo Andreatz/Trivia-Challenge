@@ -1,0 +1,38 @@
+/* Restores the previous, softer glow effect. */
+body[data-view="show"] .jeopardy-cell::before,
+body[data-view="show"] .guess-tile::before,
+body[data-view="show"] .bomb-tile::before {
+  opacity: 0 !important;
+}
+
+body[data-view="show"] .jeopardy-cell:hover,
+body[data-view="show"] .jeopardy-cell:focus-visible,
+body[data-view="show"] .guess-tile:hover,
+body[data-view="show"] .bomb-tile:hover {
+  border-color: var(--cyan2) !important;
+  background: linear-gradient(180deg, rgba(13,40,88,.88), rgba(5,17,42,.96)) !important;
+  box-shadow: 0 0 28px rgba(0,231,255,.62), inset 0 0 28px rgba(0,231,255,.14) !important;
+  transform: scale(1.025) !important;
+}
+
+body[data-view="show"] .jeopardy-cell:hover::before,
+body[data-view="show"] .jeopardy-cell:focus-visible::before,
+body[data-view="show"] .guess-tile:hover::before,
+body[data-view="show"] .bomb-tile:hover::before {
+  opacity: 0 !important;
+}
+
+body[data-view="show"] .jeopardy-cell:active,
+body[data-view="show"] .guess-tile:active,
+body[data-view="show"] .bomb-tile:active {
+  box-shadow: 0 0 28px rgba(0,231,255,.62), inset 0 0 28px rgba(0,231,255,.14) !important;
+}
+
+body[data-view="show"] .player-chip.selected {
+  background: linear-gradient(180deg, rgba(13,33,72,.7), rgba(5,14,34,.9)) !important;
+  box-shadow: 0 0 24px rgba(0,231,255,.65), inset 0 0 34px rgba(0,231,255,.12) !important;
+}
+
+body[data-view="show"] .player-chip.selected::after {
+  content: none !important;
+}
