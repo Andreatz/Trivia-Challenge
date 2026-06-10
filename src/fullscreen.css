@@ -1,5 +1,5 @@
 /* Presentation fullscreen overrides.
-   Fullscreen is applied to #app because .ppt-stage is recreated on each render. */
+   Fullscreen is applied to #app so the editor header is removed while the game board remains interactive. */
 #app:fullscreen,
 #app:-webkit-full-screen {
   width: 100vw;
@@ -8,6 +8,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: #020714;
 }
 
 #app:fullscreen .app-top,
@@ -21,17 +22,7 @@
   height: 100vh;
 }
 
-#app:fullscreen .ppt-stage {
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
-  max-height: 100vh;
-  aspect-ratio: auto;
-  border-radius: 0;
-  border: 0;
-  box-shadow: none;
-}
-
+#app:fullscreen .ppt-stage,
 #app:-webkit-full-screen .ppt-stage {
   width: 100vw;
   height: 100vh;
@@ -45,9 +36,9 @@
 
 #app:fullscreen .stage-content,
 #app:-webkit-full-screen .stage-content {
-  height: calc(100vh - 116px);
-  padding: 14px 58px 104px;
-  place-items: stretch;
+  height: calc(100vh - 298px);
+  padding-left: 7.3vw;
+  padding-right: 7.3vw;
 }
 
 #app:fullscreen .fullscreen-toggle,
@@ -57,5 +48,5 @@
 }
 
 .fullscreen-toggle {
-  min-width: 38px;
+  min-width: 92px;
 }
