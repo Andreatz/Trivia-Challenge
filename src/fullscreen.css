@@ -36,7 +36,7 @@
 
 #app:fullscreen .stage-content,
 #app:-webkit-full-screen .stage-content {
-  height: calc(100vh - 298px);
+  height: calc(100vh - 284px);
   padding-left: 7.3vw;
   padding-right: 7.3vw;
 }
