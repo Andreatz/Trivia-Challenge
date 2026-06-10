@@ -1,7 +1,27 @@
 /* Presentation fullscreen overrides.
-   The normal editor header remains visible while working.
-   When the 16:9 stage enters browser fullscreen, only the game board is shown. */
-.ppt-stage:fullscreen {
+   Fullscreen is applied to #app because .ppt-stage is recreated on each render. */
+#app:fullscreen,
+#app:-webkit-full-screen {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#app:fullscreen .app-top,
+#app:-webkit-full-screen .app-top {
+  display: none;
+}
+
+#app:fullscreen .show-layout,
+#app:-webkit-full-screen .show-layout {
+  width: 100vw;
+  height: 100vh;
+}
+
+#app:fullscreen .ppt-stage {
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
@@ -12,7 +32,7 @@
   box-shadow: none;
 }
 
-.ppt-stage:-webkit-full-screen {
+#app:-webkit-full-screen .ppt-stage {
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
@@ -23,23 +43,19 @@
   box-shadow: none;
 }
 
-.ppt-stage:fullscreen .stage-content,
-.ppt-stage:-webkit-full-screen .stage-content {
-  height: calc(100vh - 120px);
+#app:fullscreen .stage-content,
+#app:-webkit-full-screen .stage-content {
+  height: calc(100vh - 116px);
+  padding: 14px 58px 104px;
+  place-items: stretch;
 }
 
-.ppt-stage:fullscreen .fullscreen-toggle,
-.ppt-stage:-webkit-full-screen .fullscreen-toggle {
+#app:fullscreen .fullscreen-toggle,
+#app:-webkit-full-screen .fullscreen-toggle {
   border-color: var(--gold);
   color: var(--gold);
 }
 
 .fullscreen-toggle {
   min-width: 38px;
-}
-
-/* Fallback: if the browser supports :has(), hide the editor header whenever
-   the game stage is the fullscreen element. */
-body:has(.ppt-stage:fullscreen) .app-top {
-  display: none;
 }
