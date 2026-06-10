@@ -61,49 +61,22 @@ function selectGame(){const s=$('select',{onchange:e=>{gameId=e.target.value;res
 function selectPlayer(){const s=$('select',{onchange:e=>{playerId=e.target.value;render()}});state.players.forEach(p=>s.append($('option',{value:p.id,selected:p.id===playerId},`${p.name} (${p.score} pt)`)));return s}
 function show(){
   const content=cur.screen==='hub'?hub():cur.screen==='points'?pointsScreen():cur.screen==='library'?libraryScreen():cur.screen==='powers'?powersScreen():gameScreen();
-  return $('main',{class:'show-layout'},
-    stage(content),
-    $('aside',{class:'control-panel'},
-      $('h2',{},'Console host'),
-      $('label',{},'Giocatore attivo',selectPlayer()),
-      $('label',{},'Minigioco selezionato',selectGame()),
-      $('div',{class:'quick-grid'},...[-100,-50,50,100,200,500,1000].map(v=>$('button',{class:'btn small',onclick:()=>add(v,'correzione rapida')},v>0?`+${v}`:v))),
-      $('button',{class:'btn primary',onclick:()=>resetStage('hub')},'Torna alla home'),
-      $('button',{class:'btn',onclick:()=>resetStage('points')},'Apri Punti'),
-      history()
-    )
-  );
+  return $('main',{class:'show-layout'},stage(content));
 }
-function stage(content){return $('section',{class:'ppt-stage'},stageToolbar(),$('div',{class:'stage-content'},content),bottomScores())}
+function stage(content){return $('section',{class:'ppt-stage'},stageToolbar(),$('div',{class:'stage-content'},content),hostHud(),bottomScores())}
 function stageToolbar(){return $('div',{class:'stage-toolbar'},$('button',{class:'icon-btn',title:'Home',onclick:()=>resetStage('hub')},'⌂'),$('div',{class:'stage-title'},state.title||'TRIVIA CHALLENGE'),$('div',{class:'stage-actions'},$('button',{class:'mini-tab',onclick:()=>resetStage('library')},'LISTA ANIME'),$('button',{class:'mini-tab',onclick:()=>resetStage('powers')},'POTERI'),$('button',{class:'mini-tab',onclick:()=>resetStage('points')},'PUNTI'),$('button',{class:'icon-btn',title:'Reset schermata',onclick:()=>{cur={...cur,i:0,revealed:0,answer:false,selected:[],jeo:null};render()}},'↻')))}
-function bottomScores(){
-  return $('div',{class:'bottom-scorebar'},
-    ...state.players.map(p=>$('button',{class:`player-chip ${p.id===playerId?'selected':''}`,onclick:()=>{playerId=p.id;render()}},
-      $('span',{},p.name),
-      $('strong',{},p.score||0)
-    ))
-  );
-}
+function hostHud(){return $('div',{class:'host-hud'},
+  $('div',{class:'hud-card hud-selects'},$('span',{class:'hud-label'},'PLAYER'),selectPlayer(),$('span',{class:'hud-label'},'GAME'),selectGame()),
+  $('div',{class:'hud-card hud-points'},$('span',{class:'hud-label'},'SCORE BOOST'),$('div',{class:'hud-point-grid'},...[-100,-50,50,100,200,500,1000].map(v=>$('button',{class:`hud-btn ${v>0?'boost':'nerf'}`,onclick:()=>add(v,'correzione rapida')},v>0?`+${v}`:v)))),
+  $('div',{class:'hud-card hud-nav'},$('button',{class:'hud-btn main',onclick:()=>resetStage('hub')},'HOME'),$('button',{class:'hud-btn',onclick:()=>resetStage('points')},'PUNTI'),$('button',{class:'hud-btn',onclick:()=>{cur={...cur,i:0,revealed:0,answer:false,selected:[],jeo:null};render()}},'RESET')),
+  $('details',{class:'hud-card hud-log'},$('summary',{},'LOG'),...(state.history.length?state.history.slice(0,5).map(h=>$('div',{class:'hud-log-row'},$('span',{},h.playerName),$('small',{},h.reason),$('strong',{},`${h.points>0?'+':''}${h.points}`))):[$('p',{class:'muted'},'Nessun punto')]))
+)}
+function bottomScores(){return $('div',{class:'bottom-scorebar'},...state.players.map(p=>$('button',{class:`player-chip ${p.id===playerId?'selected':''}`,onclick:()=>{playerId=p.id;render()}},$('span',{},p.name),$('strong',{},p.score||0))))}
 function hub(){const groups=MENU_ORDER.map(t=>state.games.find(g=>g.type===t)).filter(Boolean);return $('div',{class:'hub-screen'},$('div',{class:'hero-title'},$('div',{class:'kicker'},state.subtitle||'Game edition'),$('h2',{},state.title||'TRIVIA CHALLENGE')), $('div',{class:'menu-board'},...groups.map(g=>$('button',{class:'ppt-button menu-button',onclick:()=>{gameId=g.id;resetStage('game')}},g.menuTitle||g.title))),$('button',{class:'floating-points',onclick:()=>resetStage('points')},'PUNTI'))}
-function pointsScreen(){
-  return $('div',{class:'points-screen'},
-    $('h2',{},'PUNTI'),
-    $('div',{class:'points-columns'},
-      ...state.players.map(p=>$('div',{class:'points-card'},
-        $('h3',{},p.name+':'),
-        $('div',{class:'mega-score'},p.score||0),
-        $('div',{class:'score-buttons'},
-          ...[-200,-100,-50,50,100,200,500,1000].map(v=>$('button',{class:`score-btn ${v>0?'plus':'minus'}`,onclick:()=>{playerId=p.id;add(v,'pannello punti')}},v>0?`+ ${v}`:v))
-        ),
-        $('button',{class:'btn danger',onclick:()=>{p.score=0;state.history.unshift({id:id('h'),playerName:p.name,points:0,reason:'reset giocatore',at:new Date().toISOString()});save();render()}},`Reset ${p.name}`)
-      ))
-    )
-  );
-}
+function pointsScreen(){return $('div',{class:'points-screen'},$('h2',{},'PUNTI'),$('div',{class:'points-columns'},...state.players.map(p=>$('div',{class:'points-card'},$('h3',{},p.name+':'),$('div',{class:'mega-score'},p.score||0),$('div',{class:'score-buttons'},...[-200,-100,-50,50,100,200,500,1000].map(v=>$('button',{class:`score-btn ${v>0?'plus':'minus'}`,onclick:()=>{playerId=p.id;add(v,'pannello punti')}},v>0?`+ ${v}`:v))),$('button',{class:'btn danger',onclick:()=>{p.score=0;state.history.unshift({id:id('h'),playerName:p.name,points:0,reason:'reset giocatore',at:new Date().toISOString()});save();render()}},`Reset ${p.name}`))))) }
 function libraryScreen(){return $('div',{class:'library-screen'},$('h2',{},'LISTA ANIME'),$('div',{class:'library-grid'},...state.library.map(x=>$('button',{class:'ppt-button library-tile'},x))))}
 function powersScreen(){return $('div',{class:'powers-screen'},$('h2',{},'POTERI'),$('div',{class:'power-grid'},...state.powers.map(p=>$('article',{class:'power-card'},$('div',{class:'power-owner'},p.player),$('h3',{},p.name),$('p',{},p.text))))) }
 function gameScreen(){const g=game();if(!g)return $('div',{class:'intro-screen'},$('h2',{},'Nessun minigioco'));return $('div',{class:'game-shell'},$('div',{class:'game-ribbon'},label(g.type)),renderGame(g))}
-function scoreboardCompact(){return $('div',{class:'scorebar-inline'},...state.players.map(p=>$('span',{},`${p.name}: ${p.score||0}`)))}
 function answer(text){return $('div',{class:`answer ${cur.answer?'on':''}`},cur.answer?$('strong',{},text||'Risposta non configurata'):'Risposta nascosta')}
 function controls(g,ans,points,after){return $('div',{class:'host-actions'},$('button',{class:'btn success',onclick:()=>{after?.();add(points,`${g.title}: risposta corretta`)}},`Corretta · +${points}`),$('button',{class:'btn',onclick:()=>{cur.answer=!cur.answer;render()}},cur.answer?'Nascondi risposta':'Mostra risposta'),answer(ans))}
 function pager(total){return $('div',{class:'pager'},$('button',{class:'btn',disabled:cur.i<=0,onclick:()=>{cur.i--;cur.answer=false;cur.revealed=0;cur.jeo=null;render()}},'←'),$('span',{},`${Math.min(cur.i+1,total||1)} / ${total||1}`),$('button',{class:'btn',disabled:cur.i>=total-1,onclick:()=>{cur.i++;cur.answer=false;cur.revealed=0;cur.jeo=null;render()}},'→'))}
@@ -118,40 +91,11 @@ function quote(g){return linear(g,g.questions||[],q=>$('div',{class:'quote-scree
 function chain(g){return linear(g,g.questions||[],q=>$('div',{class:'chain-screen'},$('div',{class:'topic'},g.topic||'Argomento'),$('h2',{},q.question),controls(g,q.answer,g.points||50)))}
 function labors(g){return linear(g,g.questions||[],q=>$('div',{class:'labor-screen'},$('div',{class:'topic'},q.kind||'tipologia'),$('h2',{},q.question),q.options?.length?$('div',{class:'option-grid'},...q.options.map(o=>$('div',{class:'ppt-button'},o))):null,controls(g,`${q.answer||''}${q.explanation?' · '+q.explanation:''}`,g.points||100)))}
 function guillotine(g){return $('div',{class:'guillotine-screen'},$('h2',{},'GHIGLIOTTINA'),$('div',{class:'word-cloud'},...(g.words||[]).map(w=>$('div',{class:'ppt-button word'},w))),controls(g,g.answer,g.points||200))}
-function pass(g){
-  const qs=g.questions||[];
-  const q=qs[cur.i]||qs[0];
-  const d=g.difficulty||'facile';
-  const pts=g.points?.[d]??5;
-  const bonus=g.bonus?.[d]??0;
-  const all=qs.length&&qs.every(x=>x.status==='correct');
-  if(!q)return $('div',{class:'intro-screen'},'Nessuna domanda.');
-  return $('div',{class:'pass-screen'},
-    $('div',{class:'pass-wheel'},
-      ...qs.map((x,i)=>{
-        const ang=(360/qs.length)*i-90;
-        return $('button',{class:`pass-letter ${x.status==='correct'?'ok':x.status==='wrong'?'wrong':x.status==='pass'?'passed':''} ${i===cur.i?'current':''}`,style:`--angle:${ang}deg`,onclick:()=>{cur.i=i;cur.answer=false;render()}},x.letter);
-      }),
-      $('div',{class:'wheel-core'},$('strong',{},q.letter),$('span',{},d.toUpperCase()))
-    ),
-    $('div',{class:'pass-question'},
-      $('div',{class:'timer-box'},'00:50'),
-      $('h2',{},q.question),
-      $('div',{class:'host-actions'},
-        $('button',{class:'btn success',onclick:()=>{q.status='correct';add(pts,`${g.title}: lettera ${q.letter}`)}},`Corretta · +${pts}`),
-        $('button',{class:'btn danger',onclick:()=>{q.status='wrong';save();render()}},'Sbagliata'),
-        $('button',{class:'btn warn',onclick:()=>{q.status='pass';save();render()}},'Passo'),
-        all ? $('button',{class:'btn primary',onclick:()=>add(bonus,`${g.title}: bonus ${d}`)},`Bonus · +${bonus}`) : null,
-        $('button',{class:'btn',onclick:()=>{cur.answer=!cur.answer;render()}},cur.answer?'Nascondi':'Risposta')
-      ),
-      answer(q.answer)
-    )
-  );
-}
+function pass(g){const qs=g.questions||[],q=qs[cur.i]||qs[0],d=g.difficulty||'facile',pts=g.points?.[d]??5,bonus=g.bonus?.[d]??0,all=qs.length&&qs.every(x=>x.status==='correct');if(!q)return $('div',{class:'intro-screen'},'Nessuna domanda.');return $('div',{class:'pass-screen'},$('div',{class:'pass-wheel'},...qs.map((x,i)=>{const ang=(360/qs.length)*i-90;return $('button',{class:`pass-letter ${x.status==='correct'?'ok':x.status==='wrong'?'wrong':x.status==='pass'?'passed':''} ${i===cur.i?'current':''}`,style:`--angle:${ang}deg`,onclick:()=>{cur.i=i;cur.answer=false;render()}},x.letter)}),$('div',{class:'wheel-core'},$('strong',{},q.letter),$('span',{},d.toUpperCase()))),$('div',{class:'pass-question'},$('div',{class:'timer-box'},'00:50'),$('h2',{},q.question),$('div',{class:'host-actions'},$('button',{class:'btn success',onclick:()=>{q.status='correct';add(pts,`${g.title}: lettera ${q.letter}`)}},`Corretta · +${pts}`),$('button',{class:'btn danger',onclick:()=>{q.status='wrong';save();render()}},'Sbagliata'),$('button',{class:'btn warn',onclick:()=>{q.status='pass';save();render()}},'Passo'),all ? $('button',{class:'btn primary',onclick:()=>add(bonus,`${g.title}: bonus ${d}`)},`Bonus · +${bonus}`) : null,$('button',{class:'btn',onclick:()=>{cur.answer=!cur.answer;render()}},cur.answer?'Nascondi':'Risposta')),answer(q.answer))) }
 function jeopardy(g){const cats=g.categories||[];if(cur.jeo){const c=cats[cur.jeo.c],cl=c?.clues?.[cur.jeo.q];if(cl)return $('div',{class:'jeopardy-question'},$('div',{class:'topic'},`${c.name} · ${cl.value} punti`),$('h2',{},cl.question),controls(g,cl.answer,cl.value,()=>{cl.used=true;cur.jeo=null;save()}),$('button',{class:'btn ghost',onclick:()=>{cur.jeo=null;render()}},'Torna al tabellone'))}return $('div',{class:'jeopardy-board'},...cats.map((c,ci)=>$('div',{class:'jeopardy-col'},$('div',{class:'jeopardy-cat'},c.name),...(c.clues||[]).map((cl,qi)=>$('button',{class:`jeopardy-cell ${cl.used?'used':''}`,disabled:cl.used,onclick:()=>{cur.jeo={c:ci,q:qi};cur.answer=false;render()}},cl.value))))) }
 function sarabanda(g){return linear(g,g.songs||[],s=>$('div',{class:'sarabanda-screen'},$('h2',{},'SARABANDA'),audio(s.audio),$('div',{class:'host-actions'},$('button',{class:'btn success',onclick:()=>add(g.pointsTitle||25,`${g.title}: titolo`)},`Titolo · +${g.pointsTitle||25}`),$('button',{class:'btn success',onclick:()=>add(g.pointsArtist||25,`${g.title}: autore`)},`Autore · +${g.pointsArtist||25}`),$('button',{class:'btn primary',onclick:()=>add((g.pointsTitle||25)+(g.pointsArtist||25),`${g.title}: completa`)},'Completa · +50'),$('button',{class:'btn',onclick:()=>{cur.answer=!cur.answer;render()}},cur.answer?'Nascondi risposta':'Mostra risposta')),answer(`${s.title||'Titolo'} · ${s.artist||'Artista'}`)))}
 function history(){return $('section',{class:'history-box'},$('h3',{},'Storico'),...(state.history.length?state.history.slice(0,7).map(h=>$('div',{class:'history-row'},$('span',{},h.playerName),$('small',{},h.reason),$('strong',{},`${h.points>0?'+':''}${h.points}`))):[$('p',{class:'muted'},'Nessun punto assegnato.')]))}
-function admin(){const sel=$('select',{id:'type',onchange:preview});Object.entries(TYPES).forEach(([v,l])=>sel.append($('option',{value:v},l)));const title=$('input',{id:'title',value:'Nuovo minigioco',oninput:()=>{if(!editing)preview()}}),ta=$('textarea',{id:'json'});setTimeout(preview);return $('main',{class:'grid two'},$('section',{class:'panel stack'},$('h2',{},'Admin contenuti'),$('p',{class:'muted'},'Il gioco ora segue la struttura PowerPoint: home, schermate speciali, bottom scorebar e minigiochi in stile slide.'),$('div',{class:'grid two'},$('label',{},'Titolo evento',$('input',{value:state.title||'',onchange:e=>{state.title=e.target.value;save();render()}})),$('label',{},'Sottotitolo',$('input',{value:state.subtitle||'',onchange:e=>{state.subtitle=e.target.value;save();render()}}))),$('div',{class:'grid two'},$('label',{},'Tipo minigioco',sel),$('label',{},'Titolo',title)),$('label',{},'Contenuto JSON',ta),$('div',{class:'row'},$('button',{class:'btn primary',onclick:saveEditor},editing?'Salva modifiche':'Crea minigioco'),$('button',{class:'btn',onclick:()=>{editing='';preview()}},'Nuovo da template'),$('button',{class:'btn',onclick:exportData},'Esporta JSON'),$('label',{class:'btn ghost'},'Importa JSON',$('input',{type:'file',accept:'application/json',style:'display:none',onchange:importData}))),playersAdmin(),libraryAdmin(),powersAdmin()),$('aside',{class:'panel stack'},$('h3',{},'Minigiochi salvati'),...state.games.map(g=>$('div',{class:'saved-game'},$('div',{},$('strong',{},g.title),$('small',{},label(g.type))),$('div',{class:'row'},$('button',{class:'btn small',onclick:()=>edit(g.id)},'Modifica'),$('button',{class:'btn small',onclick:()=>dup(g.id)},'Duplica'),$('button',{class:'btn small danger',onclick:()=>del(g.id)},'Elimina')))),$('h3',{},'Immagini riferimento repo'),$('div',{class:'reference-grid'},...REFERENCE_IMAGES.map(name=>$('a',{href:`public/reference-images/${encodeURIComponent(name)}`,target:'_blank',class:'ref-thumb'},$('img',{src:`public/reference-images/${encodeURIComponent(name)}`,alt:name}),$('span',{},name.replace(/^\d+\.\s*/,'').replace('.png',''))))))) }
+function admin(){const sel=$('select',{id:'type',onchange:preview});Object.entries(TYPES).forEach(([v,l])=>sel.append($('option',{value:v},l)));const title=$('input',{id:'title',value:'Nuovo minigioco',oninput:()=>{if(!editing)preview()}}),ta=$('textarea',{id:'json'});setTimeout(preview);return $('main',{class:'grid two'},$('section',{class:'panel stack'},$('h2',{},'Admin contenuti'),$('p',{class:'muted'},'Il gioco ora segue la struttura PowerPoint: home, HUD integrato nella slide, bottom scorebar e minigiochi in stile videogame.'),$('div',{class:'grid two'},$('label',{},'Titolo evento',$('input',{value:state.title||'',onchange:e=>{state.title=e.target.value;save();render()}})),$('label',{},'Sottotitolo',$('input',{value:state.subtitle||'',onchange:e=>{state.subtitle=e.target.value;save();render()}}))),$('div',{class:'grid two'},$('label',{},'Tipo minigioco',sel),$('label',{},'Titolo',title)),$('label',{},'Contenuto JSON',ta),$('div',{class:'row'},$('button',{class:'btn primary',onclick:saveEditor},editing?'Salva modifiche':'Crea minigioco'),$('button',{class:'btn',onclick:()=>{editing='';preview()}},'Nuovo da template'),$('button',{class:'btn',onclick:exportData},'Esporta JSON'),$('label',{class:'btn ghost'},'Importa JSON',$('input',{type:'file',accept:'application/json',style:'display:none',onchange:importData}))),playersAdmin(),libraryAdmin(),powersAdmin()),$('aside',{class:'panel stack'},$('h3',{},'Minigiochi salvati'),...state.games.map(g=>$('div',{class:'saved-game'},$('div',{},$('strong',{},g.title),$('small',{},label(g.type))),$('div',{class:'row'},$('button',{class:'btn small',onclick:()=>edit(g.id)},'Modifica'),$('button',{class:'btn small',onclick:()=>dup(g.id)},'Duplica'),$('button',{class:'btn small danger',onclick:()=>del(g.id)},'Elimina')))),$('h3',{},'Immagini riferimento repo'),$('div',{class:'reference-grid'},...REFERENCE_IMAGES.map(name=>$('a',{href:`public/reference-images/${encodeURIComponent(name)}`,target:'_blank',class:'ref-thumb'},$('img',{src:`public/reference-images/${encodeURIComponent(name)}`,alt:name}),$('span',{},name.replace(/^\d+\.\s*/,'').replace('.png',''))))))) }
 function preview(){const type=document.getElementById('type')?.value||'guess',title=document.getElementById('title')?.value||'Nuovo minigioco',ta=document.getElementById('json');if(!ta)return;const g=templates[type]();g.title=title;g.menuTitle=title.toUpperCase();ta.value=JSON.stringify(g,null,2)}
 function saveEditor(){try{const g=JSON.parse(document.getElementById('json').value);g.id=g.id||id('game');g.title=document.getElementById('title').value.trim()||g.title;g.menuTitle=g.menuTitle||g.title?.toUpperCase();const i=state.games.findIndex(x=>x.id===(editing||g.id));i>=0?state.games[i]=g:state.games.unshift(g);gameId=g.id;editing='';save();toast('Minigioco salvato');render()}catch(e){toast('JSON non valido: '+e.message)}}
 function edit(gid){const g=state.games.find(x=>x.id===gid);if(!g)return;editing=gid;render();document.getElementById('type').value=g.type;document.getElementById('title').value=g.title||'';document.getElementById('json').value=JSON.stringify(g,null,2)}
