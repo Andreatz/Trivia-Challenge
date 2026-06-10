@@ -210,7 +210,7 @@ function stage(content) {
 
 function stageToolbar() {
   return $('div', { class: 'stage-toolbar' },
-    $('button', { class: 'gear-btn', title: 'Admin', onclick: () => { view = 'admin'; render(); } }, '⚙'),
+    $('button', { class: 'gear-btn home-btn', title: 'Home', onclick: () => resetStage('hub') }, '⌂'),
     $('div', { class: 'stage-brand' },
       $('div', { class: 'edition-line' }, $('span', {}, state.subtitle || 'ANIME EDITION')),
       $('div', { class: 'main-logo' }, state.title || 'TRIVIA CHALLENGE')
