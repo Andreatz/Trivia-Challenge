@@ -40,6 +40,7 @@ function syncButtonLabel() {
   if (button.textContent !== label) button.textContent = label;
   if (button.title !== title) button.title = title;
   if (button.getAttribute('aria-label') !== title) button.setAttribute('aria-label', title);
+  button.classList.toggle('is-fullscreen', fullscreen);
 }
 
 function ensureFullscreenButton() {
@@ -50,7 +51,7 @@ function ensureFullscreenButton() {
   if (!button) {
     button = document.createElement('button');
     button.type = 'button';
-    button.className = `icon-btn ${FULLSCREEN_BUTTON_CLASS}`;
+    button.className = `top-action ${FULLSCREEN_BUTTON_CLASS}`;
     button.addEventListener('click', toggleStageFullscreen);
     actions.appendChild(button);
   }
