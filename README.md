@@ -2,13 +2,15 @@
 
 Tool web per ricreare e gestire il gioco **Trivia Challenge** nato da PowerPoint.
 
-Questa versione è stata riallineata alla struttura dei file PowerPoint originali: schermata home in stile proiezione, sfondo blu/oro, pulsanti grandi arrotondati, barra punteggi in basso, scorciatoie `PUNTI`, `LISTA ANIME` e `POTERI`, schermata punti dedicata e minigiochi con layout più simili alle slide.
+Questa versione è stata riallineata alla struttura dei file PowerPoint originali: schermata home in stile proiezione, sfondo blu/oro, pulsanti grandi arrotondati, barra punteggi in basso, scorciatoie `PUNTI`, `LISTA ANIME` e `POTERI`, schermata punti dedicata e minigiochi con layout più simili alle slide. I comandi host non sono più in un pannello separato: sono integrati nella stessa plancia 16:9 come HUD da videogame.
 
 ## Cosa include
 
 - **Modalità Show** in formato 16:9, pensata per TV o proiettore.
 - **Home stile PowerPoint** con pulsanti per i minigiochi.
+- **HUD host integrato nella slide** con selezione giocatore, selezione minigioco, correzioni rapide, reset, log e link rapidi.
 - **Scorebar fissa in basso** con giocatori/squadre selezionabili.
+- **Grafica videogame dinamica** con glow neon, griglia futuristica, animazioni leggere, sweep luminosi e card effetto HUD.
 - **Schermate speciali**: Punti, Lista Anime / argomenti, Poteri.
 - **Admin panel** per creare, modificare, duplicare ed eliminare contenuti.
 - **Punteggi manuali** con bonus, correzioni rapide e storico.
@@ -29,7 +31,7 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 8. **Ghigliottina**: 5 parole collegate da una risposta comune. 200 punti.
 9. **Passaparola**: 21 lettere dell'alfabeto italiano in disposizione circolare, con difficoltà e bonus finali.
 10. **Jeopardy**: tabellone a categorie con valori diversi per difficoltà.
-11. **Sarabanda**: 25 punti per titolo, 25 per artista, 50 per risposta completa.
+11. **Sarabanda**: 25 punti per titolo, 25 per artista, 50 punti a risposta completa.
 
 ## Come avviarlo in locale
 
@@ -75,8 +77,8 @@ L'app le usa come riferimento visivo dentro l'admin, senza confonderle con i med
 
 1. Vai in **Show** per usare la versione da proiettare.
 2. Usa la home per aprire un minigioco, oppure le scorciatoie **PUNTI**, **LISTA ANIME** e **POTERI**.
-3. Seleziona il giocatore attivo dalla console host.
-4. Rivela indizi, mostra risposte e assegna punti.
+3. Usa l'**HUD integrato nella slide** per selezionare giocatore/minigioco, correggere punti, resettare e aprire schermate rapide.
+4. Rivela indizi, mostra risposte e assegna punti direttamente dalla schermata del gioco.
 5. Vai in **Punteggi** per correzioni manuali più grandi.
 6. Vai in **Admin** per creare/modificare i minigiochi e aggiornare lista anime, poteri e giocatori.
 7. A fine preparazione usa **Esporta JSON** come backup della partita.
