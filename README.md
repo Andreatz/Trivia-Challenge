@@ -2,11 +2,12 @@
 
 Tool web per ricreare e gestire il gioco **Trivia Challenge** nato da PowerPoint.
 
-Questa versione è stata riallineata alla struttura dei file PowerPoint originali: schermata home in stile proiezione, sfondo blu/oro, pulsanti grandi arrotondati, barra punteggi in basso, scorciatoie `PUNTI`, `LISTA ANIME` e `POTERI`, schermata punti dedicata e minigiochi con layout più simili alle slide. I comandi host non sono più in un pannello separato: sono integrati nella stessa plancia 16:9 come HUD da videogame.
+Questa versione è stata riallineata alla struttura dei file PowerPoint originali: schermata home in stile proiezione, sfondo blu/oro, pulsanti grandi arrotondati, barra punteggi in basso, scorciatoie `PUNTI`, `LISTA ANIME` e `POTERI`, schermata punti dedicata e minigiochi con layout più simili alle slide. I comandi host non sono più in un pannello separato: sono integrati nella stessa plancia 16:9 come HUD da videogame. In modalità fullscreen viene mandata a schermo intero solo la plancia del gioco, quindi la barra superiore dell'app non è visibile.
 
 ## Cosa include
 
 - **Modalità Show** in formato 16:9, pensata per TV o proiettore.
+- **Fullscreen presentazione**: usa il pulsante `⛶` o il tasto `F` per mostrare solo la plancia di gioco, senza header dell'app.
 - **Home stile PowerPoint** con pulsanti per i minigiochi.
 - **HUD host integrato nella slide** con selezione giocatore, selezione minigioco, correzioni rapide, reset, log e link rapidi.
 - **Scorebar fissa in basso** con giocatori/squadre selezionabili.
@@ -47,6 +48,14 @@ Poi apri:
 http://localhost:5173
 ```
 
+## Schermo intero presentazione
+
+Nella modalità **Show**, premi il pulsante `⛶` nella barra in alto della plancia oppure premi il tasto `F`.
+
+Il fullscreen viene applicato direttamente alla `.ppt-stage`, non a tutta la pagina: in questo modo non compaiono `PowerPoint-style game master`, `Trivia Challenge Studio`, `Show`, `Admin` e `Punteggi`.
+
+Per uscire, premi `Esc` oppure di nuovo `⛶`.
+
 ## Dove mettere immagini, video e audio
 
 Inserisci i file dentro:
@@ -76,12 +85,13 @@ L'app le usa come riferimento visivo dentro l'admin, senza confonderle con i med
 ## Workflow consigliato
 
 1. Vai in **Show** per usare la versione da proiettare.
-2. Usa la home per aprire un minigioco, oppure le scorciatoie **PUNTI**, **LISTA ANIME** e **POTERI**.
-3. Usa l'**HUD integrato nella slide** per selezionare giocatore/minigioco, correggere punti, resettare e aprire schermate rapide.
-4. Rivela indizi, mostra risposte e assegna punti direttamente dalla schermata del gioco.
-5. Vai in **Punteggi** per correzioni manuali più grandi.
-6. Vai in **Admin** per creare/modificare i minigiochi e aggiornare lista anime, poteri e giocatori.
-7. A fine preparazione usa **Esporta JSON** come backup della partita.
+2. Attiva `⛶` per mandare a schermo intero solo la plancia del gioco.
+3. Usa la home per aprire un minigioco, oppure le scorciatoie **PUNTI**, **LISTA ANIME** e **POTERI**.
+4. Usa l'**HUD integrato nella slide** per selezionare giocatore/minigioco, correggere punti, resettare e aprire schermate rapide.
+5. Rivela indizi, mostra risposte e assegna punti direttamente dalla schermata del gioco.
+6. Vai in **Punteggi** per correzioni manuali più grandi.
+7. Vai in **Admin** per creare/modificare i minigiochi e aggiornare lista anime, poteri e giocatori.
+8. A fine preparazione usa **Esporta JSON** come backup della partita.
 
 ## Persistenza dei dati
 
