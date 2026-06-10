@@ -69,4 +69,26 @@ function setupFullscreenEnhancements() {
   });
 }
 
+function syncButtonLabel() {
+  const button = document.querySelector(`.${FULLSCREEN_BUTTON_CLASS}`);
+  if (!button) return;
+  button.textContent = isStageFullscreen() ? '×' : '⛶';
+  button.title = isStageFullscreen() ? 'Esci da schermo intero' : 'Schermo intero presentazione';
+  button.setAttribute('aria-label', button.title);
+}
+
+function ensureFullscreenButton() {
+  const actions = document.querySelector('.stage-actions');
+  if (!actions || actions.querySelector(`.${FULLSCREEN_BUTTON_CLASS}`)) return;
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = `icon-btn ${FULLSCREEN_BUTTON_CLASS}`;
+  button.textContent = '⛶';
+  button.title = 'Schermo intero presentazione';
+  button.setAttribute('aria-label', button.title);
+  button.addEventListener('click', toggleStageFullscreen);
+  actions.appendChild(button);
+}
+
 setupFullscreenEnhancements();
