@@ -1,0 +1,1010 @@
+{
+  "generatedBy": "npm run assets:manifest",
+  "assets": [
+    {
+      "path": "public/assets/Background.jpeg",
+      "type": "image/jpeg",
+      "bytes": 1869185
+    },
+    {
+      "path": "public/assets/box-1000.png",
+      "type": "image/png",
+      "bytes": 2249455
+    },
+    {
+      "path": "public/assets/box-250.png",
+      "type": "image/png",
+      "bytes": 2165691
+    },
+    {
+      "path": "public/assets/box-50.png",
+      "type": "image/png",
+      "bytes": 2024461
+    },
+    {
+      "path": "public/assets/box-500.png",
+      "type": "image/png",
+      "bytes": 2228036
+    },
+    {
+      "path": "public/assets/cluedo/1x1_A_man_making_a_bubble_with_chewi.png",
+      "type": "image/png",
+      "bytes": 1187445
+    },
+    {
+      "path": "public/assets/cluedo/29413fa081a5dfab54a9e466bdb032a0.jpg",
+      "type": "image/jpeg",
+      "bytes": 65115
+    },
+    {
+      "path": "public/assets/cluedo/3vi3h2p7hexa1.png",
+      "type": "image/png",
+      "bytes": 5158607
+    },
+    {
+      "path": "public/assets/cluedo/4qw6df437z781.png",
+      "type": "image/png",
+      "bytes": 384371
+    },
+    {
+      "path": "public/assets/cluedo/8084768c4a00b14e362ed3134e3f2771.jpg",
+      "type": "image/jpeg",
+      "bytes": 162816
+    },
+    {
+      "path": "public/assets/cluedo/Abyss_Game_Opening.webp",
+      "type": "image/webp",
+      "bytes": 95870
+    },
+    {
+      "path": "public/assets/cluedo/d72lzm3-e0686642-a68a-4b28-b22e-6821faeb45c2.png",
+      "type": "image/png",
+      "bytes": 1604715
+    },
+    {
+      "path": "public/assets/cluedo/Deku.webp",
+      "type": "image/webp",
+      "bytes": 229210
+    },
+    {
+      "path": "public/assets/cluedo/Gōkakyū_no_Jutsu_(Flusso_-_Game).webp",
+      "type": "image/webp",
+      "bytes": 40522
+    },
+    {
+      "path": "public/assets/cluedo/Goku.png",
+      "type": "image/png",
+      "bytes": 1808576
+    },
+    {
+      "path": "public/assets/cluedo/Gon.webp",
+      "type": "image/webp",
+      "bytes": 33460
+    },
+    {
+      "path": "public/assets/cluedo/Ichigo.png",
+      "type": "image/png",
+      "bytes": 367762
+    },
+    {
+      "path": "public/assets/cluedo/ja2rwASy69ySlG3q_Brb8RhD7Sq2gzUEqSxxAbomVS8.webp",
+      "type": "image/webp",
+      "bytes": 59330
+    },
+    {
+      "path": "public/assets/cluedo/landscape_comp.jpeg",
+      "type": "image/jpeg",
+      "bytes": 114758
+    },
+    {
+      "path": "public/assets/cluedo/Luffy.png",
+      "type": "image/png",
+      "bytes": 82683
+    },
+    {
+      "path": "public/assets/cluedo/Makankosappo.png",
+      "type": "image/png",
+      "bytes": 3992
+    },
+    {
+      "path": "public/assets/cluedo/MV5BMjNhZTc5Y2MtYjlhOC00YTM3LWE0MTctNmFhMjFlMjNlN2NmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+      "type": "image/jpeg",
+      "bytes": 86800
+    },
+    {
+      "path": "public/assets/cluedo/Naruto.webp",
+      "type": "image/webp",
+      "bytes": 175732
+    },
+    {
+      "path": "public/assets/cluedo/omorphia-visual-low.jpg",
+      "type": "image/jpeg",
+      "bytes": 775171
+    },
+    {
+      "path": "public/assets/cluedo/Prominence Burn.png",
+      "type": "image/png",
+      "bytes": 104335
+    },
+    {
+      "path": "public/assets/cluedo/Tensa Zangetsu.png",
+      "type": "image/png",
+      "bytes": 163647
+    },
+    {
+      "path": "public/assets/cluedo/thumb-1920-1370952.png",
+      "type": "image/png",
+      "bytes": 3327702
+    },
+    {
+      "path": "public/assets/cluedo/WallpaperDog-20680047.jpg",
+      "type": "image/jpeg",
+      "bytes": 196265
+    },
+    {
+      "path": "public/assets/cursor-neon.svg",
+      "type": "image/svg+xml",
+      "bytes": 800
+    },
+    {
+      "path": "public/assets/favicon.svg",
+      "type": "image/svg+xml",
+      "bytes": 911
+    },
+    {
+      "path": "public/assets/Indovina-il-personaggio.png",
+      "type": "image/png",
+      "bytes": 2150195
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ace-1.png",
+      "type": "image/png",
+      "bytes": 1802689
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ace-2.png",
+      "type": "image/png",
+      "bytes": 2093848
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ace-3.png",
+      "type": "image/png",
+      "bytes": 2821098
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ace-4.jpg",
+      "type": "image/jpeg",
+      "bytes": 1986576
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/aizen-1.png",
+      "type": "image/png",
+      "bytes": 2509040
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/aizen-2.png",
+      "type": "image/png",
+      "bytes": 1169686
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/aizen-3.png",
+      "type": "image/png",
+      "bytes": 1548415
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/aizen-4.png",
+      "type": "image/png",
+      "bytes": 1522360
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/annie-1.png",
+      "type": "image/png",
+      "bytes": 2471406
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/annie-2.png",
+      "type": "image/png",
+      "bytes": 1817970
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/annie-3.png",
+      "type": "image/png",
+      "bytes": 2039407
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/annie-4.png",
+      "type": "image/png",
+      "bytes": 2212230
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/berthold-1.png",
+      "type": "image/png",
+      "bytes": 1783325
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/berthold-2.png",
+      "type": "image/png",
+      "bytes": 3360451
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/berthold-3.png",
+      "type": "image/png",
+      "bytes": 2033991
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/berthold-4.png",
+      "type": "image/png",
+      "bytes": 2482744
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/boa-1.jpg",
+      "type": "image/jpeg",
+      "bytes": 158629
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/boa-2.png",
+      "type": "image/png",
+      "bytes": 2474081
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/boa-3.png",
+      "type": "image/png",
+      "bytes": 2499952
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/boa-4.png",
+      "type": "image/png",
+      "bytes": 3251820
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/bonolenov-1.png",
+      "type": "image/png",
+      "bytes": 2793070
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/bonolenov-2.png",
+      "type": "image/png",
+      "bytes": 1725430
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/bonolenov-3.png",
+      "type": "image/png",
+      "bytes": 1961564
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/bonolenov-4.png",
+      "type": "image/png",
+      "bytes": 2183529
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/chrollo-1.png",
+      "type": "image/png",
+      "bytes": 2666407
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/chrollo-2.png",
+      "type": "image/png",
+      "bytes": 2118047
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/chrollo-3.png",
+      "type": "image/png",
+      "bytes": 3126779
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/chrollo-4.png",
+      "type": "image/png",
+      "bytes": 1881922
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/doflamimgo-2.png",
+      "type": "image/png",
+      "bytes": 599823
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/doflamingo-1.png",
+      "type": "image/png",
+      "bytes": 2370976
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/doflamingo-3.png",
+      "type": "image/png",
+      "bytes": 2147124
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/doflamingo-4.png",
+      "type": "image/png",
+      "bytes": 1457662
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/eren-1.png",
+      "type": "image/png",
+      "bytes": 2073618
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/eren-2.png",
+      "type": "image/png",
+      "bytes": 135900
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/eren-3.png",
+      "type": "image/png",
+      "bytes": 2952076
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/eren-4.png",
+      "type": "image/png",
+      "bytes": 3021396
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/falco-1.png",
+      "type": "image/png",
+      "bytes": 1534988
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/falco-2.png",
+      "type": "image/png",
+      "bytes": 1560074
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/falco-3.png",
+      "type": "image/png",
+      "bytes": 1768517
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/falco-4.png",
+      "type": "image/png",
+      "bytes": 2246601
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gaara-1.png",
+      "type": "image/png",
+      "bytes": 1832691
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gaara-2.png",
+      "type": "image/png",
+      "bytes": 3340288
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gaara-3.png",
+      "type": "image/png",
+      "bytes": 2824978
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gaara-4.png",
+      "type": "image/png",
+      "bytes": 1572972
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gon-1.png",
+      "type": "image/png",
+      "bytes": 2736900
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gon-2.png",
+      "type": "image/png",
+      "bytes": 2286578
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gon-3.png",
+      "type": "image/png",
+      "bytes": 1232657
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/gon-4.png",
+      "type": "image/png",
+      "bytes": 982609
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/himeno-1.png",
+      "type": "image/png",
+      "bytes": 1647642
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/himeno-2.png",
+      "type": "image/png",
+      "bytes": 1067958
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/himeno-3.png",
+      "type": "image/png",
+      "bytes": 2071154
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/himeno-4.png",
+      "type": "image/png",
+      "bytes": 2205640
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ichigo-1.png",
+      "type": "image/png",
+      "bytes": 857684
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ichigo-2.png",
+      "type": "image/png",
+      "bytes": 1769538
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ichigo-3.png",
+      "type": "image/png",
+      "bytes": 2215588
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ichigo-4.png",
+      "type": "image/png",
+      "bytes": 1028780
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/jogo-1.png",
+      "type": "image/png",
+      "bytes": 1917895
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/jogo-2.png",
+      "type": "image/png",
+      "bytes": 2686222
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/jogo-3.png",
+      "type": "image/png",
+      "bytes": 2047624
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/jogo-4.png",
+      "type": "image/png",
+      "bytes": 1822712
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kaguya-1.png",
+      "type": "image/png",
+      "bytes": 3042918
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kaguya-2.png",
+      "type": "image/png",
+      "bytes": 1817271
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kaguya-3.png",
+      "type": "image/png",
+      "bytes": 2283131
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kaguya-4.png",
+      "type": "image/png",
+      "bytes": 974274
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kakashi-1.png",
+      "type": "image/png",
+      "bytes": 2747434
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kakashi-2.png",
+      "type": "image/png",
+      "bytes": 1941250
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kakashi-3.png",
+      "type": "image/png",
+      "bytes": 3076741
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kakashi-4.png",
+      "type": "image/png",
+      "bytes": 2825870
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/killua-1.png",
+      "type": "image/png",
+      "bytes": 913137
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/killua-2.jpeg",
+      "type": "image/jpeg",
+      "bytes": 2585394
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/killua-3.png",
+      "type": "image/png",
+      "bytes": 1590690
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/killua-4.png",
+      "type": "image/png",
+      "bytes": 1147160
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kurapika-1.jpg",
+      "type": "image/jpeg",
+      "bytes": 75713
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kurapika-2.png",
+      "type": "image/png",
+      "bytes": 1523458
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kurapika-3.png",
+      "type": "image/png",
+      "bytes": 2321940
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/kurapika-4.png",
+      "type": "image/png",
+      "bytes": 1678178
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/levi-1.png",
+      "type": "image/png",
+      "bytes": 2210304
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/levi-2.png",
+      "type": "image/png",
+      "bytes": 1683255
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/levi-3.png",
+      "type": "image/png",
+      "bytes": 2171429
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/levi-4.png",
+      "type": "image/png",
+      "bytes": 1760372
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/luffy-1.png",
+      "type": "image/png",
+      "bytes": 980576
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/luffy-2.png",
+      "type": "image/png",
+      "bytes": 1234994
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/luffy-3.png",
+      "type": "image/png",
+      "bytes": 2472385
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/luffy-4.png",
+      "type": "image/png",
+      "bytes": 2427410
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/naruto-1.png",
+      "type": "image/png",
+      "bytes": 2133245
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/naruto-2.png",
+      "type": "image/png",
+      "bytes": 2957388
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/naruto-3.png",
+      "type": "image/png",
+      "bytes": 2532848
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/naruto-4.png",
+      "type": "image/png",
+      "bytes": 3359986
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/netero-1.png",
+      "type": "image/png",
+      "bytes": 2103398
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/netero-2.png",
+      "type": "image/png",
+      "bytes": 2041179
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/netero-3.png",
+      "type": "image/png",
+      "bytes": 1492647
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/netero-4.png",
+      "type": "image/png",
+      "bytes": 1305118
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/nicorobin-1.png",
+      "type": "image/png",
+      "bytes": 2607908
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/nicorobin-2.png",
+      "type": "image/png",
+      "bytes": 3261857
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/nicorobin-3.png",
+      "type": "image/png",
+      "bytes": 2954030
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/nicorobin-4.png",
+      "type": "image/png",
+      "bytes": 3431661
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/sakura-1.png",
+      "type": "image/png",
+      "bytes": 3533403
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/sakura-2.png",
+      "type": "image/png",
+      "bytes": 2114139
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/sakura-3.png",
+      "type": "image/png",
+      "bytes": 4366868
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/sakura-4.png",
+      "type": "image/png",
+      "bytes": 2057421
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/suzaku-1.png",
+      "type": "image/png",
+      "bytes": 2382055
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/suzaku-2.png",
+      "type": "image/png",
+      "bytes": 2585258
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/suzaku-3.png",
+      "type": "image/png",
+      "bytes": 2413429
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/suzaku-4.png",
+      "type": "image/png",
+      "bytes": 2685209
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ulquiorra-1.png",
+      "type": "image/png",
+      "bytes": 1942738
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ulquiorra-2.png",
+      "type": "image/png",
+      "bytes": 1594794
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ulquiorra-3.png",
+      "type": "image/png",
+      "bytes": 1444208
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/ulquiorra-4.png",
+      "type": "image/png",
+      "bytes": 1154600
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/zeke-1.png",
+      "type": "image/png",
+      "bytes": 2798057
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/zeke-2.png",
+      "type": "image/png",
+      "bytes": 2344483
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/zeke-3.png",
+      "type": "image/png",
+      "bytes": 3749336
+    },
+    {
+      "path": "public/assets/indovina-il-personaggio/anime/zeke-4.png",
+      "type": "image/png",
+      "bytes": 3194900
+    },
+    {
+      "path": "public/assets/Jeopardy.png",
+      "type": "image/png",
+      "bytes": 1801987
+    },
+    {
+      "path": "public/assets/Passaparola.png",
+      "type": "image/png",
+      "bytes": 1745985
+    },
+    {
+      "path": "public/assets/Schiva-la-bomba.png",
+      "type": "image/png",
+      "bytes": 1604007
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/1024px-0448Lucario.png",
+      "type": "image/png",
+      "bytes": 331162
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/493Arceus.webp",
+      "type": "image/webp",
+      "bytes": 95296
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/92d1690b591d42988322de6699e97474_1611356315530.png",
+      "type": "image/png",
+      "bytes": 1248613
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Adult_Chi-Chi.webp",
+      "type": "image/webp",
+      "bytes": 144620
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Ainz_MFTD_cropped.webp",
+      "type": "image/webp",
+      "bytes": 204250
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Albedo99999999.webp",
+      "type": "image/webp",
+      "bytes": 152184
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Anime_Lucy_Heartfilia_X793_Render.webp",
+      "type": "image/webp",
+      "bytes": 99880
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Attacktitanrender2.webp",
+      "type": "image/webp",
+      "bytes": 429820
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/DBFighterZ_-_Beerus_by_PurpleHato.webp",
+      "type": "image/webp",
+      "bytes": 194498
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/EdoMadara_29_29.webp",
+      "type": "image/webp",
+      "bytes": 139566
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Frieren_anime_profile.webp",
+      "type": "image/webp",
+      "bytes": 80334
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Genryusai_shigekuni_yamamoto_ryujin_jakka_by_esteban_93-dabba50.webp",
+      "type": "image/webp",
+      "bytes": 113572
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Gilgamesh.png",
+      "type": "image/png",
+      "bytes": 861562
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/gojo.webp",
+      "type": "image/webp",
+      "bytes": 77568
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Griffith_render_2.webp",
+      "type": "image/webp",
+      "bytes": 262476
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Hunter_X_Hunter_Chrollo_Incognito_29.webp",
+      "type": "image/webp",
+      "bytes": 189908
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Ino_Yamanaka_-_Kid.webp",
+      "type": "image/webp",
+      "bytes": 35230
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/itachi.png",
+      "type": "image/png",
+      "bytes": 128028
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Izou._29.webp",
+      "type": "image/webp",
+      "bytes": 99720
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Kaguya_by_marcinha20-d97xpbb.webp",
+      "type": "image/webp",
+      "bytes": 92726
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Kallen_GBF.webp",
+      "type": "image/webp",
+      "bytes": 59442
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/KenshiroAnime.webp",
+      "type": "image/webp",
+      "bytes": 146594
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/MeliodasRenderSword.webp",
+      "type": "image/webp",
+      "bytes": 170804
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/MikasaAckerman_29_29.webp",
+      "type": "image/webp",
+      "bytes": 164596
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/MistyEP.png",
+      "type": "image/png",
+      "bytes": 70053
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Mitsuri_anime2.webp",
+      "type": "image/webp",
+      "bytes": 115498
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Muzan_Kibutsuji_Full_Body_29.webp",
+      "type": "image/webp",
+      "bytes": 91160
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Natsu_in_x792_Anime.webp",
+      "type": "image/webp",
+      "bytes": 263082
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Newcfgarouwubba.webp",
+      "type": "image/webp",
+      "bytes": 369982
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/NobaraKugisaki_29.webp",
+      "type": "image/webp",
+      "bytes": 130460
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/OmegamonRednerDark.webp",
+      "type": "image/webp",
+      "bytes": 135552
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/ORDINAL_SCALE_ASUNA.webp",
+      "type": "image/webp",
+      "bytes": 135440
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/pngwing.com.png",
+      "type": "image/png",
+      "bytes": 225576
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Post-Timeskip_Mayuri.webp",
+      "type": "image/webp",
+      "bytes": 63434
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/PowerRenderHD.webp",
+      "type": "image/webp",
+      "bytes": 194268
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Pre-Timeskip_Yoruichi_Rendered.webp",
+      "type": "image/webp",
+      "bytes": 136230
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Rei_Ayanami_29.webp",
+      "type": "image/webp",
+      "bytes": 64150
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Reinerbraunrender.webp",
+      "type": "image/webp",
+      "bytes": 179330
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Render_2.webp",
+      "type": "image/webp",
+      "bytes": 139366
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Rider_of_black.webp",
+      "type": "image/webp",
+      "bytes": 188620
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/RoronoaZoro._29.webp",
+      "type": "image/webp",
+      "bytes": 286464
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Ryuk.webp",
+      "type": "image/webp",
+      "bytes": 117642
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Shigaraki_Render.webp",
+      "type": "image/webp",
+      "bytes": 126036
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Sukuna_Anime.webp",
+      "type": "image/webp",
+      "bytes": 48602
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Super_Cell_Toei.webp",
+      "type": "image/webp",
+      "bytes": 178892
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Suzaku_GBF.webp",
+      "type": "image/webp",
+      "bytes": 49146
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Tatsumaki.webp",
+      "type": "image/webp",
+      "bytes": 79152
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Tsuyu_Asui_Full_Body_Hero_Costume_Anime.webp",
+      "type": "image/webp",
+      "bytes": 31824
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Ulquiorra_Cifer.webp",
+      "type": "image/webp",
+      "bytes": 38542
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Yagami-light-Render-SV.webp",
+      "type": "image/webp",
+      "bytes": 96422
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Yamato_29.webp",
+      "type": "image/webp",
+      "bytes": 511242
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Yor_Forger_Anime_png.png",
+      "type": "image/png",
+      "bytes": 237439
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Yusukeurameshidelinquent.webp",
+      "type": "image/webp",
+      "bytes": 32872
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/Zeno_sama_y_futuro_zeno_sama_by_jaredsongohan_dbpoqfy-fullview.webp",
+      "type": "image/webp",
+      "bytes": 116856
+    },
+    {
+      "path": "public/assets/ui-bg-anime-neon.svg",
+      "type": "image/svg+xml",
+      "bytes": 3973
+    }
+  ]
+}

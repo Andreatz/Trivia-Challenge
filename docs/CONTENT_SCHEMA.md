@@ -1,6 +1,28 @@
 # Content schema
 
-Questo documento descrive il formato JSON usato dal tool.
+Questo documento descrive il formato JSON versione 2 usato dal tool.
+
+## Documento radice
+
+```json
+{
+  "schemaVersion": 2,
+  "title": "TRIVIA CHALLENGE",
+  "subtitle": "ANIME EDITION",
+  "players": [],
+  "games": [],
+  "library": [],
+  "powers": [],
+  "history": [],
+  "session": {
+    "games": {}
+  }
+}
+```
+
+`games` contiene esclusivamente configurazione e contenuti. Gli esiti della partita, le domande usate e i bonus assegnati vengono conservati separatamente in `session.games`, indicizzati per ID del minigioco.
+
+I documenti senza `schemaVersion` vengono migrati automaticamente. Un documento con una versione futura non supportata viene rifiutato senza sovrascrivere lo stato corrente.
 
 Ogni minigioco ha sempre questi campi base:
 
@@ -30,7 +52,7 @@ Ogni minigioco ha sempre questi campi base:
 
 ## Media
 
-I file media possono essere percorsi locali nella repo o URL esterni.
+I file media devono essere percorsi locali relativi sotto `public/assets/`.
 
 Esempi:
 
@@ -38,9 +60,9 @@ Esempi:
 "public/assets/personaggio-1.jpg"
 ```
 
-```json
-"https://example.com/immagine.jpg"
-```
+URL remoti, `data:` URL e percorsi contenenti `../` non sono accettati. Il file deve essere incluso nel progetto prima della partita.
+
+Campi interessati: `image`, `audio`, `media`, `detailImage`, `fullImage`, `src` e `art`.
 
 ## Indovina il personaggio
 
@@ -52,16 +74,25 @@ Esempi:
     {
       "answer": "Nome personaggio",
       "clues": [
-        "public/assets/1.jpg",
-        "public/assets/2.jpg",
-        "public/assets/3.jpg",
-        "public/assets/4.jpg"
+        {
+          "label": "1000",
+          "image": "public/assets/1.jpg",
+          "fit": "cover",
+          "positionX": 50,
+          "positionY": 50,
+          "zoom": 1
+        },
+        { "label": "500", "image": "public/assets/2.jpg" },
+        { "label": "250", "image": "public/assets/3.jpg" },
+        { "label": "50", "image": "public/assets/4.jpg" }
       ],
       "points": [1000, 500, 250, 50]
     }
   ]
 }
 ```
+
+Per ogni indizio `fit`, `positionX`, `positionY` e `zoom` sono opzionali. `fit` accetta `cover`, `contain` o `fill`; `positionX` e `positionY` vanno da 0 a 100; `zoom` va da 1 a 3.
 
 ## Schiva la Bomba
 
@@ -182,15 +213,15 @@ Esempi:
   "type": "pass",
   "title": "Passaparola",
   "difficulty": "facile",
-  "points": { "facile": 5, "medio": 5, "difficile": 20 },
+  "points": { "facile": 5, "medio": 10, "difficile": 20 },
   "bonus": { "facile": 200, "medio": 500, "difficile": 1000 },
   "questions": [
-    { "letter": "A", "question": "Con la A...", "answer": "Risposta", "status": "pending" }
+    { "letter": "A", "question": "Con la A...", "answer": "Risposta" }
   ]
 }
 ```
 
-`status` può essere `pending`, `correct`, `wrong`, `pass`.
+Lo stato `pending`, `correct`, `wrong` o `pass` è runtime e viene salvato in `session.games`, non nel contenuto della domanda.
 
 ## Jeopardy
 

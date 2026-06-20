@@ -7,7 +7,7 @@ body[data-view="show"] .bomb-tile::before {
 
 body[data-view="show"] .jeopardy-cell:hover,
 body[data-view="show"] .jeopardy-cell:focus-visible,
-body[data-view="show"] .guess-tile:hover,
+body[data-view="show"] .guess-tile:not(.asset-covered):hover,
 body[data-view="show"] .bomb-tile:hover {
   border-color: var(--cyan2) !important;
   background: linear-gradient(180deg, rgba(13,40,88,.88), rgba(5,17,42,.96)) !important;
@@ -17,15 +17,33 @@ body[data-view="show"] .bomb-tile:hover {
 
 body[data-view="show"] .jeopardy-cell:hover::before,
 body[data-view="show"] .jeopardy-cell:focus-visible::before,
-body[data-view="show"] .guess-tile:hover::before,
+body[data-view="show"] .guess-tile:not(.asset-covered):hover::before,
 body[data-view="show"] .bomb-tile:hover::before {
   opacity: 0 !important;
 }
 
 body[data-view="show"] .jeopardy-cell:active,
-body[data-view="show"] .guess-tile:active,
+body[data-view="show"] .guess-tile:not(.asset-covered):active,
 body[data-view="show"] .bomb-tile:active {
   box-shadow: 0 0 28px rgba(0,231,255,.62), inset 0 0 28px rgba(0,231,255,.14) !important;
+}
+
+body[data-view="show"] .guess-tile.asset-covered,
+body[data-view="show"] .guess-tile.asset-covered:hover,
+body[data-view="show"] .guess-tile.asset-covered:focus-visible,
+body[data-view="show"] .guess-tile.asset-covered:active {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body[data-view="show"] .guess-tile.asset-covered::before,
+body[data-view="show"] .guess-tile.asset-covered:hover::before,
+body[data-view="show"] .guess-tile.asset-covered:focus-visible::before,
+body[data-view="show"] .guess-tile.asset-covered:active::before {
+  content: none !important;
+  opacity: 0 !important;
 }
 
 body[data-view="show"] .player-chip.selected {

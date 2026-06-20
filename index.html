@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trivia Challenge</title>
   <meta name="description" content="Tool per creare, presentare e gestire minigiochi Trivia Challenge." />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'" />
+  <link rel="icon" href="public/assets/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="src/styles.css" />
   <link rel="stylesheet" href="src/anime-theme-overrides.css" />
@@ -15,5 +17,6 @@
   <div id="app"></div>
   <script type="module" src="src/app.js"></script>
   <script type="module" src="src/fullscreen.js"></script>
+  <script type="module" src="src/pwa.js"></script>
 </body>
 </html>

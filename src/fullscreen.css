@@ -36,17 +36,40 @@
 
 #app:fullscreen .stage-content,
 #app:-webkit-full-screen .stage-content {
-  height: calc(100vh - 284px);
-  padding-left: 7.3vw;
-  padding-right: 7.3vw;
+  height: auto;
+  min-height: 0;
+  padding-left: clamp(34px, 6vw, 116px);
+  padding-right: clamp(34px, 6vw, 116px);
+  padding-bottom: 10px;
+  overflow: hidden;
+  animation: none;
+}
+
+#app:fullscreen .stage-toolbar,
+#app:-webkit-full-screen .stage-toolbar {
+  padding-right: 132px;
 }
 
 #app:fullscreen .fullscreen-toggle,
 #app:-webkit-full-screen .fullscreen-toggle {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 30;
+  min-width: 84px;
   border-color: var(--gold);
   color: var(--gold);
 }
 
+#app:fullscreen .edit-action,
+#app:fullscreen .admin-action,
+#app:fullscreen .stage-actions .top-action.icon-only,
+#app:-webkit-full-screen .edit-action,
+#app:-webkit-full-screen .admin-action,
+#app:-webkit-full-screen .stage-actions .top-action.icon-only {
+  display: none;
+}
+
 .fullscreen-toggle {
-  min-width: 92px;
+  min-width: 84px;
 }

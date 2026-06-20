@@ -1,0 +1,18 @@
+{
+  "name": "trivia-challenge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 5173 --bind 127.0.0.1",
+    "check:syntax": "node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check service-worker.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
+    "assets:check": "node scripts/check-assets.mjs",
+    "assets:manifest": "node scripts/generate-asset-manifest.mjs",
+    "assets:manifest:check": "node scripts/generate-asset-manifest.mjs --check",
+    "assets:optimize": "python scripts/optimize_local_assets.py",
+    "assets:optimize:apply": "python scripts/optimize_local_assets.py --apply && npm run assets:manifest",
+    "check": "npm run check:syntax && npm run assets:check && npm run assets:manifest:check && npm test",
+    "release:check": "npm run check && node scripts/release-check.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

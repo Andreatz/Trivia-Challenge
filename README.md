@@ -23,6 +23,7 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 ## Minigiochi supportati
 
 1. **Indovina il personaggio**: 4 indizi/immagini rivelabili in stile tile PowerPoint. Punteggi: 1000, 500, 250, 50.
+   Nell'editor dei box puoi aggiungere/duplicare/eliminare slide e regolare adattamento, posizione X/Y e zoom del ritaglio per ogni immagine.
 2. **Schiva la Bomba**: griglia da 20 elementi, 16 corretti e 4 bombe/intrusi. Ogni risposta corretta vale 50 punti.
 3. **Chi l'ha detto**: audio da ascoltare e risposta rivelabile tramite immagine/video. 100 punti.
 4. **Occhio al dettaglio**: dettaglio iniziale e immagine completa in risposta. 200 punti.
@@ -52,7 +53,7 @@ http://localhost:5173
 
 Nella modalità **Show**, premi il pulsante `⛶` nella barra in alto della plancia oppure premi il tasto `F`.
 
-Il fullscreen viene applicato direttamente alla `.ppt-stage`, non a tutta la pagina: in questo modo non compaiono `PowerPoint-style game master`, `Trivia Challenge Studio`, `Show`, `Admin` e `Punteggi`.
+Il fullscreen viene applicato a `#app` e mostra soltanto la modalità Show: in questo modo non compaiono `Trivia Challenge Studio`, `Show`, `Admin` e `Punteggi`.
 
 Per uscire, premi `Esc` oppure di nuovo `⛶`.
 
@@ -70,7 +71,33 @@ Poi nel JSON admin usa percorsi come:
 "public/assets/personaggio-1.jpg"
 ```
 
-Puoi anche usare link esterni assoluti, ad esempio `https://.../immagine.jpg`.
+I media devono restare locali. URL esterni e percorsi fuori da `public/assets/` vengono rifiutati durante l'importazione.
+
+Dopo aver aggiunto, rinominato o rimosso asset, rigenera il manifest usato dall'editor:
+
+```bash
+npm run assets:manifest
+```
+
+`npm run assets:check` segnala file mancanti, formati non supportati, file grandi, duplicati e asset non referenziati staticamente.
+
+Per stimare una compressione PNG lossless senza modificare i file:
+
+```bash
+npm run assets:optimize
+```
+
+L'applicazione esplicita usa `npm run assets:optimize:apply`, conserva percorsi e pixel e sostituisce soltanto file realmente più piccoli.
+
+## Controlli host
+
+- `H`: alterna controlli host e vista pubblico.
+- `F`: entra o esce dal fullscreen.
+- `Spazio`: avvia o mette in pausa il timer visibile.
+- `Freccia sinistra/destra`: cambia domanda nei giochi sequenziali.
+- `Ctrl+Z`: annulla l'ultima modifica fuori dai campi di testo.
+
+La vista pubblico nasconde azioni host, editor, media controls e interazioni sulla scorebar senza modificare lo stato della partita.
 
 ## Immagini di riferimento
 
@@ -103,6 +130,6 @@ I dati sono salvati nel `localStorage` del browser. Questo rende il tool immedia
 
 ## Roadmap tecnica
 
-La base attuale è una PWA statica. I prossimi step naturali sono: form visuali dedicati per ogni minigioco, upload media dall'admin, timer reale, effetti sonori, animazioni reveal più fedeli alle transizioni PowerPoint, database remoto, modalità player da smartphone, buzzer e lobby multiplayer.
+La base attuale è una PWA statica con cache offline progressiva degli asset locali, schema dati versionato, timer e controlli media. I prossimi interventi sono descritti nella roadmap e privilegiano stabilità locale, test, ottimizzazione degli asset e qualità dell'editor.
 
 Vedi anche [`docs/CONTENT_SCHEMA.md`](docs/CONTENT_SCHEMA.md) e [`docs/ROADMAP.md`](docs/ROADMAP.md).
