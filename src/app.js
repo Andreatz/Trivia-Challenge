@@ -1,9 +1,6 @@
 import {
   calculateBombScore,
-  guessPointsForReveal,
   nextPassIndex,
-  passBonusForDifficulty,
-  passPointsForDifficulty,
   passSummary
 } from './core/game-rules.js';
 import { CURRENT_SCHEMA_VERSION, prepareDocument, serializeDocument } from './core/schema.js';
@@ -56,7 +53,11 @@ const DEFAULT_HOME_LAYOUT = {
   toolbarButtonW: 146,
   toolbarButtonH: 56,
   toolbarButtonFont: 0.78,
-  toolbarGap: 12
+  toolbarGap: 12,
+  playerButtonW: 150,
+  playerButtonH: 66,
+  playerButtonFont: 0.76,
+  playerButtonGap: 12
 };
 const UNDO_LIMIT = 20;
 const SNAP_THRESHOLD = 1.4;
@@ -99,7 +100,6 @@ let state = load();
 const restoredNavigation = state.session?.navigation || {};
 let view = ['show', 'admin', 'scores'].includes(restoredNavigation.view) ? restoredNavigation.view : 'show';
 let gameId = state.games.some(item => item.id === restoredNavigation.gameId) ? restoredNavigation.gameId : state.games[0]?.id;
-let playerId = state.players[0]?.id;
 let cur = {
   screen: ['hub', 'game', 'points', 'library', 'powers'].includes(restoredNavigation.screen) ? restoredNavigation.screen : 'hub',
   i: Number(restoredNavigation.i || 0),
@@ -211,7 +211,6 @@ function undoLastChange() {
     const editorial = JSON.parse(snapshot);
     Object.assign(state, editorial);
     if (!state.games.some(item => item.id === gameId)) gameId = state.games[0]?.id;
-    if (!state.players.some(item => item.id === playerId)) playerId = state.players[0]?.id;
     if (!state.players.some(item => item.id === scorePanelPlayerId)) scorePanelPlayerId = '';
     lastSavedContentSnapshot = snapshot;
     lastSavedSnapshot = JSON.stringify(serializeDocument(state));
@@ -317,9 +316,7 @@ function $(tag, attrs = {}, ...kids) {
 }
 
 function game() { return state.games.find(item => item.id === gameId) || state.games[0]; }
-function player() { return state.players.find(item => item.id === playerId) || state.players[0]; }
 function scorePanelPlayer() { return state.players.find(item => item.id === scorePanelPlayerId); }
-function activePlayer() { return state.players.find(item => item.id === playerId); }
 function label(type) { return TYPES[type] || type; }
 
 function gameProgress(item = game()) {
@@ -345,12 +342,8 @@ function toast(message) {
   }, 2200);
 }
 
-function add(points, reason, targetPlayerId = scorePanelPlayerId || playerId) {
-  if (arguments.length < 3 && view === 'show' && cur.screen === 'game' && !scorePanelPlayerId) {
-    toast('Clicca un giocatore in basso per assegnare i punti.');
-    return;
-  }
-  const active = state.players.find(item => item.id === targetPlayerId) || player();
+function add(points, reason, targetPlayerId = scorePanelPlayerId) {
+  const active = state.players.find(item => item.id === targetPlayerId);
   if (!active) return toast('Crea un giocatore.');
   active.score = Number(active.score || 0) + Number(points || 0);
   state.history.unshift({ id: id('h'), playerId: active.id, playerName: active.name, points: Number(points || 0), reason, at: new Date().toISOString() });
@@ -538,17 +531,6 @@ function resetStage(screen = 'hub') {
   render();
 }
 
-function award(points, reason, complete) {
-  const active = activePlayer();
-  if (!active) {
-    toast('Seleziona prima un giocatore dalla barra in basso.');
-    return false;
-  }
-  if (typeof complete === 'function') complete();
-  add(points, reason, active.id);
-  return true;
-}
-
 function show() {
   const content = cur.screen === 'hub' ? hub() : cur.screen === 'points' ? pointsScreen() : cur.screen === 'library' ? libraryScreen() : cur.screen === 'powers' ? powersScreen() : gameScreen();
   return $('main', { class: 'show-layout' }, stage(content));
@@ -582,13 +564,6 @@ function stageToolbar() {
       toolbarAction({ icon: '★', label: 'PUNTI', onclick: () => resetStage('points') }),
       toolbarAction({
         icon: '',
-        label: audienceMode ? 'HOST' : 'PUBBLICO',
-        className: `public-toggle ${audienceMode ? 'active' : ''}`,
-        title: 'Alterna controlli host e vista pubblico (H)',
-        onclick: () => { audienceMode = !audienceMode; render(); }
-      }),
-      toolbarAction({
-        icon: '',
         label: directEdit ? 'FINE MODIFICA' : 'MODIFICA',
         className: `edit-action ${directEdit ? 'active' : ''}`,
         onclick: () => {
@@ -600,7 +575,6 @@ function stageToolbar() {
         }
       }),
       toolbarAction({ icon: '', label: 'ADMIN', className: 'admin-action', onclick: () => { directEdit = false; selectedElementId = ''; view = 'admin'; render(); } }),
-      toolbarAction({ icon: '', label: 'AIUTO', className: 'help-action', title: 'Scorciatoie host (?)', onclick: () => { helpOpen = !helpOpen; render(); } }),
       toolbarAction({
         label: cur.screen === 'game' ? 'RESET DOMANDA' : 'RESET',
         className: 'icon-only',
@@ -661,13 +635,23 @@ function toolbarActionsStyle() {
   ].join(';');
 }
 
+function playerButtonsStyle() {
+  const layout = ensureHomeLayout();
+  return [
+    `--player-button-w:${layout.playerButtonW}px`,
+    `--player-button-h:${layout.playerButtonH}px`,
+    `--player-button-font:${layout.playerButtonFont}rem`,
+    `--player-button-gap:${layout.playerButtonGap}px`
+  ].join(';');
+}
+
 function bottomScores() {
   const quickPlayer = scorePanelPlayer();
-  return $('div', { class: 'bottom-scorebar', 'aria-label': 'Punteggi giocatori' },
+  return $('div', { class: 'bottom-scorebar', 'aria-label': 'Punteggi giocatori', style: playerButtonsStyle() },
     ...state.players.map(item => $('button', {
-      class: `player-chip ${item.id === playerId ? 'selected' : ''} ${item.id === scorePanelPlayerId ? 'panel-open' : ''}`,
-      'aria-pressed': item.id === playerId ? 'true' : 'false',
-      onclick: () => { playerId = item.id; scorePanelPlayerId = scorePanelPlayerId === item.id ? '' : item.id; refreshBottomScores(); }
+      class: `player-chip ${item.id === scorePanelPlayerId ? 'panel-open' : ''}`,
+      'aria-expanded': item.id === scorePanelPlayerId ? 'true' : 'false',
+      onclick: () => { scorePanelPlayerId = scorePanelPlayerId === item.id ? '' : item.id; refreshBottomScores(); }
     },
       $('span', {}, item.name),
       $('strong', { 'aria-live': 'polite' }, item.score || 0)
@@ -1121,6 +1105,10 @@ function ensureHomeLayout() {
   layout.toolbarButtonH = safeNumber(layout.toolbarButtonH, DEFAULT_HOME_LAYOUT.toolbarButtonH, 38, 96);
   layout.toolbarButtonFont = safeNumber(layout.toolbarButtonFont, DEFAULT_HOME_LAYOUT.toolbarButtonFont, 0.55, 1.2);
   layout.toolbarGap = safeNumber(layout.toolbarGap, DEFAULT_HOME_LAYOUT.toolbarGap, 4, 28);
+  layout.playerButtonW = safeNumber(layout.playerButtonW, DEFAULT_HOME_LAYOUT.playerButtonW, 90, 260);
+  layout.playerButtonH = safeNumber(layout.playerButtonH, DEFAULT_HOME_LAYOUT.playerButtonH, 44, 110);
+  layout.playerButtonFont = safeNumber(layout.playerButtonFont, DEFAULT_HOME_LAYOUT.playerButtonFont, 0.6, 1.2);
+  layout.playerButtonGap = safeNumber(layout.playerButtonGap, DEFAULT_HOME_LAYOUT.playerButtonGap, 4, 28);
   if (layout.titleY > 38 || layout.titleSize > 132) {
     layout.titleX = DEFAULT_HOME_LAYOUT.titleX;
     layout.titleY = DEFAULT_HOME_LAYOUT.titleY;
@@ -1546,6 +1534,26 @@ function homeEditTools() {
           ),
           $('button', { class: 'btn', onclick: resetToolbarButtons }, 'Reset pulsanti superiori')
         ),
+        $('section', { class: 'content-editor layout-editor' },
+          $('h3', {}, 'Pulsanti giocatori'),
+          $('p', { class: 'muted' }, 'Regola le dimensioni della scorebar. Le modifiche si applicano a tutte le schermate.'),
+          $('div', { class: 'compact-list layout-controls' },
+            $('div', { class: 'mini-row wide' },
+              editorInput('Larghezza px', layout.playerButtonW, value => updateHomeLayout(target => target.playerButtonW = clamp(value, 90, 260)), { type: 'number' }),
+              editorInput('Altezza px', layout.playerButtonH, value => updateHomeLayout(target => target.playerButtonH = clamp(value, 44, 110)), { type: 'number' })
+            ),
+            $('div', { class: 'mini-row wide' },
+              editorInput('Font rem', layout.playerButtonFont, value => updateHomeLayout(target => target.playerButtonFont = clamp(value, 0.6, 1.2)), { type: 'number', step: '0.05' }),
+              editorInput('Spazio px', layout.playerButtonGap, value => updateHomeLayout(target => target.playerButtonGap = clamp(value, 4, 28)), { type: 'number' })
+            )
+          ),
+          $('button', { class: 'btn', onclick: () => updateHomeLayout(target => {
+            target.playerButtonW = DEFAULT_HOME_LAYOUT.playerButtonW;
+            target.playerButtonH = DEFAULT_HOME_LAYOUT.playerButtonH;
+            target.playerButtonFont = DEFAULT_HOME_LAYOUT.playerButtonFont;
+            target.playerButtonGap = DEFAULT_HOME_LAYOUT.playerButtonGap;
+          }) }, 'Reset pulsanti giocatori')
+        ),
         $('button', { class: 'btn', onclick: () => { state.homeLayout = { ...DEFAULT_HOME_LAYOUT }; save(); render(); } }, 'Reset layout Home')
       )
     )
@@ -1902,24 +1910,7 @@ function gameTimer(duration = 50) {
   );
 }
 
-function outcomeButtons(g, points, after, options = {}) {
-  const completed = !!options.completed;
-  const reason = options.reason || g.title || label(g.type);
-  const wrongPoints = Number(options.wrongPoints || 0);
-  if (!cur.answer) return [];
-  return [
-    $('button', {
-      class: 'btn success',
-      disabled: completed,
-      onclick: () => award(Number(points || 0), reason, () => after?.('correct'))
-    }, completed ? 'Completata' : `Corretta +${Number(points || 0)}`),
-    $('button', {
-      class: wrongPoints < 0 ? 'btn danger' : 'btn ghost',
-      disabled: completed,
-      onclick: () => award(wrongPoints, reason, () => after?.('wrong'))
-    }, wrongPoints < 0 ? `Errata ${wrongPoints}` : 'Nessun punto')
-  ];
-}
+function outcomeButtons() { return []; }
 
 function controls(g, ans, points, after, options = {}) {
   return $('div', { class: 'host-actions' },
@@ -1950,7 +1941,6 @@ function guess(g) {
   if (!round) return $('div', { class: 'intro-screen' }, 'Nessun round.');
   const clues = (round.clues || []).map(item => typeof item === 'string' ? { label: '?', image: item } : item);
   const shown = Math.min(cur.revealed, clues.length);
-  const roundProgress = progressEntry(g, 'rounds', cur.i);
   const freeform = directEdit || hasGuessTileLayouts(g) || hasGuessControlLayouts(g);
   if (freeform) ensureGuessTileLayouts(g, clues.length);
   if (freeform) ensureGuessControlLayouts(g);
@@ -1965,8 +1955,6 @@ function guess(g) {
     title: 'Ridimensiona controllo',
     onpointerdown: event => startGuessControlDrag(event, g, key, true)
   }) : null;
-  const availablePoints = guessPointsForReveal(round, shown);
-  const roundCompleted = ['correct', 'wrong'].includes(roundProgress.status);
   return $('div', { class: `guess-screen ${freeform ? 'guess-freeform' : ''}` },
     $('div', { class: 'guess-grid' },
       ...clues.map((clue, index) => {
@@ -2002,16 +1990,6 @@ function guess(g) {
     ),
     $('div', { ...controlAttrs('answerButton'), class: `${controlAttrs('answerButton').class} host-actions guess-answer-control` },
       $('button', { class: 'btn', onclick: () => { if (directEdit) return; cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi risposta' : 'Mostra risposta'),
-      cur.answer ? $('button', {
-        class: 'btn success',
-        disabled: directEdit || roundCompleted,
-        onclick: () => award(availablePoints, `${g.title}: ${round.answer || `round ${cur.i + 1}`}`, () => roundProgress.status = 'correct')
-      }, roundCompleted ? 'Round completato' : `Corretta +${availablePoints}`) : null,
-      cur.answer ? $('button', {
-        class: 'btn ghost',
-        disabled: directEdit || roundCompleted,
-        onclick: () => award(0, `${g.title}: nessun punto`, () => roundProgress.status = 'wrong')
-      }, 'Nessun punto') : null,
       resizeHandle('answerButton')
     ),
     $('div', { ...controlAttrs('answerBox'), class: `${controlAttrs('answerBox').class} answer guess-answer-box ${cur.answer ? 'on' : ''}` },
@@ -2043,7 +2021,6 @@ function bomb(g) {
   const selected = new Set(cur.selected || []);
   const items = g.items || [];
   const result = calculateBombScore(items, cur.selected, g.pointsPerCorrect);
-  const progress = gameProgress(g);
   return $('div', { class: 'bomb-screen' },
     $('div', { class: 'bomb-question' }, g.question || 'Evita le bombe.'),
     $('div', { class: 'bomb-grid' },
@@ -2052,12 +2029,7 @@ function bomb(g) {
     $('div', { class: 'host-actions' },
       $('span', { class: 'pill' }, `Corrette ${result.correct}`),
       $('span', { class: 'pill' }, `Bombe ${result.bombs}`),
-      $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi bombe' : 'Mostra bombe'),
-      cur.answer ? $('button', {
-        class: 'btn success',
-        disabled: !!progress.completed,
-        onclick: () => award(result.score, `${g.title}: ${result.correct} corrette, ${result.bombs} bombe`, () => { progress.completed = true; progress.result = result; })
-      }, progress.completed ? 'Completata' : `Conferma ${result.score >= 0 ? '+' : ''}${result.score}`) : null
+      $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi bombe' : 'Mostra bombe')
     ),
     cur.answer ? $('div', { class: 'answer on' }, `Bombe: ${items.filter(item => item.isBomb).map(item => item.label).join(', ')}`) : null
   );
@@ -2234,7 +2206,6 @@ function pass(g) {
   const difficulty = g.difficulty || 'facile';
   if (!q) return $('div', { class: 'intro-screen' }, 'Nessuna domanda.');
   const summary = passSummary(questions);
-  const questionPoints = passPointsForDifficulty(g);
   const advance = status => {
     progressEntry(g, 'questions', cur.i).status = status;
     questions[cur.i].status = status;
@@ -2246,23 +2217,6 @@ function pass(g) {
     advance(status);
     save();
     render();
-  };
-  const markCorrect = () => {
-    const wasPerfect = summary.perfect;
-    award(questionPoints, `${g.title}: lettera ${q.letter}`, () => {
-      advance('correct');
-      const nextSummary = passSummary(questions);
-      const progress = gameProgress(g);
-      if (!wasPerfect && nextSummary.perfect && !progress.bonusAwarded) {
-        const bonus = passBonusForDifficulty(g);
-        progress.bonusAwarded = true;
-        const active = activePlayer();
-        if (active && bonus) {
-          active.score = Number(active.score || 0) + bonus;
-          state.history.unshift({ id: id('h'), playerId: active.id, playerName: active.name, points: bonus, reason: `${g.title}: bonus perfect`, at: new Date().toISOString() });
-        }
-      }
-    });
   };
   return $('div', { class: 'pass-screen' },
     $('div', { class: 'pass-wheel' },
@@ -2277,7 +2231,7 @@ function pass(g) {
       gameTimer(Number(g.duration || 50)),
       $('h2', {}, q.question),
       $('div', { class: 'host-actions' },
-        $('button', { class: 'btn success', disabled: q.status === 'correct', onclick: markCorrect }, `Corretta +${questionPoints}`),
+        $('button', { class: 'btn success', disabled: q.status === 'correct', onclick: () => markWithoutPoints('correct') }, 'Corretta'),
         $('button', { class: 'btn danger', onclick: () => markWithoutPoints('wrong') }, 'Sbagliata'),
         $('button', { class: 'btn warn', onclick: () => markWithoutPoints('pass') }, 'Passo'),
         $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi' : 'Risposta')
@@ -2321,29 +2275,13 @@ function jeopardy(g) {
 function sarabanda(g) {
   const songs = Array.from({ length: 12 }, (_, index) => g.songs?.[index] || { audio: '', title: `Titolo ${index + 1}`, artist: 'Artista' });
   const song = songs[cur.i] || songs[0];
-  const songProgress = progressEntry(g, 'songs', cur.i);
   return $('div', { class: 'sarabanda-board-screen' },
     $('div', { class: 'sarabanda-grid' },
       ...songs.map((item, index) => $('button', { class: `sarabanda-audio-card ${index === cur.i ? 'current' : ''}`, onclick: () => { cur.i = index; cur.answer = false; render(); } }, item.audio ? audio(item.audio) : 'AUDIO'))
     ),
     $('div', { class: 'sarabanda-answer-strip' }, cur.answer ? `${cleanText(song.title, 'Titolo')} - ${cleanText(song.artist, 'Artista')}` : 'Risposta nascosta'),
     $('div', { class: 'host-actions' },
-      $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi risposta' : 'Mostra risposta'),
-      cur.answer ? $('button', {
-        class: 'btn success',
-        disabled: !!songProgress.titleAwarded,
-        onclick: () => award(g.pointsTitle || 25, `${g.title}: titolo ${cur.i + 1}`, () => songProgress.titleAwarded = true)
-      }, songProgress.titleAwarded ? 'Titolo assegnato' : `Titolo +${g.pointsTitle || 25}`) : null,
-      cur.answer ? $('button', {
-        class: 'btn success',
-        disabled: !!songProgress.artistAwarded,
-        onclick: () => award(g.pointsArtist || 25, `${g.title}: artista ${cur.i + 1}`, () => songProgress.artistAwarded = true)
-      }, songProgress.artistAwarded ? 'Artista assegnato' : `Artista +${g.pointsArtist || 25}`) : null,
-      cur.answer ? $('button', {
-        class: 'btn primary',
-        disabled: !!songProgress.titleAwarded || !!songProgress.artistAwarded,
-        onclick: () => award(Number(g.pointsTitle || 25) + Number(g.pointsArtist || 25), `${g.title}: risposta completa ${cur.i + 1}`, () => { songProgress.titleAwarded = true; songProgress.artistAwarded = true; })
-      }, 'Risposta completa') : null
+      $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi risposta' : 'Mostra risposta')
     )
   );
 }
@@ -3127,8 +3065,8 @@ function del(gid) {
 function playersAdmin() {
   return $('section', { class: 'stack' },
     $('h3', {}, 'Giocatori'),
-    $('div', { class: 'row' }, $('input', { id: 'pname', placeholder: 'Nome squadra o giocatore' }), $('button', { class: 'btn success', onclick: () => { const value = document.getElementById('pname').value.trim(); if (!value) return toast('Inserisci un nome.'); const newPlayer = { id: id('p'), name: value.toUpperCase(), score: 0 }; state.players.push(newPlayer); playerId = newPlayer.id; save(); render(); } }, 'Aggiungi')),
-    ...state.players.map(item => $('div', { class: 'score-card' }, $('input', { value: item.name, 'aria-label': `Nome giocatore ${item.name}`, onchange: event => { item.name = event.target.value.toUpperCase(); save(); render(); } }), $('input', { type: 'number', value: item.score || 0, 'aria-label': `Punteggio ${item.name}`, onchange: event => { item.score = Number(event.target.value || 0); save(); render(); } }), $('button', { class: 'btn danger', onclick: () => { if (state.players.length < 2) return toast('Deve restare almeno un giocatore.'); state.players = state.players.filter(player => player.id !== item.id); playerId = state.players[0]?.id; scorePanelPlayerId = ''; save(); render(); } }, 'Rimuovi')))
+    $('div', { class: 'row' }, $('input', { id: 'pname', placeholder: 'Nome squadra o giocatore' }), $('button', { class: 'btn success', onclick: () => { const value = document.getElementById('pname').value.trim(); if (!value) return toast('Inserisci un nome.'); const newPlayer = { id: id('p'), name: value.toUpperCase(), score: 0 }; state.players.push(newPlayer); save(); render(); } }, 'Aggiungi')),
+    ...state.players.map(item => $('div', { class: 'score-card' }, $('input', { value: item.name, 'aria-label': `Nome giocatore ${item.name}`, onchange: event => { item.name = event.target.value.toUpperCase(); save(); render(); } }), $('input', { type: 'number', value: item.score || 0, 'aria-label': `Punteggio ${item.name}`, onchange: event => { item.score = Number(event.target.value || 0); save(); render(); } }), $('button', { class: 'btn danger', onclick: () => { if (state.players.length < 2) return toast('Deve restare almeno un giocatore.'); state.players = state.players.filter(player => player.id !== item.id); scorePanelPlayerId = ''; save(); render(); } }, 'Rimuovi')))
   );
 }
 
@@ -3179,7 +3117,7 @@ function settingsAdmin() {
   );
 }
 function exportData(prefix = 'trivia-challenge') { const safePrefix = typeof prefix === 'string' ? prefix : 'trivia-challenge'; const blob = new Blob([JSON.stringify(serializeDocument(state), null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = $('a', { href: url, download: `${safePrefix}-${new Date().toISOString().slice(0, 10)}.json` }); document.body.append(link); link.click(); link.remove(); URL.revokeObjectURL(url); }
-function importData(event) { const file = event.target.files?.[0]; if (!file) return; exportData('backup-prima-import'); const reader = new FileReader(); reader.onload = () => { try { const prepared = prepareDocument(JSON.parse(reader.result)); backupDocument(localStorage, BACKUP_KEY, serializeDocument(state)); const data = hydrate(prepared); state = data; gameId = state.games[0].id; playerId = state.players[0].id; scorePanelPlayerId = ''; undoStack = []; lastSavedContentSnapshot = JSON.stringify(editorialSnapshot(state)); save(); render(); toast('Dati importati; backup precedente conservato'); } catch (error) { toast(`Import fallito: ${error.message}`); } finally { event.target.value = ''; } }; reader.readAsText(file); }
+function importData(event) { const file = event.target.files?.[0]; if (!file) return; exportData('backup-prima-import'); const reader = new FileReader(); reader.onload = () => { try { const prepared = prepareDocument(JSON.parse(reader.result)); backupDocument(localStorage, BACKUP_KEY, serializeDocument(state)); const data = hydrate(prepared); state = data; gameId = state.games[0].id; scorePanelPlayerId = ''; undoStack = []; lastSavedContentSnapshot = JSON.stringify(editorialSnapshot(state)); save(); render(); toast('Dati importati; backup precedente conservato'); } catch (error) { toast(`Import fallito: ${error.message}`); } finally { event.target.value = ''; } }; reader.readAsText(file); }
 
 window.addEventListener('keydown', handleUndoShortcut);
 window.addEventListener('keydown', handleHostShortcut);

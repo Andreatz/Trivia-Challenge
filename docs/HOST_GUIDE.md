@@ -1,6 +1,6 @@
 # Guida rapida host
 
-Premi `?` durante un minigioco per aprire il pannello delle scorciatoie. Sono disponibili `R` (reveal), `C` (corretta), `X` (errata), `P` (passo), frecce per navigare, spazio per il timer e `H` per la vista pubblico.
+Premi `?` durante un minigioco per aprire il pannello delle scorciatoie. Sono disponibili `R` (reveal), frecce per navigare e spazio per il timer. Alcuni giochi mantengono `C`, `X` e `P` per avanzare lo stato della domanda, senza assegnare punti.
 
 I comandi `RESET DOMANDA`, `RESET GIOCO` e `Nuova partita` hanno ambiti distinti. Le operazioni distruttive generano prima un backup locale/esportato.
 
@@ -14,9 +14,11 @@ I comandi `RESET DOMANDA`, `RESET GIOCO` e `Nuova partita` hanno ambiti distinti
 
 ## Durante la partita
 
-- Seleziona il giocatore dalla scorebar prima di assegnare punti.
-- Usa i pulsanti specifici del gioco per corretta, errata o nessun punto.
-- `H` alterna vista host e pubblico.
+- Tutti i giocatori rispondono contemporaneamente: non esiste un turno o un giocatore attivo.
+- Clicca la scheda di un giocatore e usa il pannello rapido per modificare esclusivamente il suo punteggio.
+- Per ridimensionare le schede, torna alla Home, premi `MODIFICA` e usa la sezione **Pulsanti giocatori**: larghezza, altezza, font e spaziatura vengono salvati nel layout.
+- Mostrare una risposta non aggiunge pulsanti di assegnazione automatica.
+- La vista pubblico non occupa più spazio nella toolbar; `H` resta disponibile come scorciatoia opzionale.
 - `F` alterna il fullscreen.
 - `Spazio` avvia o mette in pausa il timer.
 - Le frecce cambiano domanda nei giochi sequenziali.

@@ -18,3 +18,36 @@ body.alert-flash:after{content:"TEMPO SCADUTO";position:fixed;inset:0;z-index:va
   position: relative;
   z-index: 1;
 }
+
+.bottom-scorebar {
+  grid-template-columns: repeat(auto-fit, minmax(min(90px, 100%), var(--player-button-w, 150px)));
+  gap: var(--player-button-gap, 12px);
+  z-index: var(--z-overlay);
+}
+
+.player-chip,
+body[data-view="show"] .player-chip {
+  height: var(--player-button-h, 66px);
+  border-radius: 10px;
+}
+
+.player-chip span {
+  font-size: var(--player-button-font, .76rem);
+}
+
+.player-chip strong {
+  margin-top: 2px;
+  font-size: calc(var(--player-button-font, .76rem) + .49rem);
+}
+
+@media(max-width:700px) {
+  body[data-view="show"] .player-chip {
+    flex-basis: min(var(--player-button-w, 150px), 42vw);
+  }
+
+  body[data-view="show"] .quick-score-panel {
+    position: fixed;
+    bottom: 76px;
+    z-index: var(--z-overlay);
+  }
+}

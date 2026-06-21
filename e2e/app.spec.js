@@ -26,7 +26,7 @@ async function horizontalOverflow(page) {
   }));
 }
 
-test('home, punteggio e modalità pubblico funzionano', async ({ page }) => {
+test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page }) => {
   const runtimeErrors = [];
   page.on('pageerror', error => runtimeErrors.push(error.message));
 
@@ -37,15 +37,12 @@ test('home, punteggio e modalità pubblico funzionano', async ({ page }) => {
   await expect(page.locator('.guess-tile.revealed')).toHaveCount(1);
 
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
+  await expect(page.getByRole('button', { name: /Corretta \+/ })).toHaveCount(0);
   await page.locator('.player-chip').first().click();
-  await page.getByRole('button', { name: 'Corretta +1000' }).click();
+  await page.getByRole('button', { name: '+1000', exact: true }).click();
   await expect(page.locator('.player-chip').first().locator('strong')).toHaveText('1000');
-
-  await page.getByRole('button', { name: 'PUBBLICO' }).click();
-  await expect(page.locator('body')).toHaveAttribute('data-audience', 'public');
-  await expect(page.locator('.host-actions')).toBeHidden();
-  await page.keyboard.press('h');
-  await expect(page.locator('body')).toHaveAttribute('data-audience', 'host');
+  await expect(page.getByRole('button', { name: 'PUBBLICO' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'AIUTO' })).toHaveCount(0);
   expect(runtimeErrors).toEqual([]);
 });
 
@@ -100,7 +97,7 @@ test('annulla l’ultimo punteggio senza annullare i contenuti', async ({ page }
   await page.locator('.guess-tile').first().click();
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
   await page.locator('.player-chip').first().click();
-  await page.getByRole('button', { name: 'Corretta +1000' }).click();
+  await page.getByRole('button', { name: '+1000', exact: true }).click();
   await page.getByRole('button', { name: 'ADMIN' }).click();
   await page.getByRole('button', { name: 'Punteggi' }).click();
   await page.getByRole('button', { name: 'Annulla ultimo punteggio' }).click();
@@ -175,6 +172,26 @@ test('scorebar supporta uno e quattro giocatori', async ({ page }) => {
   }
   await page.getByRole('button', { name: 'Show', exact: true }).click();
   await expect(page.locator('.player-chip')).toHaveCount(4);
+});
+
+test('dimensioni dei pulsanti giocatore sono modificabili e persistenti', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-720p', 'Il controllo editoriale viene verificato una volta.');
+  await page.getByRole('button', { name: 'MODIFICA' }).click();
+  const panel = page.locator('.content-editor', { hasText: 'Pulsanti giocatori' });
+  await panel.getByLabel('Larghezza px').fill('128');
+  await panel.getByLabel('Larghezza px').press('Tab');
+  await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-w:128px/);
+  await panel.getByLabel('Altezza px').fill('58');
+  await panel.getByLabel('Altezza px').press('Tab');
+  await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-h:58px/);
+  await panel.getByLabel('Font rem').fill('0.7');
+  await panel.getByLabel('Font rem').press('Tab');
+  await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-font:0.7rem/);
+  await panel.getByLabel('Spazio px').fill('8');
+  await panel.getByLabel('Spazio px').press('Tab');
+  await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-gap:8px/);
+  await page.reload();
+  await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-h:58px/);
 });
 
 test('reduced motion disattiva le animazioni non essenziali', async ({ page }) => {
@@ -255,8 +272,6 @@ test('completa il flusso principale di tutti gli undici minigiochi', async ({ pa
   test.skip(testInfo.project.name !== 'chromium-720p', 'Matrice completa eseguita una volta nel viewport host.');
   const open = async name => {
     await page.locator('.menu-button', { hasText: name }).click();
-    await page.locator('.player-chip').first().click();
-    await page.getByRole('button', { name: 'Chiudi punti rapidi' }).click();
   };
   const home = async () => {
     await page.locator('.home-btn').click();
@@ -266,51 +281,44 @@ test('completa il flusso principale di tutti gli undici minigiochi', async ({ pa
   await open('INDOVINA IL PERSONAGGIO');
   await page.locator('.guess-tile').first().click();
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
-  await page.getByRole('button', { name: /Corretta \+/ }).click();
   await home();
 
   await open('SCHIVA LA BOMBA');
   await page.locator('.bomb-tile').first().click();
   await page.getByRole('button', { name: 'Mostra bombe' }).click();
-  await page.getByRole('button', { name: /Conferma \+/ }).click();
   await home();
 
   for (const name of ["CHI L'HA DETTO", 'OCCHIO AL DETTAGLIO', 'COMPLETA LA FRASE']) {
     await open(name);
     await page.getByRole('button', { name: 'Mostra risposta' }).click();
-    await page.getByRole('button', { name: /Corretta \+/ }).click();
     await home();
   }
 
   await open('REAZIONE A CATENA');
   await page.getByRole('button', { name: 'Rivela' }).click();
-  await page.getByRole('button', { name: /Corretta \+/ }).click();
   await home();
 
   await open('LE DIECI FATICHE');
   await page.locator('.labors-number').first().click();
   await page.getByRole('button', { name: 'Risposta', exact: true }).click();
-  await page.getByRole('button', { name: /Corretta \+/ }).click();
   await home();
 
   await open('GHIGLIOTTINA');
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
-  await page.getByRole('button', { name: /Corretta \+/ }).click();
   await home();
 
   await open('PASSAPAROLA');
-  await page.getByRole('button', { name: /Corretta \+/ }).click();
+  await page.getByRole('button', { name: 'Corretta', exact: true }).click();
   await home();
 
   await open('JEOPARDY');
   await page.locator('.jeopardy-cell').first().click();
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
-  await page.getByRole('button', { name: /Corretta \+/ }).click();
   await home();
 
   await open('SARABANDA');
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
-  await page.getByRole('button', { name: 'Risposta completa' }).click();
+  await expect(page.getByRole('button', { name: /\+\d+/ })).toHaveCount(0);
   const persistedScore = await page.evaluate(() => JSON.parse(localStorage.getItem('trivia-challenge-v3')).session.players[0].score);
-  expect(persistedScore).toBeGreaterThan(0);
+  expect(persistedScore).toBe(0);
 });
