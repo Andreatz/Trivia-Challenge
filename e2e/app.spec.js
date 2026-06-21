@@ -53,11 +53,12 @@ test('admin usa il manifest locale e rifiuta import non validi', async ({ page }
   await page.getByRole('button', { name: 'ADMIN' }).click();
   await expect(page.locator('#local-assets option')).toHaveCount(202);
 
-  await page.getByLabel('Titolo evento').evaluate(element => {
+  const immediateSaveStatus = await page.getByLabel('Titolo evento').evaluate(element => {
     element.value = 'TRIVIA TEST';
     element.dispatchEvent(new Event('change', { bubbles: true }));
+    return document.querySelector('[data-save-status]')?.textContent;
   });
-  await expect(page.locator('[data-save-status]')).toHaveText('Modifiche in corso');
+  expect(immediateSaveStatus).toBe('Modifiche in corso');
   await expect(page.locator('[data-save-status]')).toHaveText('Salvato');
   await page.keyboard.press('Control+z');
   await expect(page.getByLabel('Titolo evento')).toHaveValue('TRIVIA CHALLENGE');
