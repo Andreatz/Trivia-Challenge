@@ -1,7 +1,7 @@
-import test from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 
-import { CURRENT_SCHEMA_VERSION, prepareDocument, validateDocument } from '../src/core/schema.js';
+import { CURRENT_SCHEMA_VERSION, prepareDocument, serializeDocument, validateDocument } from '../src/core/schema.js';
 
 const validDocument = () => ({
   players: [{ id: 'player-1', name: 'PLAYER', score: 0 }],
@@ -36,12 +36,35 @@ test('migra gli stati runtime fuori dai contenuti', () => {
   const legacy = validDocument();
   legacy.games[0].rounds = [{ status: 'correct', clues: [{ image: '' }] }];
   const migrated = prepareDocument(legacy);
-  assert.equal(migrated.games[0].rounds[0].status, undefined);
+  assert.equal(migrated.content.games[0].rounds[0].status, undefined);
   assert.equal(migrated.session.games['game-1'].rounds[0].status, 'correct');
+});
+
+test('separa contenuti, sessione, impostazioni e storico nello schema v3', () => {
+  const migrated = prepareDocument(validDocument());
+  assert.deepEqual(Object.keys(migrated).sort(), ['content', 'history', 'schemaVersion', 'session', 'settings']);
+  assert.equal(migrated.content.games.length, 1);
+  assert.equal(migrated.session.players.length, 1);
+
+  const serialized = serializeDocument({
+    title: 'Evento', subtitle: 'Demo', homeLayout: {}, games: migrated.content.games,
+    library: [], powers: [], players: migrated.session.players, session: { games: {} },
+    settings: { soundsEnabled: false }, history: []
+  });
+  assert.equal(serialized.content.title, 'Evento');
+  assert.equal(serialized.settings.soundsEnabled, false);
+  assert.equal(serialized.games, undefined);
 });
 
 test('valida la struttura specifica del tipo di gioco', () => {
   const invalid = validDocument();
   invalid.games[0].rounds = [];
   assert.throws(() => prepareDocument(invalid), /rounds/);
+});
+
+test('migra i percorsi media rinominati senza rompere i contenuti salvati', () => {
+  const legacy = validDocument();
+  legacy.games[0].rounds[0].clues[0].image = 'public/assets/indovina-il-personaggio/anime/aizen-1.png';
+  const migrated = prepareDocument(legacy);
+  assert.equal(migrated.content.games[0].rounds[0].clues[0].image, 'public/assets/indovina-il-personaggio/anime/aizen-1.webp');
 });

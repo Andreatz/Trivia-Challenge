@@ -1,4 +1,4 @@
-import test from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 
 import { createGameTemplates, GAME_DEFINITIONS, GAME_TYPES, MENU_ORDER } from '../src/core/game-registry.js';

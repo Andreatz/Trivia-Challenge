@@ -6,13 +6,14 @@ import {
   passPointsForDifficulty,
   passSummary
 } from './core/game-rules.js';
-import { CURRENT_SCHEMA_VERSION, prepareDocument } from './core/schema.js';
+import { CURRENT_SCHEMA_VERSION, prepareDocument, serializeDocument } from './core/schema.js';
 import { formatTimer, pauseTimer, resetTimer, startTimer, timerRemaining } from './core/timer.js';
-import { categoryIcon, createGameTemplates, GAME_LABELS, MENU_ORDER } from './core/game-registry.js';
+import { categoryIcon, createGameTemplates, GAME_LABELS } from './core/game-registry.js';
+import { createGameContracts } from './core/game-contracts.js';
 import { backupDocument, readFirstValid, writeDocument } from './core/storage.js';
 
-const KEY = 'trivia-challenge-v2';
-const LEGACY_KEY = 'trivia-challenge-v1';
+const KEY = 'trivia-challenge-v3';
+const LEGACY_KEYS = ['trivia-challenge-v2', 'trivia-challenge-v1'];
 const BACKUP_KEY = 'trivia-challenge-backup';
 const ABC = 'ABCDEFGHILMNOPQRSTUVZ'.split('');
 
@@ -33,7 +34,7 @@ const REFERENCE_IMAGES = [
   '20. Schermata Minigioco 7.png',
   '25. Schermata Minigioco 8.png',
   '28. Schermata Minigioco 9.png',
-  '33. Schermata Schermata Minigioco 10.png',
+  '33. Schermata Minigioco 10.png',
   '36. Schermata Minigioco 11.png'
 ];
 
@@ -57,11 +58,12 @@ const DEFAULT_HOME_LAYOUT = {
   toolbarButtonFont: 0.78,
   toolbarGap: 12
 };
-const UNDO_LIMIT = 80;
+const UNDO_LIMIT = 20;
 const SNAP_THRESHOLD = 1.4;
+const SAVE_DEBOUNCE_MS = 350;
 
 const animeList = [
-  'Attack on Titans', 'Berserk', 'Bleach', 'Chainsaw Man', 'Code Geass', 'Death Note', 'Demon Slayer', 'Dragon Ball', 'Frieren', 'Hunter X Hunter', 'Jujutsu Kaisen', 'Made in Abyss', 'My Hero Academia', 'Naruto', 'One Piece', 'One Punch Man', 'Overlord', 'Pokemon', 'Seven Deadly Sins', 'Vinland Saga'
+  'Attack on Titan', 'Berserk', 'Bleach', 'Chainsaw Man', 'Code Geass', 'Death Note', 'Demon Slayer', 'Dragon Ball', 'Frieren', 'Hunter X Hunter', 'Jujutsu Kaisen', 'Made in Abyss', 'My Hero Academia', 'Naruto', 'One Piece', 'One Punch Man', 'Overlord', 'Pokemon', 'Seven Deadly Sins', 'Vinland Saga'
 ];
 
 const powers = [
@@ -74,6 +76,10 @@ const powers = [
 ];
 
 const templates = createGameTemplates({ createId: id, alphabet: ABC });
+const gameContracts = createGameContracts(
+  Object.fromEntries(Object.entries(TYPES).map(([type, gameLabel]) => [type, { label: gameLabel }])),
+  { guess, bomb, said, detail, quote, chain, labors, guillotine, pass, jeopardy, sarabanda }
+);
 
 const defaults = () => ({
   schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -84,74 +90,133 @@ const defaults = () => ({
   games: Object.values(templates).map(factory => factory()),
   library: animeList,
   powers,
+  settings: { soundsEnabled: true, alertsEnabled: true },
   history: [],
   session: { games: {} }
 });
 
 let state = load();
-let view = 'show';
-let gameId = state.games[0]?.id;
+const restoredNavigation = state.session?.navigation || {};
+let view = ['show', 'admin', 'scores'].includes(restoredNavigation.view) ? restoredNavigation.view : 'show';
+let gameId = state.games.some(item => item.id === restoredNavigation.gameId) ? restoredNavigation.gameId : state.games[0]?.id;
 let playerId = state.players[0]?.id;
-let cur = { screen: 'hub', i: 0, revealed: 0, answer: false, selected: [], jeo: null };
+let cur = {
+  screen: ['hub', 'game', 'points', 'library', 'powers'].includes(restoredNavigation.screen) ? restoredNavigation.screen : 'hub',
+  i: Number(restoredNavigation.i || 0),
+  revealed: Number(restoredNavigation.revealed || 0),
+  answer: false, selected: [], jeo: null
+};
 let editing = '';
 let selectedElementId = '';
 let directEdit = false;
 let directEditPanel = 'layers';
 let scorePanelPlayerId = '';
 let undoStack = [];
-let lastSavedSnapshot = JSON.stringify(state);
+let lastSavedSnapshot = JSON.stringify(serializeDocument(state));
+let lastSavedContentSnapshot = JSON.stringify(editorialSnapshot(state));
+let saveStatus = 'saved';
+let pendingSave = null;
 let timerInterval = null;
 let localAssets = [];
+let localThumbnails = {};
 let audienceMode = false;
+let helpOpen = false;
 
 function load() {
-  const result = readFirstValid(localStorage, [KEY, LEGACY_KEY], prepareDocument);
+  const result = readFirstValid(localStorage, [KEY, ...LEGACY_KEYS], prepareDocument);
   result.errors.forEach(({ key, error }) => console.warn(`Salvataggio ${key} ignorato:`, error));
   return result.document ? hydrate(result.document) : defaults();
 }
 
 function hydrate(data) {
-  data.schemaVersion = CURRENT_SCHEMA_VERSION;
-  data.title = data.title || 'TRIVIA CHALLENGE';
-  data.subtitle = data.subtitle || 'ANIME EDITION';
-  data.homeLayout = { ...DEFAULT_HOME_LAYOUT, ...(data.homeLayout || {}) };
-  data.library = data.library?.length ? data.library : animeList;
-  data.powers = data.powers?.length ? data.powers : powers;
-  data.history = data.history || [];
-  data.session = data.session && typeof data.session === 'object' ? data.session : { games: {} };
-  data.session.games = data.session.games && typeof data.session.games === 'object' ? data.session.games : {};
-  data.players = data.players?.length ? data.players.map(player => ({ ...player, name: String(player.name || 'PLAYER').toUpperCase(), score: Number(player.score || 0) })) : defaults().players;
-  data.games = (data.games || []).map(game => ({ ...game, menuTitle: game.menuTitle || game.title || label(game.type), customElements: game.customElements || [], layout: game.layout || {}, showOnHome: game.showOnHome !== false }));
-  return data;
+  const content = data.content && typeof data.content === 'object' ? data.content : data;
+  const persistedSession = data.session && typeof data.session === 'object' ? data.session : { games: {} };
+  return {
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    title: content.title || 'TRIVIA CHALLENGE',
+    subtitle: content.subtitle || 'ANIME EDITION',
+    homeLayout: { ...DEFAULT_HOME_LAYOUT, ...(content.homeLayout || {}) },
+    library: content.library?.length ? content.library : animeList,
+    powers: content.powers?.length ? content.powers : powers,
+    settings: data.settings && typeof data.settings === 'object' ? data.settings : { soundsEnabled: true, alertsEnabled: true },
+    history: Array.isArray(data.history) ? data.history : [],
+    session: {
+      ...persistedSession,
+      games: persistedSession.games && typeof persistedSession.games === 'object' ? persistedSession.games : {}
+    },
+    players: persistedSession.players?.length
+      ? persistedSession.players.map(player => ({ ...player, name: String(player.name || 'PLAYER').toUpperCase(), score: Number(player.score || 0) }))
+      : defaults().players,
+    games: (content.games || []).map(game => gameContracts[game.type]?.normalize(game) || game)
+  };
+}
+
+function editorialSnapshot(source) {
+  return {
+    title: source.title,
+    subtitle: source.subtitle,
+    homeLayout: clone(source.homeLayout || {}),
+    games: clone(source.games || []),
+    library: clone(source.library || []),
+    powers: clone(source.powers || []),
+    settings: clone(source.settings || {})
+  };
+}
+
+function setSaveStatus(status) {
+  saveStatus = status;
+  const indicator = document.querySelector('[data-save-status]');
+  if (!indicator) return;
+  indicator.className = `save-status ${status}`;
+  indicator.textContent = status === 'pending'
+    ? 'Modifiche in corso'
+    : status === 'failed'
+      ? 'Salvataggio fallito'
+      : 'Salvato';
 }
 
 function save() {
-  const nextSnapshot = JSON.stringify(state);
+  clearTimeout(pendingSave);
+  pendingSave = null;
+  state.session.navigation = { view, screen: cur.screen, gameId, i: cur.i, revealed: cur.revealed };
+  const nextSnapshot = JSON.stringify(serializeDocument(state));
+  const nextContentSnapshot = JSON.stringify(editorialSnapshot(state));
   try {
     writeDocument(localStorage, KEY, nextSnapshot);
-    if (nextSnapshot !== lastSavedSnapshot) {
-      undoStack.push(lastSavedSnapshot);
+    if (nextContentSnapshot !== lastSavedContentSnapshot) {
+      undoStack.push(lastSavedContentSnapshot);
       if (undoStack.length > UNDO_LIMIT) undoStack.shift();
-      lastSavedSnapshot = nextSnapshot;
+      lastSavedContentSnapshot = nextContentSnapshot;
     }
+    lastSavedSnapshot = nextSnapshot;
+    setSaveStatus('saved');
     return true;
   } catch (error) {
+    setSaveStatus('failed');
     toast(`Salvataggio non riuscito: ${error.message}`);
     return false;
   }
+}
+
+function scheduleSave() {
+  clearTimeout(pendingSave);
+  setSaveStatus('pending');
+  pendingSave = setTimeout(save, SAVE_DEBOUNCE_MS);
 }
 
 function undoLastChange() {
   const snapshot = undoStack.pop();
   if (!snapshot) return toast('Nessuna modifica da annullare.');
   try {
-    state = hydrate(JSON.parse(snapshot));
+    const editorial = JSON.parse(snapshot);
+    Object.assign(state, editorial);
     if (!state.games.some(item => item.id === gameId)) gameId = state.games[0]?.id;
     if (!state.players.some(item => item.id === playerId)) playerId = state.players[0]?.id;
     if (!state.players.some(item => item.id === scorePanelPlayerId)) scorePanelPlayerId = '';
-    lastSavedSnapshot = snapshot;
-    writeDocument(localStorage, KEY, snapshot);
-    toast('Modifica annullata');
+    lastSavedContentSnapshot = snapshot;
+    lastSavedSnapshot = JSON.stringify(serializeDocument(state));
+    writeDocument(localStorage, KEY, lastSavedSnapshot);
+    toast('Modifica editoriale annullata');
     render();
   } catch (error) {
     toast(`Undo non riuscito: ${error.message}`);
@@ -188,6 +253,17 @@ function handleHostShortcut(event) {
   }
 
   if (view !== 'show' || cur.screen !== 'game' || directEdit) return;
+  if (event.key === 'Escape' && helpOpen) {
+    helpOpen = false;
+    render();
+    return;
+  }
+  if (event.key === '?') {
+    event.preventDefault();
+    helpOpen = !helpOpen;
+    render();
+    return;
+  }
   const total = currentQuestionCount();
   if (total > 0 && ['ArrowLeft', 'ArrowRight'].includes(event.key)) {
     event.preventDefault();
@@ -200,7 +276,25 @@ function handleHostShortcut(event) {
   if (event.key === ' ' && cur.timer) {
     event.preventDefault();
     cur.timer.running ? pauseTimer(cur.timer) : startTimer(cur.timer);
-    render();
+    syncTimerLoop();
+  }
+  const shortcut = event.key.toLowerCase();
+  const buttonPattern = shortcut === 'r'
+    ? /mostra (risposta|bombe)|rivela/i
+    : shortcut === 'c'
+      ? /corretta|conferma \+/i
+      : shortcut === 'x'
+        ? /sbagliata|errata|nessun punto/i
+        : shortcut === 'p'
+          ? /^passo$/i
+          : null;
+  if (buttonPattern) {
+    const target = [...document.querySelectorAll('.game-live-area button:not(:disabled)')]
+      .find(button => buttonPattern.test(button.textContent.trim()));
+    if (target) {
+      event.preventDefault();
+      target.click();
+    }
   }
 }
 
@@ -225,6 +319,7 @@ function $(tag, attrs = {}, ...kids) {
 function game() { return state.games.find(item => item.id === gameId) || state.games[0]; }
 function player() { return state.players.find(item => item.id === playerId) || state.players[0]; }
 function scorePanelPlayer() { return state.players.find(item => item.id === scorePanelPlayerId); }
+function activePlayer() { return state.players.find(item => item.id === playerId); }
 function label(type) { return TYPES[type] || type; }
 
 function gameProgress(item = game()) {
@@ -258,7 +353,7 @@ function add(points, reason, targetPlayerId = scorePanelPlayerId || playerId) {
   const active = state.players.find(item => item.id === targetPlayerId) || player();
   if (!active) return toast('Crea un giocatore.');
   active.score = Number(active.score || 0) + Number(points || 0);
-  state.history.unshift({ id: id('h'), playerName: active.name, points: Number(points || 0), reason, at: new Date().toISOString() });
+  state.history.unshift({ id: id('h'), playerId: active.id, playerName: active.name, points: Number(points || 0), reason, at: new Date().toISOString() });
   state.history = state.history.slice(0, 120);
   save();
   toast(`${active.name}: ${points > 0 ? '+' : ''}${points}`);
@@ -294,16 +389,31 @@ function media(src, alt = 'media', options = {}) {
     class: options.class || null,
     style: mediaStyle(options),
   };
-  if (/\.(mp4|webm|mov)$/i.test(src)) return $('video', { ...attrs, src, controls: true, playsinline: true });
-  return $('img', { ...attrs, src, alt, loading: 'lazy' });
+  const handleError = event => showMediaError(event.currentTarget, src);
+  if (/\.(mp4|webm)$/i.test(src)) return $('video', { ...attrs, src, controls: true, playsinline: true, preload: 'metadata', onerror: handleError });
+  return $('img', { ...attrs, src, alt, loading: options.eager ? 'eager' : 'lazy', decoding: 'async', onerror: handleError });
+}
+
+function showMediaError(element, src) {
+  element.replaceWith($('div', { class: 'media-error', role: 'alert' },
+    $('strong', {}, 'Media non disponibile'),
+    $('small', {}, src || 'Percorso non configurato')
+  ));
 }
 
 async function loadAssetManifest() {
   try {
-    const response = await fetch('public/assets-manifest.json');
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const manifest = await response.json();
+    const [assetResponse, thumbnailResponse] = await Promise.all([
+      fetch('public/assets-manifest.json'),
+      fetch('public/thumbnails-manifest.json')
+    ]);
+    if (!assetResponse.ok) throw new Error(`HTTP ${assetResponse.status}`);
+    const manifest = await assetResponse.json();
     localAssets = Array.isArray(manifest.assets) ? manifest.assets : [];
+    if (thumbnailResponse.ok) {
+      const thumbnails = await thumbnailResponse.json();
+      localThumbnails = Object.fromEntries((thumbnails.thumbnails || []).map(entry => [entry.source, entry.thumbnail]));
+    }
     if (view === 'admin') render();
   } catch (error) {
     console.warn('Manifest asset locali non disponibile:', error);
@@ -359,13 +469,15 @@ function refreshGuessCluePreview(row, clue, index) {
 }
 
 function audio(src) {
-  return src ? $('audio', { src, controls: true }) : $('span', { class: 'muted' }, 'Audio non configurato');
+  return src ? $('audio', { src, controls: true, preload: 'metadata', onerror: event => showMediaError(event.currentTarget, src) }) : $('span', { class: 'muted' }, 'Audio non configurato');
 }
 
 function top() {
   return $('header', { class: 'app-top' },
     $('div', {}, $('div', { class: 'kicker' }, 'Studio mode'), $('h1', {}, 'Trivia Challenge Studio')),
-    $('nav', { class: 'app-nav' }, nav('show', 'Show'), nav('admin', 'Admin'), nav('scores', 'Punteggi'))
+    $('nav', { class: 'app-nav' },
+      $('span', { class: `save-status ${saveStatus}`, 'data-save-status': '', role: 'status', 'aria-live': 'polite' }, saveStatus === 'pending' ? 'Modifiche in corso' : saveStatus === 'failed' ? 'Salvataggio fallito' : 'Salvato'),
+      nav('show', 'Show'), nav('admin', 'Admin'), nav('scores', 'Punteggi'))
   );
 }
 
@@ -420,12 +532,14 @@ function resetStage(screen = 'hub') {
   selectedElementId = '';
   directEditPanel = 'layers';
   scorePanelPlayerId = '';
+  helpOpen = false;
   cur = { screen, i: 0, revealed: 0, answer: false, selected: [], jeo: null, laborOpen: false, guillotine: null };
+  save();
   render();
 }
 
 function award(points, reason, complete) {
-  const active = scorePanelPlayer();
+  const active = activePlayer();
   if (!active) {
     toast('Seleziona prima un giocatore dalla barra in basso.');
     return false;
@@ -433,18 +547,6 @@ function award(points, reason, complete) {
   if (typeof complete === 'function') complete();
   add(points, reason, active.id);
   return true;
-}
-
-function selectGame() {
-  const select = $('select', { onchange: event => { gameId = event.target.value; resetStage('game'); } });
-  state.games.forEach(item => select.append($('option', { value: item.id, selected: item.id === gameId }, `${item.title} · ${label(item.type)}`)));
-  return select;
-}
-
-function selectPlayer() {
-  const select = $('select', { onchange: event => { playerId = event.target.value; render(); } });
-  state.players.forEach(item => select.append($('option', { value: item.id, selected: item.id === playerId }, `${item.name} (${item.score} pt)`)));
-  return select;
 }
 
 function show() {
@@ -464,7 +566,8 @@ function stage(content) {
     bottomScores(),
     selected ? slideLayer(selected, directEdit) : null,
     directEdit && selected ? directEditTools(selected) : null,
-    directEdit && editableHome ? homeEditTools() : null
+    directEdit && editableHome ? homeEditTools() : null,
+    helpOpen ? keyboardHelp() : null
   );
 }
 
@@ -497,14 +600,42 @@ function stageToolbar() {
         }
       }),
       toolbarAction({ icon: '', label: 'ADMIN', className: 'admin-action', onclick: () => { directEdit = false; selectedElementId = ''; view = 'admin'; render(); } }),
+      toolbarAction({ icon: '', label: 'AIUTO', className: 'help-action', title: 'Scorciatoie host (?)', onclick: () => { helpOpen = !helpOpen; render(); } }),
       toolbarAction({
-        label: 'RESET',
+        label: cur.screen === 'game' ? 'RESET DOMANDA' : 'RESET',
         className: 'icon-only',
         title: 'Reset',
-        onclick: () => { cur = { ...cur, i: 0, revealed: 0, answer: false, selected: [], jeo: null, laborOpen: false, guillotine: null }; render(); }
-      })
+        onclick: cur.screen === 'game' ? resetCurrentQuestion : () => { cur = { ...cur, i: 0, revealed: 0, answer: false, selected: [], jeo: null, laborOpen: false, guillotine: null }; render(); }
+      }),
+      cur.screen === 'game' ? toolbarAction({ label: 'RESET GIOCO', className: 'icon-only danger', title: 'Azzera il minigioco corrente', onclick: resetCurrentGame }) : null
     )
   );
+}
+
+function keyboardHelp() {
+  const rows = [
+    ['R', 'Rivela o mostra risposta'], ['C', 'Segna corretta'], ['X', 'Segna errata o nessun punto'],
+    ['P', 'Passa'], ['← / →', 'Domanda precedente o successiva'], ['Spazio', 'Avvia o mette in pausa il timer'],
+    ['H', 'Alterna vista host/pubblico'], ['?', 'Apre o chiude questo aiuto'], ['Esc', 'Chiude il pannello']
+  ];
+  const panel = $('section', { class: 'keyboard-help', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'keyboard-help-title', tabindex: '-1', onkeydown: event => {
+    if (event.key !== 'Tab') return;
+    const focusable = [...event.currentTarget.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')];
+    if (!focusable.length) return;
+    const target = event.shiftKey ? focusable.at(-1) : focusable[0];
+    if ((event.shiftKey && document.activeElement === focusable[0]) || (!event.shiftKey && document.activeElement === focusable.at(-1))) {
+      event.preventDefault();
+      target.focus();
+    }
+  } },
+    $('div', { class: 'row keyboard-help-head' },
+      $('h2', { id: 'keyboard-help-title' }, 'Scorciatoie host'),
+      $('button', { class: 'btn small', onclick: () => { helpOpen = false; render(); } }, 'Chiudi')
+    ),
+    ...rows.map(([key, action]) => $('div', { class: 'shortcut-row' }, $('kbd', {}, key), $('span', {}, action)))
+  );
+  requestAnimationFrame(() => panel.focus());
+  return panel;
 }
 
 function toolbarAction({ icon = '', label, className = '', title = '', onclick }) {
@@ -534,8 +665,9 @@ function bottomScores() {
   const quickPlayer = scorePanelPlayer();
   return $('div', { class: 'bottom-scorebar', 'aria-label': 'Punteggi giocatori' },
     ...state.players.map(item => $('button', {
-      class: `player-chip ${item.id === scorePanelPlayerId ? 'panel-open' : ''}`,
-      onclick: () => { scorePanelPlayerId = scorePanelPlayerId === item.id ? '' : item.id; render(); }
+      class: `player-chip ${item.id === playerId ? 'selected' : ''} ${item.id === scorePanelPlayerId ? 'panel-open' : ''}`,
+      'aria-pressed': item.id === playerId ? 'true' : 'false',
+      onclick: () => { playerId = item.id; scorePanelPlayerId = scorePanelPlayerId === item.id ? '' : item.id; refreshBottomScores(); }
     },
       $('span', {}, item.name),
       $('strong', { 'aria-live': 'polite' }, item.score || 0)
@@ -544,11 +676,16 @@ function bottomScores() {
   );
 }
 
+function refreshBottomScores() {
+  const current = document.querySelector('.bottom-scorebar');
+  if (current) current.replaceWith(bottomScores());
+}
+
 function quickScorePanel(item) {
   return $('div', { class: 'quick-score-panel' },
     $('div', { class: 'quick-score-head' },
       $('div', {}, $('span', {}, 'Punti rapidi'), $('strong', {}, `${item.name}: ${item.score || 0}`)),
-      $('button', { class: 'btn small ghost', title: 'Chiudi', onclick: event => { event.stopPropagation(); scorePanelPlayerId = ''; render(); } }, 'X')
+      $('button', { class: 'btn small ghost', title: 'Chiudi', 'aria-label': 'Chiudi punti rapidi', onclick: event => { event.stopPropagation(); scorePanelPlayerId = ''; refreshBottomScores(); } }, 'X')
     ),
     $('div', { class: 'quick-score-buttons' },
       ...SCORE_VALUES.map(value => $('button', {
@@ -596,12 +733,59 @@ function hub() {
 function gameScreen() {
   const selected = game();
   if (!selected) return $('div', { class: 'intro-screen' }, $('h2', {}, 'Nessun minigioco'));
+  syncNextMediaPreloads(selected);
   const ribbonFreeform = directEdit || hasGameRibbonLayout(selected);
   if (ribbonFreeform) ensureGameRibbonLayout(selected);
-  return $('div', { class: 'game-shell', style: gameLayoutStyle(selected) },
+  const result = gameContracts[selected.type].getResult(gameProgress(selected));
+  return $('div', { class: 'game-shell', style: gameLayoutStyle(selected), 'data-game-result': result.status },
     gameRibbonLayer(selected, ribbonFreeform),
     $('div', { class: 'game-live-area' }, renderGame(selected))
   );
+}
+
+function resetCurrentQuestion() {
+  const selected = game();
+  if (!selected) return;
+  const progress = gameProgress(selected);
+  const group = selected.type === 'guess' ? 'rounds' : selected.type === 'sarabanda' ? 'songs' : 'questions';
+  if (progress[group]) delete progress[group][cur.i];
+  if (selected.type === 'jeopardy' && cur.jeo && progress.clues) delete progress.clues[`${cur.jeo.c}:${cur.jeo.q}`];
+  cur = { ...cur, revealed: 0, answer: false, selected: [], jeo: null, laborOpen: false, guillotine: null };
+  save();
+  render();
+  toast(selected.type === 'guess' ? 'Round corrente ripristinato' : 'Domanda corrente ripristinata');
+}
+
+function resetCurrentGame() {
+  const selected = game();
+  if (!selected || !confirm(`Azzerare tutti i progressi di “${selected.title}”?`)) return;
+  state.session.games[selected.id] = gameContracts[selected.type].reset();
+  cur = { ...cur, i: 0, revealed: 0, answer: false, selected: [], jeo: null, laborOpen: false, guillotine: null };
+  save();
+  render();
+  toast('Minigioco ripristinato');
+}
+
+function syncNextMediaPreloads(item) {
+  document.head.querySelectorAll('link[data-round-preload]').forEach(link => link.remove());
+  const collection = item.type === 'guess' ? item.rounds : item.type === 'sarabanda' ? item.songs : item.questions;
+  const next = Array.isArray(collection) ? collection[cur.i + 1] : null;
+  if (!next) return;
+  const paths = [];
+  const visit = value => {
+    if (Array.isArray(value)) return value.forEach(visit);
+    if (!value || typeof value !== 'object') return;
+    Object.entries(value).forEach(([key, entry]) => {
+      if (['image', 'audio', 'media', 'detailImage', 'fullImage', 'src', 'art'].includes(key) && typeof entry === 'string' && entry) paths.push(entry);
+      visit(entry);
+    });
+  };
+  visit(next);
+  [...new Set(paths)].slice(0, 4).forEach(path => {
+    const extension = path.split('.').pop()?.toLowerCase();
+    const as = ['mp3', 'wav', 'ogg', 'm4a'].includes(extension) ? 'audio' : ['mp4', 'webm'].includes(extension) ? 'video' : 'image';
+    document.head.append($('link', { rel: 'preload', href: path, as, 'data-round-preload': '' }));
+  });
 }
 
 function pointsScreen() {
@@ -621,7 +805,13 @@ function pointsScreen() {
 }
 
 function libraryScreen() {
-  return $('div', { class: 'library-screen' }, $('h2', {}, 'LISTA ANIME'), $('div', { class: 'library-grid' }, ...state.library.map(item => $('button', { class: 'ppt-button library-tile' }, item))));
+  return $('div', { class: 'library-screen' }, $('h2', {}, 'LISTA ANIME'), state.library.length
+    ? $('div', { class: 'library-grid' }, ...state.library.map(item => $('button', { class: 'ppt-button library-tile' }, item)))
+    : emptyState('Nessun argomento', 'Aggiungi anime o argomenti dalla sezione Admin.'));
+}
+
+function emptyState(title, message) {
+  return $('div', { class: 'empty-state', role: 'status' }, $('h3', {}, title), $('p', { class: 'muted' }, message));
 }
 
 function initials(value) {
@@ -643,11 +833,12 @@ function powerArtwork(item) {
 function powersScreen() {
   return $('div', { class: 'powers-screen pokemon-power-screen' },
     $('h2', {}, 'POTERI'),
+    !state.powers.length ? emptyState('Nessun potere', 'Configura almeno un potere dalla sezione Admin.') : null,
     $('div', { class: 'power-grid pokemon-power-grid' },
       ...state.powers.map((item, index) => $('div', { class: 'wrapper' },
         $('div', { class: 'card' },
           powerArtwork(item)
-            ? $('img', { src: powerArtwork(item), alt: item.name || 'Potere' })
+            ? $('img', { src: powerArtwork(item), alt: item.name || 'Potere', loading: 'lazy', onerror: event => showMediaError(event.currentTarget, powerArtwork(item)) })
             : $('div', { class: 'power-card-fallback' }, $('span', {}, initials(item.player)), $('small', {}, item.player || 'Player')),
           $('div', { class: 'tophead' },
             $('div', { class: 'facts' },
@@ -1078,10 +1269,19 @@ function resetToolbarButtons() {
   render();
 }
 
+function captureDragPointer(event) {
+  try {
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  } catch (error) {
+    console.warn('Pointer capture non disponibile:', error);
+  }
+}
+
 function startToolbarButtonResize(event) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   selectedElementId = 'toolbar-buttons';
   const layout = ensureHomeLayout();
   const node = event.currentTarget.closest('.stage-actions');
@@ -1118,6 +1318,7 @@ function startHomeMenuButtonDrag(event, item, index, resize) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   selectedElementId = `home-menu-${item.id}`;
   const groups = state.games.filter(entry => entry.showOnHome !== false);
   const layouts = ensureHomeMenuButtonLayouts(groups);
@@ -1171,6 +1372,7 @@ function startHomeElementDrag(event, target, resize) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   const layout = ensureHomeLayout();
   const surface = event.currentTarget.closest('.ppt-stage');
   if (!surface) return;
@@ -1246,7 +1448,7 @@ function startHomeElementDrag(event, target, resize) {
 
 function updateHomeLayout(mutate) {
   mutate(ensureHomeLayout());
-  save();
+  scheduleSave();
   render();
 }
 
@@ -1256,8 +1458,8 @@ function globalTitlePanel() {
     $('h3', {}, 'Titolo globale'),
     $('p', { class: 'muted' }, 'Questo titolo mantiene la stessa posizione in tutte le pagine. Trascinalo direttamente sulla slide oppure usa questi valori.'),
     $('div', { class: 'game-basics direct-basics' },
-      editorInput('Titolo', state.title || '', value => { state.title = value; save(); render(); }),
-      editorInput('Sottotitolo', state.subtitle || '', value => { state.subtitle = value; save(); render(); })
+      editorInput('Titolo', state.title || '', value => { state.title = value; scheduleSave(); render(); }),
+      editorInput('Sottotitolo', state.subtitle || '', value => { state.subtitle = value; scheduleSave(); render(); })
     ),
     $('section', { class: 'content-editor layout-editor' },
       $('h3', {}, 'Titolo - posizione e dimensione'),
@@ -1397,6 +1599,7 @@ function startSlideDrag(event, item, elementId, resize) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   selectedElementId = elementId;
   const element = ensureSlideElements(item).find(entry => entry.id === elementId);
   const surface = event.currentTarget.closest('.slide-canvas,.ppt-stage');
@@ -1449,6 +1652,7 @@ function startGuessTileDrag(event, item, index, resize) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   selectedElementId = `guess-tile-${index}`;
   const tiles = ensureGuessTileLayouts(item, Math.max(index + 1, 4));
   const tile = tiles[index];
@@ -1502,6 +1706,7 @@ function startGuessControlDrag(event, item, key, resize) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   selectedElementId = `guess-control-${key}`;
   const controls = ensureGuessControlLayouts(item);
   const control = controls[key];
@@ -1556,6 +1761,7 @@ function startGameRibbonDrag(event, item, resize) {
   if (event.button != null && event.button !== 0) return;
   event.preventDefault();
   event.stopPropagation();
+  captureDragPointer(event);
   selectedElementId = 'game-ribbon';
   const ribbon = ensureGameRibbonLayout(item);
   const surface = event.currentTarget.closest('.ppt-stage');
@@ -1636,6 +1842,8 @@ function ensureGameTimer(duration = 50) {
 }
 
 function syncTimerLoop() {
+  clearInterval(timerInterval);
+  timerInterval = null;
   const timer = cur.timer;
   const value = document.querySelector('[data-timer-value]');
   if (!timer || !value) return;
@@ -1650,10 +1858,36 @@ function syncTimerLoop() {
     clearInterval(timerInterval);
     timerInterval = null;
     toast('Tempo scaduto');
+    playLocalAlert();
   };
 
   update();
   if (timer.running) timerInterval = setInterval(update, 200);
+}
+
+function playLocalAlert() {
+  if (state.settings?.alertsEnabled !== false) {
+    document.body.classList.add('alert-flash');
+    setTimeout(() => document.body.classList.remove('alert-flash'), 700);
+  }
+  if (state.settings?.soundsEnabled === false) return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const context = new AudioContextClass();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.28);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start();
+    oscillator.stop(context.currentTime + 0.3);
+    oscillator.addEventListener('ended', () => context.close());
+  } catch (error) {
+    console.warn('Avviso sonoro non disponibile:', error);
+  }
 }
 
 function gameTimer(duration = 50) {
@@ -1661,9 +1895,9 @@ function gameTimer(duration = 50) {
   return $('div', { class: `game-timer ${timer.expired ? 'expired' : ''}` },
     $('strong', { class: 'chain-timer', 'data-timer-value': '', role: 'timer', 'aria-live': 'polite' }, formatTimer(timerRemaining(timer))),
     $('div', { class: 'timer-actions' },
-      $('button', { class: 'btn small', onclick: () => { startTimer(timer); render(); } }, 'Avvia'),
-      $('button', { class: 'btn small', onclick: () => { pauseTimer(timer); render(); } }, 'Pausa'),
-      $('button', { class: 'btn small ghost', onclick: () => { resetTimer(timer, duration); render(); } }, 'Reset')
+      $('button', { class: 'btn small', onclick: () => { startTimer(timer); syncTimerLoop(); } }, 'Avvia'),
+      $('button', { class: 'btn small', onclick: () => { pauseTimer(timer); syncTimerLoop(); } }, 'Pausa'),
+      $('button', { class: 'btn small ghost', onclick: () => { resetTimer(timer, duration); syncTimerLoop(); } }, 'Reset')
     )
   );
 }
@@ -1695,16 +1929,8 @@ function controls(g, ans, points, after, options = {}) {
   );
 }
 
-function pager(total) {
-  return $('div', { class: 'pager' },
-    $('button', { class: 'btn', disabled: cur.i <= 0, onclick: () => { cur.i--; cur.answer = false; cur.revealed = 0; cur.jeo = null; render(); } }, '←'),
-    $('span', {}, `${Math.min(cur.i + 1, total || 1)} / ${total || 1}`),
-    $('button', { class: 'btn', disabled: cur.i >= total - 1, onclick: () => { cur.i++; cur.answer = false; cur.revealed = 0; cur.jeo = null; render(); } }, '→')
-  );
-}
-
 function renderGame(g) {
-  return ({ guess, bomb, said, detail, quote, chain, labors, guillotine, pass, jeopardy, sarabanda }[g.type] || unsupported)(g);
+  return gameContracts[g.type]?.render(g) || unsupported(g);
 }
 
 function unsupported(g) { return $('div', { class: 'intro-screen' }, $('h2', {}, `Tipo non supportato: ${g.type}`)); }
@@ -1714,6 +1940,7 @@ function chooseGuessRound(index, total) {
   cur.answer = false;
   cur.revealed = 0;
   cur.jeo = null;
+  save();
   render();
 }
 
@@ -1757,6 +1984,7 @@ function guess(g) {
             }
             if (index >= shown) {
               cur.revealed = Math.max(cur.revealed, index + 1);
+              save();
               render();
             }
           }
@@ -1819,7 +2047,7 @@ function bomb(g) {
   return $('div', { class: 'bomb-screen' },
     $('div', { class: 'bomb-question' }, g.question || 'Evita le bombe.'),
     $('div', { class: 'bomb-grid' },
-      ...items.map((item, index) => $('button', { class: `bomb-tile ${selected.has(index) ? (item.isBomb ? 'bomb' : 'ok') : ''}`, onclick: () => { selected.has(index) ? selected.delete(index) : selected.add(index); cur.selected = [...selected]; render(); } }, item.image ? media(item.image, item.label) : $('span', {}, item.label || `Elemento ${index + 1}`)))
+      ...items.map((item, index) => $('button', { class: `bomb-tile ${selected.has(index) ? (item.isBomb ? 'bomb' : 'ok') : ''}`, 'aria-label': `${item.label || `Elemento ${index + 1}`}${selected.has(index) ? item.isBomb ? ', bomba selezionata' : ', risposta selezionata' : ''}`, onclick: () => { selected.has(index) ? selected.delete(index) : selected.add(index); cur.selected = [...selected]; render(); } }, item.image ? media(item.image, item.label) : $('span', {}, item.label || `Elemento ${index + 1}`)))
     ),
     $('div', { class: 'host-actions' },
       $('span', { class: 'pill' }, `Corrette ${result.correct}`),
@@ -1833,11 +2061,6 @@ function bomb(g) {
     ),
     cur.answer ? $('div', { class: 'answer on' }, `Bombe: ${items.filter(item => item.isBomb).map(item => item.label).join(', ')}`) : null
   );
-}
-
-function linear(g, list, fn) {
-  const q = list[cur.i] || list[0];
-  return q ? $('div', { class: 'linear-screen' }, fn(q), pager(list.length)) : $('div', { class: 'intro-screen' }, 'Nessun contenuto.');
 }
 
 function said(g) {
@@ -1910,7 +2133,6 @@ function quote(g) {
 function chain(g) {
   const source = g.questions?.length ? g.questions : templates.chain().questions;
   const steps = Array.from({ length: 20 }, (_, index) => source[index] || { question: `Domanda ${index + 1}`, answer: '' });
-  const q = steps[cur.i] || steps[0];
   const progress = gameProgress(g);
   progress.lives = Number.isFinite(Number(progress.lives)) ? Number(progress.lives) : 3;
   const questionProgress = progressEntry(g, 'questions', cur.i);
@@ -2034,10 +2256,10 @@ function pass(g) {
       if (!wasPerfect && nextSummary.perfect && !progress.bonusAwarded) {
         const bonus = passBonusForDifficulty(g);
         progress.bonusAwarded = true;
-        const active = scorePanelPlayer();
+        const active = activePlayer();
         if (active && bonus) {
           active.score = Number(active.score || 0) + bonus;
-          state.history.unshift({ id: id('h'), playerName: active.name, points: bonus, reason: `${g.title}: bonus perfect`, at: new Date().toISOString() });
+          state.history.unshift({ id: id('h'), playerId: active.id, playerName: active.name, points: bonus, reason: `${g.title}: bonus perfect`, at: new Date().toISOString() });
         }
       }
     });
@@ -2046,7 +2268,8 @@ function pass(g) {
     $('div', { class: 'pass-wheel' },
       ...questions.map((item, index) => {
         const angle = (360 / questions.length) * index - 90;
-        return $('button', { class: `pass-letter ${item.status === 'correct' ? 'ok' : item.status === 'wrong' ? 'wrong' : item.status === 'pass' ? 'passed' : ''} ${index === cur.i ? 'current' : ''}`, style: `--angle:${angle}deg`, onclick: () => { cur.i = index; cur.answer = false; render(); } }, item.letter);
+        const statusLabel = item.status === 'correct' ? 'corretta' : item.status === 'wrong' ? 'errata' : item.status === 'pass' ? 'passata' : 'in attesa';
+        return $('button', { class: `pass-letter ${item.status === 'correct' ? 'ok' : item.status === 'wrong' ? 'wrong' : item.status === 'pass' ? 'passed' : ''} ${index === cur.i ? 'current' : ''}`, style: `--angle:${angle}deg`, 'aria-label': `${item.letter}: ${statusLabel}`, onclick: () => { cur.i = index; cur.answer = false; render(); } }, item.letter);
       }),
       $('div', { class: 'wheel-core' }, $('strong', {}, q.letter), $('span', {}, difficulty.toUpperCase()))
     ),
@@ -2125,8 +2348,31 @@ function sarabanda(g) {
   );
 }
 
+function undoLastScore() {
+  const entry = state.history.shift();
+  if (!entry) return toast('Nessun punteggio da annullare.');
+  const target = state.players.find(item => item.id === entry.playerId)
+    || state.players.find(item => item.name === entry.playerName);
+  if (!target) {
+    state.history.unshift(entry);
+    return toast('Giocatore dello storico non trovato.');
+  }
+  target.score = Number(target.score || 0) - Number(entry.points || 0);
+  save();
+  toast(`Annullato ${entry.points > 0 ? '+' : ''}${entry.points} a ${target.name}`);
+  render();
+}
+
 function history() {
-  return $('section', { class: 'history-box' }, $('h3', {}, 'Storico'), ...(state.history.length ? state.history.slice(0, 7).map(item => $('div', { class: 'history-row' }, $('span', {}, item.playerName), $('small', {}, item.reason), $('strong', {}, `${item.points > 0 ? '+' : ''}${item.points}`))) : [$('p', { class: 'muted' }, 'Nessun punto assegnato.')]));
+  return $('section', { class: 'history-box' },
+    $('div', { class: 'row history-head' },
+      $('h3', {}, 'Storico'),
+      $('button', { class: 'btn small', disabled: !state.history.length, onclick: undoLastScore }, 'Annulla ultimo punteggio')
+    ),
+    ...(state.history.length
+      ? state.history.slice(0, 7).map(item => $('div', { class: 'history-row' }, $('span', {}, item.playerName), $('small', {}, item.reason), $('strong', {}, `${item.points > 0 ? '+' : ''}${item.points}`)))
+      : [$('p', { class: 'muted' }, 'Nessun punto assegnato.')])
+  );
 }
 
 function admin() {
@@ -2135,26 +2381,45 @@ function admin() {
   Object.entries(TYPES).forEach(([value, text]) => typeSelect.append($('option', { value, selected: value === (activeEdit?.type || 'guess') }, text)));
   const draft = activeEdit || { ...templates[typeSelect.value || 'guess'](), title: 'Nuovo minigioco', menuTitle: 'NUOVO MINIGIOCO' };
   const titleInput = $('input', { id: 'title', value: draft.title || 'Nuovo minigioco', oninput: () => { if (!editing) preview(); } });
-  const jsonArea = $('textarea', { id: 'json', value: JSON.stringify(draft, null, 2) });
+  const jsonStatus = $('small', { id: 'json-sync-status', class: 'muted', role: 'status' }, 'JSON sincronizzato con l’editor visuale.');
+  const jsonArea = $('textarea', { id: 'json', value: JSON.stringify(draft, null, 2), oninput: event => {
+    event.currentTarget.dataset.dirty = 'true';
+    jsonStatus.className = 'asset-field-feedback invalid';
+    jsonStatus.textContent = 'JSON modificato: sincronizzazione visuale sospesa fino al salvataggio.';
+  } });
   return $('main', { class: 'grid two' },
     assetDatalist(),
     $('section', { class: 'panel stack' },
       $('h2', {}, 'Admin contenuti'),
       $('p', { class: 'muted' }, 'Gestisci i contenuti in modo visuale. Il JSON resta disponibile come modalità avanzata.'),
       $('div', { class: 'grid two' },
-        $('label', {}, 'Titolo evento', $('input', { value: state.title || '', onchange: event => { state.title = event.target.value; save(); render(); } })),
-        $('label', {}, 'Sottotitolo', $('input', { value: state.subtitle || '', onchange: event => { state.subtitle = event.target.value; save(); render(); } }))
+        $('label', {}, 'Titolo evento', $('input', { value: state.title || '', onchange: event => { state.title = event.target.value; scheduleSave(); render(); } })),
+        $('label', {}, 'Sottotitolo', $('input', { value: state.subtitle || '', onchange: event => { state.subtitle = event.target.value; scheduleSave(); render(); } }))
       ),
       $('div', { class: 'grid two' }, $('label', {}, 'Tipo minigioco', typeSelect), $('label', {}, 'Titolo', titleInput)),
       activeEdit ? slideDesigner(activeEdit) : $('div', { class: 'slide-empty panel-lite' }, 'Premi "Modifica" su un minigioco salvato per aprire l editor diapositiva. Per crearne uno nuovo puoi partire dal template qui sotto.'),
-      $('details', { class: 'json-details' }, $('summary', {}, 'JSON avanzato'), $('label', {}, 'Contenuto JSON', jsonArea)),
+      $('details', { class: 'json-details' },
+        $('summary', {}, 'JSON avanzato'),
+        $('p', { class: 'muted' }, 'Le modifiche JSON sono applicate solo con Salva. Se il form visuale cambia nel frattempo, viene mostrato un conflitto.'),
+        $('label', {}, 'Contenuto JSON', jsonArea),
+        jsonStatus,
+        $('button', { class: 'btn small', onclick: () => {
+          const current = editing ? state.games.find(item => item.id === editing) : draft;
+          jsonArea.value = JSON.stringify(current, null, 2);
+          delete jsonArea.dataset.dirty;
+          jsonStatus.className = 'muted';
+          jsonStatus.textContent = 'JSON risincronizzato dal form visuale.';
+        } }, 'Risincronizza dal visuale')
+      ),
+      $('div', { id: 'editor-validation', class: 'editor-validation', role: 'alert', hidden: true }),
       $('div', { class: 'row' },
-        $('button', { class: 'btn primary', onclick: saveEditor }, editing ? 'Salva modifiche' : 'Crea minigioco'),
+        $('button', { class: 'btn primary', onclick: () => saveEditor(false) }, editing ? 'Salva modifiche' : 'Crea minigioco'),
+        $('button', { class: 'btn success', onclick: () => saveEditor(true) }, 'Salva e prova'),
         $('button', { class: 'btn', onclick: () => { editing = ''; selectedElementId = ''; render(); } }, 'Nuovo da template'),
         $('button', { class: 'btn', onclick: exportData }, 'Esporta JSON'),
         $('label', { class: 'btn ghost' }, 'Importa JSON', $('input', { type: 'file', accept: 'application/json', style: 'display:none', onchange: importData }))
       ),
-      playersAdmin(), libraryAdmin(), powersAdmin()
+      playersAdmin(), settingsAdmin(), libraryAdmin(), powersAdmin()
     ),
     $('aside', { class: 'panel stack' },
       $('h3', {}, 'Minigiochi salvati'),
@@ -2173,20 +2438,60 @@ function admin() {
 function updateGame(item, mutate, shouldRender = true) {
   mutate(item);
   item.menuTitle = item.menuTitle || (item.title || label(item.type)).toUpperCase();
-  save();
+  scheduleSave();
   const jsonArea = document.getElementById('json');
-  if (jsonArea && editing === item.id) jsonArea.value = JSON.stringify(item, null, 2);
+  if (jsonArea && editing === item.id) {
+    const status = document.getElementById('json-sync-status');
+    if (jsonArea.dataset.dirty === 'true') {
+      status.className = 'asset-field-feedback invalid';
+      status.textContent = 'Conflitto: il visuale e il JSON contengono modifiche diverse.';
+    } else {
+      jsonArea.value = JSON.stringify(item, null, 2);
+      if (status) status.textContent = 'JSON sincronizzato con l’editor visuale.';
+    }
+  }
   if (shouldRender) render();
 }
 
 function editorInput(labelText, value, onChange, attrs = {}) {
   const usesLocalAsset = attrs.type == null && /immagine|audio|media|percorso/i.test(labelText);
-  return $('label', { class: 'editor-field' }, labelText, $('input', {
+  const input = $('input', {
     value: value ?? '',
     ...(usesLocalAsset ? { list: 'local-assets' } : {}),
     ...attrs,
     onchange: event => onChange(attrs.type === 'number' ? Number(event.target.value || 0) : event.target.value, event)
-  }));
+  });
+  if (!usesLocalAsset) return $('label', { class: 'editor-field' }, labelText, input);
+  const feedback = $('small', { class: 'asset-field-feedback', role: 'status' });
+  const preview = $('div', { class: 'asset-field-preview' });
+  const refresh = () => refreshAssetField(input.value, labelText, feedback, preview);
+  input.addEventListener('input', refresh);
+  requestAnimationFrame(refresh);
+  return $('label', { class: 'editor-field asset-editor-field' }, labelText, input, feedback, preview);
+}
+
+function refreshAssetField(path, labelText, feedback, preview) {
+  const normalized = String(path || '').trim().replaceAll('\\', '/');
+  preview.replaceChildren();
+  if (!normalized) {
+    feedback.className = 'asset-field-feedback muted';
+    feedback.textContent = 'Nessun file selezionato.';
+    return;
+  }
+  const extension = normalized.split('.').pop()?.toLowerCase();
+  const expected = /audio/i.test(labelText) ? ['mp3', 'wav', 'ogg', 'm4a'] : /video/i.test(labelText) ? ['mp4', 'webm'] : ['png', 'jpg', 'jpeg', 'webp', 'avif', 'gif', 'svg', 'mp4', 'webm'];
+  const exists = localAssets.some(asset => asset.path === normalized);
+  const validRoot = normalized.startsWith('public/assets/') && !normalized.includes('../');
+  const validFormat = expected.includes(extension);
+  const valid = validRoot && validFormat && (!localAssets.length || exists);
+  feedback.className = `asset-field-feedback ${valid ? 'valid' : 'invalid'}`;
+  feedback.textContent = !validRoot ? 'Il percorso deve essere locale sotto public/assets/.'
+    : !validFormat ? `Formato .${extension || '?'} non supportato in questo campo.`
+      : !exists && localAssets.length ? 'File locale non trovato nel manifest.' : 'File locale valido.';
+  if (!valid) return;
+  if (['mp3', 'wav', 'ogg', 'm4a'].includes(extension)) preview.append(audio(normalized));
+  else if (['mp4', 'webm'].includes(extension)) preview.append(media(normalized, `Anteprima ${labelText}`));
+  else preview.append(media(localThumbnails[normalized] || normalized, `Anteprima ${labelText}`));
 }
 
 function editorArea(labelText, value, onChange) {
@@ -2696,17 +3001,39 @@ function visualContentEditor(item) {
 }
 
 function questionEditor(item, key, length, factory, fields) {
-  const rows = ensureList(item, key, length, factory);
+  const rows = Array.isArray(item[key]) && item[key].length ? item[key] : ensureList(item, key, length, factory);
   return $('section', { class: 'content-editor' }, $('h3', {}, 'Contenuto rapido'),
     $('div', { class: 'compact-list' },
       ...rows.map((row, index) => $('div', { class: 'mini-row wide' },
         $('strong', {}, index + 1),
         ...fields.map(([labelText, field]) => field === 'optionsText'
           ? editorInput(labelText, Array.isArray(row.options) ? row.options.join(' | ') : '', value => updateGame(item, () => { row.options = value.split('|').map(option => option.trim()).filter(Boolean); }, false))
-          : editorInput(labelText, row[field] || '', value => updateGame(item, () => row[field] = value, false)))
+          : editorInput(labelText, row[field] || '', value => updateGame(item, () => row[field] = value, false))),
+        $('div', { class: 'row question-row-actions' },
+          $('button', { class: 'btn small', disabled: index === 0, onclick: () => reorderQuestion(item, key, index, index - 1) }, 'Su'),
+          $('button', { class: 'btn small', disabled: index === rows.length - 1, onclick: () => reorderQuestion(item, key, index, index + 1) }, 'Giù'),
+          $('button', { class: 'btn small', onclick: () => duplicateQuestion(item, key, index) }, 'Duplica'),
+          $('button', { class: 'btn small danger', disabled: rows.length <= 1, onclick: () => deleteQuestion(item, key, index) }, 'Elimina')
+        )
       ))
     )
   );
+}
+
+function reorderQuestion(item, key, from, to) {
+  updateGame(item, target => {
+    const [entry] = target[key].splice(from, 1);
+    target[key].splice(to, 0, entry);
+  });
+}
+
+function duplicateQuestion(item, key, index) {
+  updateGame(item, target => target[key].splice(index + 1, 0, clone(target[key][index])));
+}
+
+function deleteQuestion(item, key, index) {
+  if (!confirm(`Eliminare la domanda ${index + 1}?`)) return;
+  updateGame(item, target => target[key].splice(index, 1));
 }
 
 function preview() {
@@ -2721,9 +3048,18 @@ function preview() {
   jsonArea.value = JSON.stringify(item, null, 2);
 }
 
-function saveEditor() {
+function saveEditor(openAfterSave = false) {
+  const validation = document.getElementById('editor-validation');
   try {
-    const item = JSON.parse(document.getElementById('json').value);
+    const jsonArea = document.getElementById('json');
+    if (jsonArea.dataset.dirty === 'true' && editing) {
+      const current = state.games.find(game => game.id === editing);
+      const diverged = current && JSON.stringify(current, null, 2) !== jsonArea.value;
+      if (diverged && !confirm('Il JSON avanzato sostituirà le modifiche del form visuale. Continuare?')) return;
+    }
+    const item = JSON.parse(jsonArea.value);
+    const errors = validateGameForEditor(item);
+    if (errors.length) throw new Error(errors.join(' '));
     item.id = item.id || id('game');
     item.title = document.getElementById('title').value.trim() || item.title;
     item.menuTitle = item.menuTitle || item.title?.toUpperCase();
@@ -2734,10 +3070,30 @@ function saveEditor() {
     editing = '';
     save();
     toast('Minigioco salvato');
+    if (validation) validation.hidden = true;
+    if (openAfterSave) {
+      view = 'show';
+      resetStage('game');
+      return;
+    }
     render();
   } catch (error) {
+    if (validation) {
+      validation.hidden = false;
+      validation.textContent = error.message;
+    }
     toast(`JSON non valido: ${error.message}`);
   }
+}
+
+function validateGameForEditor(item) {
+  const errors = [];
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return ['Il minigioco deve essere un oggetto JSON.'];
+  if (!TYPES[item.type]) errors.push('Tipo di minigioco non supportato.');
+  if (!String(item.title || '').trim()) errors.push('Il titolo è obbligatorio.');
+  const listKey = item.type === 'guess' ? 'rounds' : item.type === 'bomb' ? 'items' : item.type === 'sarabanda' ? 'songs' : ['said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(item.type) ? 'questions' : item.type === 'jeopardy' ? 'categories' : null;
+  if (listKey && (!Array.isArray(item[listKey]) || !item[listKey].length)) errors.push(`${listKey}: aggiungi almeno un elemento.`);
+  return errors;
 }
 
 function edit(gid) {
@@ -2772,12 +3128,12 @@ function playersAdmin() {
   return $('section', { class: 'stack' },
     $('h3', {}, 'Giocatori'),
     $('div', { class: 'row' }, $('input', { id: 'pname', placeholder: 'Nome squadra o giocatore' }), $('button', { class: 'btn success', onclick: () => { const value = document.getElementById('pname').value.trim(); if (!value) return toast('Inserisci un nome.'); const newPlayer = { id: id('p'), name: value.toUpperCase(), score: 0 }; state.players.push(newPlayer); playerId = newPlayer.id; save(); render(); } }, 'Aggiungi')),
-    ...state.players.map(item => $('div', { class: 'score-card' }, $('input', { value: item.name, onchange: event => { item.name = event.target.value.toUpperCase(); save(); render(); } }), $('input', { type: 'number', value: item.score || 0, onchange: event => { item.score = Number(event.target.value || 0); save(); render(); } }), $('button', { class: 'btn danger', onclick: () => { if (state.players.length < 2) return toast('Deve restare almeno un giocatore.'); state.players = state.players.filter(player => player.id !== item.id); playerId = state.players[0]?.id; scorePanelPlayerId = ''; save(); render(); } }, 'Rimuovi')))
+    ...state.players.map(item => $('div', { class: 'score-card' }, $('input', { value: item.name, 'aria-label': `Nome giocatore ${item.name}`, onchange: event => { item.name = event.target.value.toUpperCase(); save(); render(); } }), $('input', { type: 'number', value: item.score || 0, 'aria-label': `Punteggio ${item.name}`, onchange: event => { item.score = Number(event.target.value || 0); save(); render(); } }), $('button', { class: 'btn danger', onclick: () => { if (state.players.length < 2) return toast('Deve restare almeno un giocatore.'); state.players = state.players.filter(player => player.id !== item.id); playerId = state.players[0]?.id; scorePanelPlayerId = ''; save(); render(); } }, 'Rimuovi')))
   );
 }
 
-function libraryAdmin() { return $('section', { class: 'stack' }, $('h3', {}, 'Lista Anime / Argomenti'), $('textarea', { value: state.library.join('\n'), style: 'min-height:160px', onchange: event => { state.library = event.target.value.split('\n').map(item => item.trim()).filter(Boolean); save(); render(); } })); }
-function powersAdmin() { return $('section', { class: 'stack' }, $('h3', {}, 'Poteri'), $('textarea', { value: JSON.stringify(state.powers, null, 2), style: 'min-height:180px', onchange: event => { try { state.powers = JSON.parse(event.target.value); save(); toast('Poteri aggiornati'); } catch { toast('JSON poteri non valido'); } } })); }
+function libraryAdmin() { return $('section', { class: 'stack' }, $('h3', {}, 'Lista Anime / Argomenti'), $('textarea', { value: state.library.join('\n'), 'aria-label': 'Lista anime e argomenti', style: 'min-height:160px', onchange: event => { state.library = event.target.value.split('\n').map(item => item.trim()).filter(Boolean); save(); render(); } })); }
+function powersAdmin() { return $('section', { class: 'stack' }, $('h3', {}, 'Poteri'), $('textarea', { value: JSON.stringify(state.powers, null, 2), 'aria-label': 'Configurazione JSON dei poteri', style: 'min-height:180px', onchange: event => { try { state.powers = JSON.parse(event.target.value); save(); toast('Poteri aggiornati'); } catch { toast('JSON poteri non valido'); } } })); }
 function scores() {
   return $('main', { class: 'grid two' },
     $('section', { class: 'panel stack' },
@@ -2786,6 +3142,8 @@ function scores() {
       $('div', { class: 'row' },
         $('button', { class: 'btn danger', onclick: () => {
           if (!confirm('Iniziare una nuova partita? Punteggi, storico e progressi verranno azzerati.')) return;
+          exportData('backup-prima-nuova-partita');
+          backupDocument(localStorage, BACKUP_KEY, serializeDocument(state));
           state.players.forEach(item => item.score = 0);
           state.history = [];
           state.session = { games: {} };
@@ -2793,16 +3151,40 @@ function scores() {
           view = 'show';
           resetStage('hub');
         } }, 'Nuova partita'),
-        $('button', { class: 'btn', onclick: () => { state.history = []; save(); render(); } }, 'Svuota storico')
+        $('button', { class: 'btn', onclick: () => {
+          if (!state.history.length || !confirm('Svuotare lo storico punti? Verrà prima esportato un backup.')) return;
+          exportData('backup-prima-svuota-storico');
+          backupDocument(localStorage, BACKUP_KEY, serializeDocument(state));
+          state.history = [];
+          save();
+          render();
+        } }, 'Svuota storico')
       )
     ),
     $('aside', { class: 'panel' }, history())
   );
 }
-function exportData() { const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = $('a', { href: url, download: `trivia-challenge-${new Date().toISOString().slice(0, 10)}.json` }); document.body.append(link); link.click(); link.remove(); URL.revokeObjectURL(url); }
-function importData(event) { const file = event.target.files?.[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const prepared = prepareDocument(JSON.parse(reader.result)); backupDocument(localStorage, BACKUP_KEY, state); const data = hydrate(prepared); state = data; gameId = state.games[0].id; playerId = state.players[0].id; scorePanelPlayerId = ''; save(); render(); toast('Dati importati; backup precedente conservato'); } catch (error) { toast(`Import fallito: ${error.message}`); } finally { event.target.value = ''; } }; reader.readAsText(file); }
+
+function settingsAdmin() {
+  return $('section', { class: 'stack' },
+    $('h3', {}, 'Avvisi partita'),
+    $('label', { class: 'check-field' },
+      $('input', { type: 'checkbox', checked: state.settings?.alertsEnabled !== false, onchange: event => { state.settings.alertsEnabled = event.target.checked; save(); } }),
+      'Avviso visivo allo scadere del timer'
+    ),
+    $('label', { class: 'check-field' },
+      $('input', { type: 'checkbox', checked: state.settings?.soundsEnabled !== false, onchange: event => { state.settings.soundsEnabled = event.target.checked; save(); } }),
+      'Avviso sonoro locale allo scadere del timer'
+    )
+  );
+}
+function exportData(prefix = 'trivia-challenge') { const safePrefix = typeof prefix === 'string' ? prefix : 'trivia-challenge'; const blob = new Blob([JSON.stringify(serializeDocument(state), null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = $('a', { href: url, download: `${safePrefix}-${new Date().toISOString().slice(0, 10)}.json` }); document.body.append(link); link.click(); link.remove(); URL.revokeObjectURL(url); }
+function importData(event) { const file = event.target.files?.[0]; if (!file) return; exportData('backup-prima-import'); const reader = new FileReader(); reader.onload = () => { try { const prepared = prepareDocument(JSON.parse(reader.result)); backupDocument(localStorage, BACKUP_KEY, serializeDocument(state)); const data = hydrate(prepared); state = data; gameId = state.games[0].id; playerId = state.players[0].id; scorePanelPlayerId = ''; undoStack = []; lastSavedContentSnapshot = JSON.stringify(editorialSnapshot(state)); save(); render(); toast('Dati importati; backup precedente conservato'); } catch (error) { toast(`Import fallito: ${error.message}`); } finally { event.target.value = ''; } }; reader.readAsText(file); }
 
 window.addEventListener('keydown', handleUndoShortcut);
 window.addEventListener('keydown', handleHostShortcut);
+window.addEventListener('beforeunload', () => {
+  if (pendingSave) save();
+});
 render();
 loadAssetManifest();

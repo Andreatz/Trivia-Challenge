@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "paths": {
+    "public/assets/indovina-il-personaggio/anime/doflamimgo-2.png": "public/assets/indovina-il-personaggio/anime/doflamingo-2.png",
+    "public/assets/indovina-il-personaggio/anime/aizen-1.png": "public/assets/indovina-il-personaggio/anime/aizen-1.webp",
+    "public/assets/indovina-il-personaggio/anime/aizen-2.png": "public/assets/indovina-il-personaggio/anime/aizen-2.webp",
+    "public/assets/indovina-il-personaggio/anime/aizen-3.png": "public/assets/indovina-il-personaggio/anime/aizen-3.webp",
+    "public/assets/indovina-il-personaggio/anime/aizen-4.png": "public/assets/indovina-il-personaggio/anime/aizen-4.webp"
+  }
+}

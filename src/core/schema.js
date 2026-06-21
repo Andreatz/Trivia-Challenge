@@ -1,8 +1,15 @@
 import { GAME_TYPES } from './game-registry.js';
 
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 const MEDIA_FIELDS = new Set(['image', 'audio', 'media', 'detailImage', 'fullImage', 'src', 'art']);
+export const LEGACY_MEDIA_PATHS = Object.freeze({
+  'public/assets/indovina-il-personaggio/anime/doflamimgo-2.png': 'public/assets/indovina-il-personaggio/anime/doflamingo-2.png',
+  'public/assets/indovina-il-personaggio/anime/aizen-1.png': 'public/assets/indovina-il-personaggio/anime/aizen-1.webp',
+  'public/assets/indovina-il-personaggio/anime/aizen-2.png': 'public/assets/indovina-il-personaggio/anime/aizen-2.webp',
+  'public/assets/indovina-il-personaggio/anime/aizen-3.png': 'public/assets/indovina-il-personaggio/anime/aizen-3.webp',
+  'public/assets/indovina-il-personaggio/anime/aizen-4.png': 'public/assets/indovina-il-personaggio/anime/aizen-4.webp'
+});
 
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -75,19 +82,59 @@ export function migrateDocument(input) {
     document.schemaVersion = 2;
   }
 
+  if (version < 3) {
+    document.content = {
+      title: document.title || 'TRIVIA CHALLENGE',
+      subtitle: document.subtitle || 'ANIME EDITION',
+      homeLayout: document.homeLayout || {},
+      games: document.games || [],
+      library: document.library || [],
+      powers: document.powers || []
+    };
+    document.session ||= { games: {} };
+    document.session.games ||= {};
+    document.session.players = document.players || document.session.players || [];
+    document.settings ||= { soundsEnabled: true, alertsEnabled: true };
+    document.history ||= [];
+    delete document.title;
+    delete document.subtitle;
+    delete document.homeLayout;
+    delete document.games;
+    delete document.library;
+    delete document.powers;
+    delete document.players;
+    document.schemaVersion = 3;
+  }
+
+  rewriteLegacyMediaPaths(document);
   return document;
+}
+
+function rewriteLegacyMediaPaths(value) {
+  if (Array.isArray(value)) return value.forEach(rewriteLegacyMediaPaths);
+  if (!isRecord(value)) return;
+  Object.entries(value).forEach(([key, entry]) => {
+    if (MEDIA_FIELDS.has(key) && typeof entry === 'string' && LEGACY_MEDIA_PATHS[entry]) value[key] = LEGACY_MEDIA_PATHS[entry];
+    else rewriteLegacyMediaPaths(entry);
+  });
 }
 
 export function validateDocument(input) {
   const errors = [];
   if (!isRecord(input)) return ['Il documento deve essere un oggetto JSON.'];
-  if (!Array.isArray(input.games) || input.games.length === 0) errors.push('games: deve contenere almeno un minigioco.');
-  if (!Array.isArray(input.players) || input.players.length === 0) errors.push('players: deve contenere almeno un giocatore.');
-  if (!isRecord(input.session) || !isRecord(input.session.games)) errors.push('session.games: stato sessione mancante.');
+  const content = isRecord(input.content) ? input.content : input;
+  const session = isRecord(input.session) ? input.session : {};
+  const games = content.games;
+  const players = Array.isArray(session.players) ? session.players : input.players;
+  if (!Array.isArray(games) || games.length === 0) errors.push('content.games: deve contenere almeno un minigioco.');
+  if (!Array.isArray(players) || players.length === 0) errors.push('session.players: deve contenere almeno un giocatore.');
+  if (!isRecord(session.games)) errors.push('session.games: stato sessione mancante.');
+  if (Number(input.schemaVersion || 0) >= 3 && !isRecord(input.settings)) errors.push('settings: impostazioni mancanti.');
+  if (Number(input.schemaVersion || 0) >= 3 && !Array.isArray(input.history)) errors.push('history: storico non valido.');
 
   const ids = new Set();
-  (Array.isArray(input.games) ? input.games : []).forEach((game, index) => {
-    const path = `games[${index}]`;
+  (Array.isArray(games) ? games : []).forEach((game, index) => {
+    const path = `content.games[${index}]`;
     if (!isRecord(game)) {
       errors.push(`${path}: deve essere un oggetto.`);
       return;
@@ -100,8 +147,8 @@ export function validateDocument(input) {
     validateGameShape(game, path, errors);
   });
 
-  (Array.isArray(input.players) ? input.players : []).forEach((player, index) => {
-    const path = `players[${index}]`;
+  (Array.isArray(players) ? players : []).forEach((player, index) => {
+    const path = `session.players[${index}]`;
     if (!isRecord(player)) {
       errors.push(`${path}: deve essere un oggetto.`);
       return;
@@ -113,8 +160,33 @@ export function validateDocument(input) {
     if (!Number.isFinite(Number(player.score))) errors.push(`${path}.score: punteggio non numerico.`);
   });
 
-  visitMedia(input, '', errors);
+  visitMedia(content, 'content', errors);
   return errors;
+}
+
+export function serializeDocument(state) {
+  return {
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    content: {
+      title: state.title || 'TRIVIA CHALLENGE',
+      subtitle: state.subtitle || 'ANIME EDITION',
+      homeLayout: state.homeLayout || {},
+      games: state.games || [],
+      library: state.library || [],
+      powers: state.powers || []
+    },
+    session: {
+      games: state.session?.games || {},
+      players: state.players || [],
+      ...(state.session?.navigation ? { navigation: state.session.navigation } : {})
+    },
+    settings: {
+      soundsEnabled: state.settings?.soundsEnabled !== false,
+      alertsEnabled: state.settings?.alertsEnabled !== false,
+      ...(state.settings || {})
+    },
+    history: state.history || []
+  };
 }
 
 function requireList(game, key, path, errors, minimum = 1) {

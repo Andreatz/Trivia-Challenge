@@ -1,28 +1,41 @@
 # Content schema
 
-Questo documento descrive il formato JSON versione 2 usato dal tool.
+Questo documento descrive il formato JSON versione 3 usato dal tool.
 
 ## Documento radice
 
 ```json
 {
-  "schemaVersion": 2,
-  "title": "TRIVIA CHALLENGE",
-  "subtitle": "ANIME EDITION",
-  "players": [],
-  "games": [],
-  "library": [],
-  "powers": [],
-  "history": [],
+  "schemaVersion": 3,
+  "content": {
+    "title": "TRIVIA CHALLENGE",
+    "subtitle": "ANIME EDITION",
+    "homeLayout": {},
+    "games": [],
+    "library": [],
+    "powers": []
+  },
   "session": {
-    "games": {}
+    "games": {},
+    "players": [],
+    "navigation": {
+      "view": "show",
+      "screen": "game",
+      "gameId": "game-...",
+      "i": 0,
+      "revealed": 0
+    }
+  },
+  "settings": {
+    "soundsEnabled": true,
+    "alertsEnabled": true
   }
 }
 ```
 
-`games` contiene esclusivamente configurazione e contenuti. Gli esiti della partita, le domande usate e i bonus assegnati vengono conservati separatamente in `session.games`, indicizzati per ID del minigioco.
+`content.games` contiene esclusivamente configurazione e contenuti. Giocatori, punteggi, esiti della partita, domande usate, bonus e la navigazione minima per il ripristino vengono conservati in `session`; le preferenze applicative restano in `settings`. Lo storico dettagliato delle assegnazioni è transitorio e non viene incluso nel salvataggio persistente, così la sessione resta minimale; i punteggi correnti vengono invece sempre conservati.
 
-I documenti senza `schemaVersion` vengono migrati automaticamente. Un documento con una versione futura non supportata viene rifiutato senza sovrascrivere lo stato corrente.
+I documenti senza `schemaVersion` e quelli in formato v1/v2 vengono migrati automaticamente. Un documento con una versione futura non supportata viene rifiutato senza sovrascrivere lo stato corrente.
 
 Ogni minigioco ha sempre questi campi base:
 

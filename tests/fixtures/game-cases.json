@@ -1,0 +1,57 @@
+[
+  {
+    "type": "guess",
+    "valid": { "id": "game-guess", "type": "guess", "title": "Indovina", "rounds": [{ "answer": "Aizen", "clues": [{ "label": "100", "image": "public/assets/box-100.png" }] }] },
+    "invalid": { "id": "game-guess", "type": "guess", "title": "Indovina", "rounds": [] }
+  },
+  {
+    "type": "bomb",
+    "valid": { "id": "game-bomb", "type": "bomb", "title": "Bomba", "pointsPerCorrect": 50, "items": [{ "label": "A", "isBomb": false }] },
+    "invalid": { "id": "game-bomb", "type": "bomb", "title": "Bomba", "pointsPerCorrect": "no", "items": [] }
+  },
+  {
+    "type": "said",
+    "valid": { "id": "game-said", "type": "said", "title": "Chi l'ha detto", "questions": [{ "prompt": "Chi parla?", "answer": "A" }] },
+    "invalid": { "id": "game-said", "type": "said", "title": "Chi l'ha detto", "questions": [] }
+  },
+  {
+    "type": "detail",
+    "valid": { "id": "game-detail", "type": "detail", "title": "Dettaglio", "questions": [{ "answer": "Scena" }] },
+    "invalid": { "id": "game-detail", "type": "detail", "title": "Dettaglio" }
+  },
+  {
+    "type": "quote",
+    "valid": { "id": "game-quote", "type": "quote", "title": "Frase", "questions": [{ "partial": "Io sono", "answer": "tuo padre" }] },
+    "invalid": { "id": "game-quote", "type": "quote", "title": "Frase", "questions": [] }
+  },
+  {
+    "type": "chain",
+    "valid": { "id": "game-chain", "type": "chain", "title": "Catena", "questions": [{ "question": "Q", "answer": "A" }] },
+    "invalid": { "id": "game-chain", "type": "chain", "title": "Catena", "questions": "non-array" }
+  },
+  {
+    "type": "labors",
+    "valid": { "id": "game-labors", "type": "labors", "title": "Fatiche", "questions": [{ "question": "Q", "answer": "A" }] },
+    "invalid": { "id": "game-labors", "type": "labors", "title": "Fatiche", "questions": [] }
+  },
+  {
+    "type": "guillotine",
+    "valid": { "id": "game-guillotine", "type": "guillotine", "title": "Ghigliottina", "words": ["uno", "due", "tre", "quattro", "cinque"], "answer": "A" },
+    "invalid": { "id": "game-guillotine", "type": "guillotine", "title": "Ghigliottina", "words": ["uno", "due"] }
+  },
+  {
+    "type": "pass",
+    "valid": { "id": "game-pass", "type": "pass", "title": "Passaparola", "points": { "facile": 5, "medio": 10, "difficile": 20 }, "bonus": { "facile": 200, "medio": 500, "difficile": 1000 }, "questions": [{ "letter": "A", "question": "Q", "answer": "A" }] },
+    "invalid": { "id": "game-pass", "type": "pass", "title": "Passaparola", "points": 10, "questions": [] }
+  },
+  {
+    "type": "jeopardy",
+    "valid": { "id": "game-jeopardy", "type": "jeopardy", "title": "Jeopardy", "categories": [{ "name": "Anime", "clues": [{ "value": 100, "question": "Q", "answer": "A" }] }] },
+    "invalid": { "id": "game-jeopardy", "type": "jeopardy", "title": "Jeopardy", "categories": [{ "name": "Anime", "clues": [] }] }
+  },
+  {
+    "type": "sarabanda",
+    "valid": { "id": "game-sarabanda", "type": "sarabanda", "title": "Sarabanda", "songs": [{ "title": "T", "artist": "A" }] },
+    "invalid": { "id": "game-sarabanda", "type": "sarabanda", "title": "Sarabanda", "songs": [] }
+  }
+]

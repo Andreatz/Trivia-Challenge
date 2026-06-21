@@ -1,0 +1,797 @@
+{
+  "version": 1,
+  "thumbnails": [
+    {
+      "source": "public/assets/Background.jpeg",
+      "thumbnail": "public/thumbnails/Background.webp"
+    },
+    {
+      "source": "public/assets/box-1000.png",
+      "thumbnail": "public/thumbnails/box-1000.webp"
+    },
+    {
+      "source": "public/assets/box-250.png",
+      "thumbnail": "public/thumbnails/box-250.webp"
+    },
+    {
+      "source": "public/assets/box-50.png",
+      "thumbnail": "public/thumbnails/box-50.webp"
+    },
+    {
+      "source": "public/assets/box-500.png",
+      "thumbnail": "public/thumbnails/box-500.webp"
+    },
+    {
+      "source": "public/assets/cluedo/1x1_A_man_making_a_bubble_with_chewi.png",
+      "thumbnail": "public/thumbnails/cluedo/1x1_A_man_making_a_bubble_with_chewi.webp"
+    },
+    {
+      "source": "public/assets/cluedo/29413fa081a5dfab54a9e466bdb032a0.jpg",
+      "thumbnail": "public/thumbnails/cluedo/29413fa081a5dfab54a9e466bdb032a0.webp"
+    },
+    {
+      "source": "public/assets/cluedo/3vi3h2p7hexa1.png",
+      "thumbnail": "public/thumbnails/cluedo/3vi3h2p7hexa1.webp"
+    },
+    {
+      "source": "public/assets/cluedo/4qw6df437z781.png",
+      "thumbnail": "public/thumbnails/cluedo/4qw6df437z781.webp"
+    },
+    {
+      "source": "public/assets/cluedo/8084768c4a00b14e362ed3134e3f2771.jpg",
+      "thumbnail": "public/thumbnails/cluedo/8084768c4a00b14e362ed3134e3f2771.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Abyss_Game_Opening.webp",
+      "thumbnail": "public/thumbnails/cluedo/Abyss_Game_Opening.webp"
+    },
+    {
+      "source": "public/assets/cluedo/d72lzm3-e0686642-a68a-4b28-b22e-6821faeb45c2.png",
+      "thumbnail": "public/thumbnails/cluedo/d72lzm3-e0686642-a68a-4b28-b22e-6821faeb45c2.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Deku.webp",
+      "thumbnail": "public/thumbnails/cluedo/Deku.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Goku.png",
+      "thumbnail": "public/thumbnails/cluedo/Goku.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Gon.webp",
+      "thumbnail": "public/thumbnails/cluedo/Gon.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Gōkakyū_no_Jutsu_(Flusso_-_Game).webp",
+      "thumbnail": "public/thumbnails/cluedo/Gōkakyū_no_Jutsu_(Flusso_-_Game).webp"
+    },
+    {
+      "source": "public/assets/cluedo/Ichigo.png",
+      "thumbnail": "public/thumbnails/cluedo/Ichigo.webp"
+    },
+    {
+      "source": "public/assets/cluedo/ja2rwASy69ySlG3q_Brb8RhD7Sq2gzUEqSxxAbomVS8.webp",
+      "thumbnail": "public/thumbnails/cluedo/ja2rwASy69ySlG3q_Brb8RhD7Sq2gzUEqSxxAbomVS8.webp"
+    },
+    {
+      "source": "public/assets/cluedo/landscape_comp.jpeg",
+      "thumbnail": "public/thumbnails/cluedo/landscape_comp.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Luffy.png",
+      "thumbnail": "public/thumbnails/cluedo/Luffy.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Makankosappo.png",
+      "thumbnail": "public/thumbnails/cluedo/Makankosappo.webp"
+    },
+    {
+      "source": "public/assets/cluedo/MV5BMjNhZTc5Y2MtYjlhOC00YTM3LWE0MTctNmFhMjFlMjNlN2NmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+      "thumbnail": "public/thumbnails/cluedo/MV5BMjNhZTc5Y2MtYjlhOC00YTM3LWE0MTctNmFhMjFlMjNlN2NmXkEyXkFqcGc@._V1_FMjpg_UX1000_.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Naruto.webp",
+      "thumbnail": "public/thumbnails/cluedo/Naruto.webp"
+    },
+    {
+      "source": "public/assets/cluedo/omorphia-visual-low.jpg",
+      "thumbnail": "public/thumbnails/cluedo/omorphia-visual-low.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Prominence Burn.png",
+      "thumbnail": "public/thumbnails/cluedo/Prominence Burn.webp"
+    },
+    {
+      "source": "public/assets/cluedo/Tensa Zangetsu.png",
+      "thumbnail": "public/thumbnails/cluedo/Tensa Zangetsu.webp"
+    },
+    {
+      "source": "public/assets/cluedo/thumb-1920-1370952.png",
+      "thumbnail": "public/thumbnails/cluedo/thumb-1920-1370952.webp"
+    },
+    {
+      "source": "public/assets/cluedo/WallpaperDog-20680047.jpg",
+      "thumbnail": "public/thumbnails/cluedo/WallpaperDog-20680047.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ace-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ace-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ace-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ace-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ace-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ace-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ace-4.jpg",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ace-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/aizen-1.webp",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/aizen-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/aizen-2.webp",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/aizen-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/aizen-3.webp",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/aizen-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/aizen-4.webp",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/aizen-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/annie-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/annie-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/annie-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/annie-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/annie-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/annie-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/annie-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/annie-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/berthold-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/berthold-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/berthold-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/berthold-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/berthold-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/berthold-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/berthold-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/berthold-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/boa-1.jpg",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/boa-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/boa-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/boa-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/boa-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/boa-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/boa-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/boa-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/bonolenov-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/bonolenov-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/bonolenov-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/bonolenov-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/bonolenov-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/bonolenov-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/bonolenov-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/bonolenov-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/chrollo-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/chrollo-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/chrollo-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/chrollo-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/chrollo-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/chrollo-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/chrollo-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/chrollo-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/doflamingo-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/doflamingo-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/doflamingo-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/doflamingo-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/doflamingo-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/doflamingo-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/doflamingo-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/doflamingo-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/eren-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/eren-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/eren-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/eren-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/eren-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/eren-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/eren-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/eren-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/falco-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/falco-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/falco-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/falco-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/falco-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/falco-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/falco-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/falco-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gaara-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gaara-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gaara-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gaara-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gaara-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gaara-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gaara-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gaara-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gon-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gon-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gon-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gon-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gon-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gon-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/gon-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/gon-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/himeno-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/himeno-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/himeno-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/himeno-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/himeno-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/himeno-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/himeno-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/himeno-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ichigo-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ichigo-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ichigo-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ichigo-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ichigo-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ichigo-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ichigo-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ichigo-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/jogo-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/jogo-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/jogo-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/jogo-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/jogo-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/jogo-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/jogo-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/jogo-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kaguya-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kaguya-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kaguya-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kaguya-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kaguya-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kaguya-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kaguya-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kaguya-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kakashi-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kakashi-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kakashi-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kakashi-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kakashi-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kakashi-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kakashi-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kakashi-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/killua-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/killua-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/killua-2.jpeg",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/killua-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/killua-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/killua-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/killua-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/killua-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kurapika-1.jpg",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kurapika-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kurapika-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kurapika-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kurapika-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kurapika-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/kurapika-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/kurapika-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/levi-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/levi-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/levi-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/levi-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/levi-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/levi-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/levi-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/levi-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/luffy-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/luffy-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/luffy-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/luffy-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/luffy-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/luffy-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/luffy-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/luffy-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/naruto-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/naruto-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/naruto-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/naruto-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/naruto-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/naruto-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/naruto-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/naruto-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/netero-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/netero-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/netero-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/netero-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/netero-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/netero-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/netero-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/netero-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/nicorobin-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/nicorobin-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/nicorobin-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/nicorobin-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/nicorobin-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/nicorobin-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/nicorobin-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/nicorobin-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/sakura-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/sakura-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/sakura-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/sakura-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/sakura-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/sakura-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/sakura-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/sakura-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/suzaku-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/suzaku-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/suzaku-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/suzaku-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/suzaku-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/suzaku-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/suzaku-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/suzaku-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ulquiorra-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ulquiorra-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ulquiorra-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ulquiorra-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ulquiorra-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ulquiorra-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/ulquiorra-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/ulquiorra-4.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/zeke-1.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/zeke-1.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/zeke-2.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/zeke-2.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/zeke-3.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/zeke-3.webp"
+    },
+    {
+      "source": "public/assets/indovina-il-personaggio/anime/zeke-4.png",
+      "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/zeke-4.webp"
+    },
+    {
+      "source": "public/assets/Indovina-il-personaggio.png",
+      "thumbnail": "public/thumbnails/Indovina-il-personaggio.webp"
+    },
+    {
+      "source": "public/assets/Jeopardy.png",
+      "thumbnail": "public/thumbnails/Jeopardy.webp"
+    },
+    {
+      "source": "public/assets/Passaparola.png",
+      "thumbnail": "public/thumbnails/Passaparola.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/1024px-0448Lucario.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/1024px-0448Lucario.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/493Arceus.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/493Arceus.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/92d1690b591d42988322de6699e97474_1611356315530.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/92d1690b591d42988322de6699e97474_1611356315530.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Adult_Chi-Chi.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Adult_Chi-Chi.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Ainz_MFTD_cropped.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Ainz_MFTD_cropped.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Albedo99999999.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Albedo99999999.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Anime_Lucy_Heartfilia_X793_Render.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Anime_Lucy_Heartfilia_X793_Render.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Attacktitanrender2.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Attacktitanrender2.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/DBFighterZ_-_Beerus_by_PurpleHato.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/DBFighterZ_-_Beerus_by_PurpleHato.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/EdoMadara_29_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/EdoMadara_29_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Frieren_anime_profile.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Frieren_anime_profile.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Genryusai_shigekuni_yamamoto_ryujin_jakka_by_esteban_93-dabba50.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Genryusai_shigekuni_yamamoto_ryujin_jakka_by_esteban_93-dabba50.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Gilgamesh.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Gilgamesh.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/gojo.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/gojo.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Griffith_render_2.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Griffith_render_2.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Hunter_X_Hunter_Chrollo_Incognito_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Hunter_X_Hunter_Chrollo_Incognito_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Ino_Yamanaka_-_Kid.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Ino_Yamanaka_-_Kid.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/itachi.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/itachi.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Izou._29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Izou._29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Kaguya_by_marcinha20-d97xpbb.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Kaguya_by_marcinha20-d97xpbb.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Kallen_GBF.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Kallen_GBF.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/KenshiroAnime.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/KenshiroAnime.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/MeliodasRenderSword.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/MeliodasRenderSword.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/MikasaAckerman_29_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/MikasaAckerman_29_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/MistyEP.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/MistyEP.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Mitsuri_anime2.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Mitsuri_anime2.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Muzan_Kibutsuji_Full_Body_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Muzan_Kibutsuji_Full_Body_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Natsu_in_x792_Anime.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Natsu_in_x792_Anime.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Newcfgarouwubba.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Newcfgarouwubba.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/NobaraKugisaki_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/NobaraKugisaki_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/OmegamonRednerDark.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/OmegamonRednerDark.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/ORDINAL_SCALE_ASUNA.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/ORDINAL_SCALE_ASUNA.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/pngwing.com.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/pngwing.com.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Post-Timeskip_Mayuri.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Post-Timeskip_Mayuri.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/PowerRenderHD.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/PowerRenderHD.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Pre-Timeskip_Yoruichi_Rendered.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Pre-Timeskip_Yoruichi_Rendered.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Rei_Ayanami_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Rei_Ayanami_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Reinerbraunrender.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Reinerbraunrender.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Render_2.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Render_2.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Rider_of_black.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Rider_of_black.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/RoronoaZoro._29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/RoronoaZoro._29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Ryuk.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Ryuk.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Shigaraki_Render.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Shigaraki_Render.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Sukuna_Anime.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Sukuna_Anime.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Super_Cell_Toei.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Super_Cell_Toei.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Suzaku_GBF.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Suzaku_GBF.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Tatsumaki.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Tatsumaki.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Tsuyu_Asui_Full_Body_Hero_Costume_Anime.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Tsuyu_Asui_Full_Body_Hero_Costume_Anime.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Ulquiorra_Cifer.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Ulquiorra_Cifer.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Yagami-light-Render-SV.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Yagami-light-Render-SV.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Yamato_29.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Yamato_29.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Yor_Forger_Anime_png.png",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Yor_Forger_Anime_png.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Yusukeurameshidelinquent.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Yusukeurameshidelinquent.webp"
+    },
+    {
+      "source": "public/assets/schiva-la-bomba/Zeno_sama_y_futuro_zeno_sama_by_jaredsongohan_dbpoqfy-fullview.webp",
+      "thumbnail": "public/thumbnails/schiva-la-bomba/Zeno_sama_y_futuro_zeno_sama_by_jaredsongohan_dbpoqfy-fullview.webp"
+    },
+    {
+      "source": "public/assets/Schiva-la-bomba.png",
+      "thumbnail": "public/thumbnails/Schiva-la-bomba.webp"
+    }
+  ]
+}

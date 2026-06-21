@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'trivia-challenge-v1';
+const CACHE_VERSION = 'trivia-challenge-v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -7,22 +7,24 @@ const APP_SHELL = [
   './src/fullscreen.js',
   './src/pwa.js',
   './src/core/game-rules.js',
+  './src/core/game-contracts.js',
   './src/core/game-registry.js',
   './src/core/schema.js',
   './src/core/storage.js',
   './src/core/timer.js',
   './src/styles.css',
+  './src/components.css',
   './src/anime-theme-overrides.css',
   './src/legacy-glow.css',
   './src/fullscreen.css',
   './public/assets/favicon.svg',
   './public/assets-manifest.json',
+  './public/thumbnails-manifest.json',
   './public/assets/Background.jpeg'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -50,4 +52,8 @@ self.addEventListener('fetch', event => {
       });
     })
   );
+});
+
+self.addEventListener('message', event => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });

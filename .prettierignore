@@ -1,0 +1,6 @@
+node_modules/
+public/assets/
+public/reference-images/
+public/assets-manifest.json
+playwright-report/
+test-results/
