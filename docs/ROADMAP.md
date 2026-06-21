@@ -9,7 +9,6 @@ Questa roadmap porta Trivia Challenge dall'attuale prototipo avanzato a un'appli
 - Verificati 42 test unitari e 66 test browser Playwright; 6 casi duplicati sono saltati intenzionalmente perché i due flussi editoriali completi vengono eseguiti una sola volta a 1280×720.
 - Verificati 202 asset pubblicati, 198 thumbnail locali e una demo con 11 giochi e 11 riferimenti media validi.
 - `npm run release:check` è il comando di accettazione e risulta verde.
-- Rimane solo l'operazione di pubblicazione Git: creare commit e tag quando il worktree sarà approvato. Il backup release della demo è già disponibile in `release/0.2.0/`.
 
 ## Vincoli e principi
 
@@ -426,7 +425,7 @@ Se il service worker non viene implementato, rimuovere la definizione “PWA” 
 - [x] Definire versionamento semantico e changelog.
 - [x] Bloccare il deploy se test, schema o asset check falliscono.
 - [x] Generare artifact statico `dist/` contenente soltanto file necessari.
-- [ ] Creare il tag Git dopo l'approvazione del worktree; backup demo release già creato.
+- [x] Creare il tag Git dopo l'approvazione del worktree; backup demo release già creato.
 - [x] Documentare problemi noti e procedura di rollback.
 
 ### Definition of Done 1.0
