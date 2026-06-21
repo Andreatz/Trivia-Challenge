@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from PIL import Image, ImageOps
@@ -24,6 +25,10 @@ def generate(source: Path, target: Path) -> None:
         image.save(target, "WEBP", quality=76, method=6)
 
 
+def source_hash(source: Path) -> str:
+    return hashlib.sha256(source.read_bytes()).hexdigest()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
@@ -35,14 +40,14 @@ def main() -> None:
     extras = [path for path in OUTPUT.rglob("*.webp") if path not in expected_targets] if OUTPUT.exists() else []
     for source in sources:
         target = target_for(source)
-        if not target.exists() or target.stat().st_mtime_ns < source.stat().st_mtime_ns:
-            if args.check:
-                stale.append(target)
-            else:
-                generate(source, target)
+        if not target.exists() and args.check:
+            stale.append(target)
+        elif not args.check:
+            generate(source, target)
         entries.append({
             "source": source.relative_to(ROOT).as_posix(),
             "thumbnail": target.relative_to(ROOT).as_posix(),
+            "sourceSha256": source_hash(source),
         })
     manifest = json.dumps({"version": 1, "thumbnails": entries}, indent=2, ensure_ascii=False) + "\n"
     if args.check:
