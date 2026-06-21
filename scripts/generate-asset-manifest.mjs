@@ -31,7 +31,9 @@ const assets = await Promise.all((await walk(assetRoot)).map(async file => {
     bytes: Number((await stat(file)).size)
   };
 }));
-assets.sort((left, right) => left.path.localeCompare(right.path, 'it'));
+// Locale-aware collation can differ between the ICU versions shipped by
+// Windows and Linux. Code-point ordering keeps the generated file stable.
+assets.sort((left, right) => left.path < right.path ? -1 : left.path > right.path ? 1 : 0);
 
 const serialized = `${JSON.stringify({ generatedBy: 'npm run assets:manifest', assets }, null, 2)}\n`;
 if (checkOnly) {

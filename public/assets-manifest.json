@@ -2,14 +2,34 @@
   "generatedBy": "npm run assets:manifest",
   "assets": [
     {
-      "path": "public/assets/audio/demo-tone.wav",
-      "type": "audio/wav",
-      "bytes": 35324
-    },
-    {
       "path": "public/assets/Background.jpeg",
       "type": "image/jpeg",
       "bytes": 1869185
+    },
+    {
+      "path": "public/assets/Indovina-il-personaggio.png",
+      "type": "image/png",
+      "bytes": 2073422
+    },
+    {
+      "path": "public/assets/Jeopardy.png",
+      "type": "image/png",
+      "bytes": 1697132
+    },
+    {
+      "path": "public/assets/Passaparola.png",
+      "type": "image/png",
+      "bytes": 1636297
+    },
+    {
+      "path": "public/assets/Schiva-la-bomba.png",
+      "type": "image/png",
+      "bytes": 1484280
+    },
+    {
+      "path": "public/assets/audio/demo-tone.wav",
+      "type": "audio/wav",
+      "bytes": 35324
     },
     {
       "path": "public/assets/box-1000.png",
@@ -62,19 +82,9 @@
       "bytes": 95870
     },
     {
-      "path": "public/assets/cluedo/d72lzm3-e0686642-a68a-4b28-b22e-6821faeb45c2.png",
-      "type": "image/png",
-      "bytes": 1042078
-    },
-    {
       "path": "public/assets/cluedo/Deku.webp",
       "type": "image/webp",
       "bytes": 229210
-    },
-    {
-      "path": "public/assets/cluedo/Gōkakyū_no_Jutsu_(Flusso_-_Game).webp",
-      "type": "image/webp",
-      "bytes": 40522
     },
     {
       "path": "public/assets/cluedo/Goku.png",
@@ -87,19 +97,14 @@
       "bytes": 33460
     },
     {
+      "path": "public/assets/cluedo/Gōkakyū_no_Jutsu_(Flusso_-_Game).webp",
+      "type": "image/webp",
+      "bytes": 40522
+    },
+    {
       "path": "public/assets/cluedo/Ichigo.png",
       "type": "image/png",
       "bytes": 367762
-    },
-    {
-      "path": "public/assets/cluedo/ja2rwASy69ySlG3q_Brb8RhD7Sq2gzUEqSxxAbomVS8.webp",
-      "type": "image/webp",
-      "bytes": 59330
-    },
-    {
-      "path": "public/assets/cluedo/landscape_comp.jpeg",
-      "type": "image/jpeg",
-      "bytes": 114758
     },
     {
       "path": "public/assets/cluedo/Luffy.png",
@@ -107,24 +112,19 @@
       "bytes": 82683
     },
     {
-      "path": "public/assets/cluedo/Makankosappo.png",
-      "type": "image/png",
-      "bytes": 3992
-    },
-    {
       "path": "public/assets/cluedo/MV5BMjNhZTc5Y2MtYjlhOC00YTM3LWE0MTctNmFhMjFlMjNlN2NmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
       "type": "image/jpeg",
       "bytes": 86800
     },
     {
+      "path": "public/assets/cluedo/Makankosappo.png",
+      "type": "image/png",
+      "bytes": 3992
+    },
+    {
       "path": "public/assets/cluedo/Naruto.webp",
       "type": "image/webp",
       "bytes": 175732
-    },
-    {
-      "path": "public/assets/cluedo/omorphia-visual-low.jpg",
-      "type": "image/jpeg",
-      "bytes": 775171
     },
     {
       "path": "public/assets/cluedo/Prominence Burn.png",
@@ -137,14 +137,34 @@
       "bytes": 163647
     },
     {
-      "path": "public/assets/cluedo/thumb-1920-1370952.png",
-      "type": "image/png",
-      "bytes": 2606441
-    },
-    {
       "path": "public/assets/cluedo/WallpaperDog-20680047.jpg",
       "type": "image/jpeg",
       "bytes": 196265
+    },
+    {
+      "path": "public/assets/cluedo/d72lzm3-e0686642-a68a-4b28-b22e-6821faeb45c2.png",
+      "type": "image/png",
+      "bytes": 1042078
+    },
+    {
+      "path": "public/assets/cluedo/ja2rwASy69ySlG3q_Brb8RhD7Sq2gzUEqSxxAbomVS8.webp",
+      "type": "image/webp",
+      "bytes": 59330
+    },
+    {
+      "path": "public/assets/cluedo/landscape_comp.jpeg",
+      "type": "image/jpeg",
+      "bytes": 114758
+    },
+    {
+      "path": "public/assets/cluedo/omorphia-visual-low.jpg",
+      "type": "image/jpeg",
+      "bytes": 775171
+    },
+    {
+      "path": "public/assets/cluedo/thumb-1920-1370952.png",
+      "type": "image/png",
+      "bytes": 2606441
     },
     {
       "path": "public/assets/cursor-neon.svg",
@@ -155,11 +175,6 @@
       "path": "public/assets/favicon.svg",
       "type": "image/svg+xml",
       "bytes": 911
-    },
-    {
-      "path": "public/assets/Indovina-il-personaggio.png",
-      "type": "image/png",
-      "bytes": 2073422
     },
     {
       "path": "public/assets/indovina-il-personaggio/anime/ace-1.png",
@@ -722,21 +737,6 @@
       "bytes": 3075403
     },
     {
-      "path": "public/assets/Jeopardy.png",
-      "type": "image/png",
-      "bytes": 1697132
-    },
-    {
-      "path": "public/assets/Passaparola.png",
-      "type": "image/png",
-      "bytes": 1636297
-    },
-    {
-      "path": "public/assets/Schiva-la-bomba.png",
-      "type": "image/png",
-      "bytes": 1484280
-    },
-    {
       "path": "public/assets/schiva-la-bomba/1024px-0448Lucario.png",
       "type": "image/png",
       "bytes": 331162
@@ -802,11 +802,6 @@
       "bytes": 780430
     },
     {
-      "path": "public/assets/schiva-la-bomba/gojo.webp",
-      "type": "image/webp",
-      "bytes": 77568
-    },
-    {
       "path": "public/assets/schiva-la-bomba/Griffith_render_2.webp",
       "type": "image/webp",
       "bytes": 262476
@@ -820,11 +815,6 @@
       "path": "public/assets/schiva-la-bomba/Ino_Yamanaka_-_Kid.webp",
       "type": "image/webp",
       "bytes": 35230
-    },
-    {
-      "path": "public/assets/schiva-la-bomba/itachi.png",
-      "type": "image/png",
-      "bytes": 128028
     },
     {
       "path": "public/assets/schiva-la-bomba/Izou._29.webp",
@@ -887,19 +877,14 @@
       "bytes": 130460
     },
     {
-      "path": "public/assets/schiva-la-bomba/OmegamonRednerDark.webp",
-      "type": "image/webp",
-      "bytes": 135552
-    },
-    {
       "path": "public/assets/schiva-la-bomba/ORDINAL_SCALE_ASUNA.webp",
       "type": "image/webp",
       "bytes": 135440
     },
     {
-      "path": "public/assets/schiva-la-bomba/pngwing.com.png",
-      "type": "image/png",
-      "bytes": 225576
+      "path": "public/assets/schiva-la-bomba/OmegamonRednerDark.webp",
+      "type": "image/webp",
+      "bytes": 135552
     },
     {
       "path": "public/assets/schiva-la-bomba/Post-Timeskip_Mayuri.webp",
@@ -1005,6 +990,21 @@
       "path": "public/assets/schiva-la-bomba/Zeno_sama_y_futuro_zeno_sama_by_jaredsongohan_dbpoqfy-fullview.webp",
       "type": "image/webp",
       "bytes": 116856
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/gojo.webp",
+      "type": "image/webp",
+      "bytes": 77568
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/itachi.png",
+      "type": "image/png",
+      "bytes": 128028
+    },
+    {
+      "path": "public/assets/schiva-la-bomba/pngwing.com.png",
+      "type": "image/png",
+      "bytes": 225576
     },
     {
       "path": "public/assets/ui-bg-anime-neon.svg",
