@@ -25,10 +25,13 @@ async function walk(directory) {
 
 const assets = await Promise.all((await walk(assetRoot)).map(async file => {
   const extension = path.extname(file).toLowerCase();
+  const bytes = extension === '.svg'
+    ? Buffer.byteLength((await readFile(file, 'utf8')).replaceAll('\r\n', '\n'), 'utf8')
+    : Number((await stat(file)).size);
   return {
     path: path.relative(root, file).replaceAll('\\', '/'),
     type: mimeTypes[extension] || 'application/octet-stream',
-    bytes: Number((await stat(file)).size)
+    bytes
   };
 }));
 // Locale-aware collation can differ between the ICU versions shipped by

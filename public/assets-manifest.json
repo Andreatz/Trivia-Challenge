@@ -169,7 +169,7 @@
     {
       "path": "public/assets/cursor-neon.svg",
       "type": "image/svg+xml",
-      "bytes": 800
+      "bytes": 785
     },
     {
       "path": "public/assets/favicon.svg",
@@ -1009,7 +1009,7 @@
     {
       "path": "public/assets/ui-bg-anime-neon.svg",
       "type": "image/svg+xml",
-      "bytes": 3973
+      "bytes": 3901
     }
   ]
 }
