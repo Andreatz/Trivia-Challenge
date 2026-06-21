@@ -26,6 +26,9 @@ def generate(source: Path, target: Path) -> None:
 
 
 def source_hash(source: Path) -> str:
+    if source.suffix.lower() == ".svg":
+        canonical = source.read_text(encoding="utf-8").replace("\r\n", "\n").encode("utf-8")
+        return hashlib.sha256(canonical).hexdigest()
     return hashlib.sha256(source.read_bytes()).hexdigest()
 
 
@@ -33,7 +36,10 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    sources = sorted(path for path in SOURCE.rglob("*") if path.suffix.lower() in EXTENSIONS)
+    sources = sorted(
+        (path for path in SOURCE.rglob("*") if path.suffix.lower() in EXTENSIONS),
+        key=lambda path: path.relative_to(SOURCE).as_posix(),
+    )
     entries = []
     stale = []
     expected_targets = {target_for(source) for source in sources}
