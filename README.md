@@ -16,6 +16,7 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 - **Admin panel** per creare, modificare, duplicare ed eliminare contenuti.
 - **Punteggi manuali** con bonus, correzioni rapide e storico.
 - **Import / export JSON** per backup e preparazione partite.
+- **Modalità spettatore** con ingresso via QR/nickname, risposte da telefono e classifica live separata.
 - **Supporto media**: immagini, video e audio tramite file locali o URL esterni.
 - **Galleria immagini di riferimento** dalla cartella `public/reference-images/`.
 - **Deploy statico su GitHub Pages** tramite workflow incluso.
@@ -127,6 +128,8 @@ I dati sono salvati nel `localStorage` del browser. Questo rende il tool immedia
 - i dati restano sul browser/dispositivo usato;
 - conviene esportare spesso il JSON;
 - per condividere una partita con un altro computer basta importare il JSON esportato.
+
+La modalità spettatore è l’unica funzione che richiede un backend condiviso Supabase. La configurazione, la migrazione SQL e le indicazioni per oltre 1.000 partecipanti sono descritte in [`docs/AUDIENCE_MODE.md`](docs/AUDIENCE_MODE.md).
 
 ## Roadmap tecnica
 

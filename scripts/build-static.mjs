@@ -3,7 +3,16 @@ import path from 'node:path';
 
 const root = process.cwd();
 const output = path.join(root, 'dist');
-const entries = ['index.html', 'manifest.webmanifest', 'service-worker.js', '.nojekyll', 'src', 'public'];
+const entries = [
+  'index.html',
+  'spectator.html',
+  'leaderboard.html',
+  'manifest.webmanifest',
+  'service-worker.js',
+  '.nojekyll',
+  'src',
+  'public'
+];
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });

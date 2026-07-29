@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trivia Challenge</title>
   <meta name="description" content="Tool per creare, presentare e gestire minigiochi Trivia Challenge." />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co http://127.0.0.1:* ws://127.0.0.1:*; worker-src 'self'; object-src 'none'; base-uri 'self'" />
   <link rel="icon" href="public/assets/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="src/styles.css" />
@@ -13,9 +13,12 @@
   <link rel="stylesheet" href="src/anime-theme-overrides.css" />
   <link rel="stylesheet" href="src/legacy-glow.css" />
   <link rel="stylesheet" href="src/fullscreen.css" />
+  <link rel="stylesheet" href="src/audience-host.css" />
 </head>
 <body>
   <div id="app"></div>
+  <script src="public/vendor/supabase.js"></script>
+  <script src="public/vendor/qrious.min.js"></script>
   <script type="module" src="src/app.js"></script>
   <script type="module" src="src/fullscreen.js"></script>
   <script type="module" src="src/pwa.js"></script>

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "python -m http.server 5173 --bind 127.0.0.1",
     "build": "node scripts/build-static.mjs",
-    "check:syntax": "node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check service-worker.js && node --check src/core/game-contracts.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
+    "check:syntax": "node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check src/audience-api.js && node --check src/audience-host.js && node --check src/spectator.js && node --check src/leaderboard.js && node --check service-worker.js && node --check src/core/audience-questions.js && node --check src/core/game-contracts.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
     "lint": "eslint . --max-warnings 20",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -24,6 +24,7 @@
     "check": "npm run check:syntax && npm run lint && npm run assets:check && npm run assets:manifest:check && npm run thumbnails:check && npm run demo:check && npm test",
     "release:check": "npm run check && npm run test:e2e && node scripts/release-check.mjs",
     "test": "vitest run tests",
+    "test:audience:integration": "node scripts/test-audience-integration.mjs",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
@@ -32,5 +33,9 @@
     "eslint": "^10.5.0",
     "prettier": "^3.8.4",
     "vitest": "^4.1.9"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.111.0",
+    "qrious": "4.0.2"
   }
 }

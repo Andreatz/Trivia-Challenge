@@ -8,6 +8,8 @@ import { formatTimer, pauseTimer, resetTimer, startTimer, timerRemaining } from 
 import { categoryIcon, createGameTemplates, GAME_LABELS } from './core/game-registry.js';
 import { createGameContracts } from './core/game-contracts.js';
 import { backupDocument, readFirstValid, writeDocument } from './core/storage.js';
+import { audienceQuestionState } from './core/audience-questions.js';
+import { AudienceHostController } from './audience-host.js';
 
 const KEY = 'trivia-challenge-v3';
 const LEGACY_KEYS = ['trivia-challenge-v2', 'trivia-challenge-v1'];
@@ -98,7 +100,7 @@ const defaults = () => ({
 
 let state = load();
 const restoredNavigation = state.session?.navigation || {};
-let view = ['show', 'admin', 'scores'].includes(restoredNavigation.view) ? restoredNavigation.view : 'show';
+let view = ['show', 'admin', 'scores', 'audience'].includes(restoredNavigation.view) ? restoredNavigation.view : 'show';
 let gameId = state.games.some(item => item.id === restoredNavigation.gameId) ? restoredNavigation.gameId : state.games[0]?.id;
 let cur = {
   screen: ['hub', 'game', 'points', 'library', 'powers'].includes(restoredNavigation.screen) ? restoredNavigation.screen : 'hub',
@@ -121,6 +123,9 @@ let localAssets = [];
 let localThumbnails = {};
 let audienceMode = false;
 let helpOpen = false;
+const audienceHost = new AudienceHostController(() => {
+  if (view === 'audience') render();
+});
 
 function load() {
   const result = readFirstValid(localStorage, [KEY, ...LEGACY_KEYS], prepareDocument);
@@ -470,7 +475,7 @@ function top() {
     $('div', {}, $('div', { class: 'kicker' }, 'Studio mode'), $('h1', {}, 'Trivia Challenge Studio')),
     $('nav', { class: 'app-nav' },
       $('span', { class: `save-status ${saveStatus}`, 'data-save-status': '', role: 'status', 'aria-live': 'polite' }, saveStatus === 'pending' ? 'Modifiche in corso' : saveStatus === 'failed' ? 'Salvataggio fallito' : 'Salvato'),
-      nav('show', 'Show'), nav('admin', 'Admin'), nav('scores', 'Punteggi'))
+      nav('show', 'Show'), nav('admin', 'Admin'), nav('scores', 'Punteggi'), nav('audience', 'Spettatori'))
   );
 }
 
@@ -484,9 +489,141 @@ function render() {
   timerInterval = null;
   document.body.dataset.view = view;
   document.body.dataset.audience = audienceMode ? 'public' : 'host';
-  document.getElementById('app').replaceChildren(top(), view === 'show' ? show() : view === 'admin' ? admin() : scores());
+  document.getElementById('app').replaceChildren(
+    top(),
+    view === 'show' ? show() : view === 'admin' ? admin() : view === 'scores' ? scores() : audienceAdmin()
+  );
   restoreRenderState(renderState);
   syncTimerLoop();
+  syncAudienceQuestion();
+}
+
+function syncAudienceQuestion() {
+  if (!audienceHost.session || audienceHost.session.status === 'finished') return;
+  const question = audienceQuestionState(game(), cur, view === 'show' && cur.screen === 'game');
+  audienceHost.scheduleSync({
+    status: 'live',
+    ...question
+  });
+}
+
+function copyAudienceLink(value, label) {
+  navigator.clipboard?.writeText(value)
+    .then(() => toast(`${label} copiato`))
+    .catch(() => toast('Copia non disponibile: seleziona il link manualmente.'));
+}
+
+function audienceQr(value) {
+  const canvas = $('canvas', {
+    class: 'audience-host-qr',
+    width: '240',
+    height: '240',
+    role: 'img',
+    'aria-label': 'QR code per entrare come spettatore'
+  });
+  requestAnimationFrame(() => {
+    if (!globalThis.QRious) return;
+    new globalThis.QRious({
+      element: canvas,
+      value,
+      size: 240,
+      level: 'H',
+      background: '#ffffff',
+      foreground: '#071126',
+      padding: 14
+    });
+  });
+  return canvas;
+}
+
+function audienceAdmin() {
+  if (!audienceHost.configured) {
+    return $('main', { class: 'audience-host-layout' },
+      $('section', { class: 'panel audience-host-setup stack' },
+        $('div', { class: 'kicker' }, 'MODALITÀ SPETTATORE'),
+        $('h2', {}, 'Configura il backend condiviso'),
+        $('p', { class: 'muted' }, 'Applica la migrazione Supabase inclusa nel progetto, poi inserisci Project URL e chiave pubblicabile in src/audience-config.js.'),
+        $('code', {}, 'supabase/migrations/*_audience_mode.sql'),
+        $('p', { class: 'muted' }, 'Per oltre 1.000 connessioni simultanee serve un piano con un limite Realtime adeguato; il piano Free non è sufficiente.')
+      )
+    );
+  }
+
+  const session = audienceHost.session;
+  if (!session) {
+    return $('main', { class: 'audience-host-layout' },
+      $('section', { class: 'panel audience-host-setup stack' },
+        $('div', { class: 'kicker' }, 'MODALITÀ SPETTATORE'),
+        $('h2', {}, 'Apri una stanza per il pubblico'),
+        $('p', { class: 'muted' }, 'Verranno creati un codice di 6 caratteri e un QR code. I nickname degli spettatori saranno unici all’interno della stanza.'),
+        audienceHost.error ? $('div', { class: 'audience-host-error', role: 'alert' }, audienceHost.error) : null,
+        $('button', {
+          class: 'btn primary audience-create-room',
+          disabled: audienceHost.loading,
+          onclick: () => audienceHost.create(state.title || 'Trivia Challenge')
+        }, audienceHost.loading ? 'Creazione…' : 'Crea stanza spettatori')
+      )
+    );
+  }
+
+  if (session.status === 'finished') {
+    return $('main', { class: 'audience-host-layout' },
+      $('section', { class: 'panel audience-host-setup stack' },
+        $('div', { class: 'kicker' }, 'SESSIONE TERMINATA'),
+        $('h2', {}, `Classifica finale · ${session.code}`),
+        $('p', { class: 'muted' }, `${session.participantCount || 0} spettatori hanno partecipato. I giocatori principali non sono inclusi.`),
+        $('a', {
+          class: 'btn primary audience-create-room',
+          href: audienceHost.leaderboardUrl(),
+          target: '_blank',
+          rel: 'noopener'
+        }, 'Apri classifica finale'),
+        $('button', { class: 'btn', onclick: () => audienceHost.reset() }, 'Crea una nuova stanza')
+      )
+    );
+  }
+
+  const spectatorUrl = audienceHost.spectatorUrl();
+  const leaderboardUrl = audienceHost.leaderboardUrl();
+  const preview = audienceQuestionState(game(), cur, view === 'show' && cur.screen === 'game');
+  return $('main', { class: 'audience-host-layout' },
+    $('section', { class: 'panel audience-room-card' },
+      $('div', { class: 'audience-room-copy' },
+        $('div', { class: 'kicker' }, 'STANZA SPETTATORI ATTIVA'),
+        $('div', { class: 'audience-room-code' }, session.code),
+        $('p', { class: 'muted' }, `${session.participantCount || 0} partecipanti collegati`),
+        $('div', { class: 'audience-host-actions' },
+          $('a', { class: 'btn primary', href: leaderboardUrl, target: '_blank', rel: 'noopener' }, 'Apri classifica live'),
+          $('button', { class: 'btn', onclick: () => copyAudienceLink(spectatorUrl, 'Link spettatori') }, 'Copia link'),
+          $('button', {
+            class: 'btn danger',
+            disabled: audienceHost.loading,
+            onclick: () => {
+              if (confirm('Terminare la sessione spettatori? I punteggi resteranno visibili nella classifica finale.')) audienceHost.finish();
+            }
+          }, 'Termina sessione')
+        ),
+        audienceHost.error ? $('div', { class: 'audience-host-error', role: 'alert' }, audienceHost.error) : null
+      ),
+      $('div', { class: 'audience-qr-wrap' },
+        audienceQr(spectatorUrl),
+        $('strong', {}, 'Scansiona per giocare'),
+        $('small', {}, spectatorUrl)
+      )
+    ),
+    $('section', { class: 'panel audience-sync-preview' },
+      $('div', { class: 'row' },
+        $('div', {},
+          $('div', { class: 'kicker' }, 'ANTEPRIMA TELEFONI'),
+          $('h3', {}, preview.gameTitle || 'In attesa')
+        ),
+        $('span', { class: `pill ${preview.accepting ? 'success' : ''}` }, preview.accepting ? 'RISPOSTE APERTE' : 'IN ATTESA')
+      ),
+      $('p', {}, preview.prompt),
+      preview.accepting ? $('strong', {}, `${preview.points} punti disponibili`) : null,
+      $('p', { class: 'muted' }, 'Torna su Show e apri una domanda. Ogni cambio domanda o indizio viene inviato automaticamente a tutti i telefoni.')
+    )
+  );
 }
 
 function captureRenderState() {
@@ -575,6 +712,12 @@ function stageToolbar() {
         }
       }),
       toolbarAction({ icon: '', label: 'ADMIN', className: 'admin-action', onclick: () => { directEdit = false; selectedElementId = ''; view = 'admin'; render(); } }),
+      toolbarAction({ icon: '', label: 'SPETTATORI', className: 'audience-action', onclick: () => {
+        directEdit = false;
+        selectedElementId = '';
+        view = 'audience';
+        render();
+      } }),
       toolbarAction({
         label: cur.screen === 'game' ? 'RESET DOMANDA' : 'RESET',
         className: 'icon-only',
@@ -2571,6 +2714,24 @@ function alignPanel(item) {
   );
 }
 
+function playerButtonsPanel() {
+  const layout = ensureHomeLayout();
+  return $('div', { class: 'stack player-buttons-panel' },
+    $('h3', {}, 'Pulsanti giocatori'),
+    $('p', { class: 'muted' }, 'Regola la scorebar dei giocatori. Le modifiche si applicano a tutte le schermate.'),
+    editorInput('Larghezza px', layout.playerButtonW, value => updateHomeLayout(target => target.playerButtonW = clamp(value, 90, 260)), { type: 'number' }),
+    editorInput('Altezza px', layout.playerButtonH, value => updateHomeLayout(target => target.playerButtonH = clamp(value, 44, 110)), { type: 'number' }),
+    editorInput('Font rem', layout.playerButtonFont, value => updateHomeLayout(target => target.playerButtonFont = clamp(value, 0.6, 1.2)), { type: 'number', step: '0.05' }),
+    editorInput('Spazio px', layout.playerButtonGap, value => updateHomeLayout(target => target.playerButtonGap = clamp(value, 4, 28)), { type: 'number' }),
+    $('button', { class: 'btn', onclick: () => updateHomeLayout(target => {
+      target.playerButtonW = DEFAULT_HOME_LAYOUT.playerButtonW;
+      target.playerButtonH = DEFAULT_HOME_LAYOUT.playerButtonH;
+      target.playerButtonFont = DEFAULT_HOME_LAYOUT.playerButtonFont;
+      target.playerButtonGap = DEFAULT_HOME_LAYOUT.playerButtonGap;
+    }) }, 'Reset pulsanti giocatori')
+  );
+}
+
 function directEditTools(item) {
   const selected = ensureSlideElements(item).find(element => element.id === selectedElementId) || ensureSlideElements(item)[0];
   return $('div', { class: 'direct-edit-tools' },
@@ -2583,6 +2744,7 @@ function directEditTools(item) {
       $('button', { class: `btn ${directEditPanel === 'layers' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'layers'; render(); } }, 'Layer'),
       $('button', { class: `btn ${directEditPanel === 'content' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'content'; render(); } }, 'Contenuto'),
       $('button', { class: `btn ${directEditPanel === 'align' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'align'; render(); } }, 'Allinea'),
+      $('button', { class: `btn ${directEditPanel === 'players' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'players'; render(); } }, 'Giocatori'),
       $('button', { class: 'btn ghost', onclick: () => { directEdit = false; selectedElementId = ''; render(); } }, 'Chiudi strumenti')
     ),
     $('aside', { class: `direct-inspector ${directEditPanel === 'content' ? 'wide' : ''}` },
@@ -2590,6 +2752,8 @@ function directEditTools(item) {
         ? nativeContentPanel(item)
         : directEditPanel === 'align'
         ? alignPanel(item)
+        : directEditPanel === 'players'
+        ? playerButtonsPanel()
         : selected ? elementInspector(item, selected) : $('p', { class: 'muted' }, 'Aggiungi o seleziona un oggetto sulla pagina.')
     )
   );
@@ -3126,3 +3290,4 @@ window.addEventListener('beforeunload', () => {
 });
 render();
 loadAssetManifest();
+audienceHost.init();

@@ -19,9 +19,12 @@ body.alert-flash:after{content:"TEMPO SCADUTO";position:fixed;inset:0;z-index:va
   z-index: 1;
 }
 
-.bottom-scorebar {
-  grid-template-columns: repeat(auto-fit, minmax(min(90px, 100%), var(--player-button-w, 150px)));
+body[data-view="show"] .bottom-scorebar {
+  width: max-content;
+  max-width: 94vw;
+  grid-template-columns: repeat(auto-fit, var(--player-button-w, 150px));
   gap: var(--player-button-gap, 12px);
+  overflow-x: auto;
   z-index: var(--z-overlay);
 }
 
@@ -41,6 +44,10 @@ body[data-view="show"] .player-chip {
 }
 
 @media(max-width:700px) {
+  body[data-view="show"] .bottom-scorebar {
+    width: calc(100vw - 28px);
+  }
+
   body[data-view="show"] .player-chip {
     flex-basis: min(var(--player-button-w, 150px), 42vw);
   }
