@@ -245,10 +245,10 @@ button:disabled{cursor:not-allowed}
 .quick-score-panel{
   position:absolute;
   left:50%;
-  bottom:calc(100% + 16px);
+  bottom:calc(var(--player-button-h,66px) + 34px);
   transform:translateX(-50%);
   width:min(760px,calc(100vw - 48px));
-  z-index:12;
+  z-index:var(--z-overlay,80);
   display:grid;
   gap:12px;
   padding:14px;

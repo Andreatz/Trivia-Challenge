@@ -3,17 +3,33 @@ import { createClient } from '@supabase/supabase-js';
 
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+const adminEmail = process.env.AUDIENCE_ADMIN_EMAIL;
+const adminPassword = process.env.AUDIENCE_ADMIN_PASSWORD;
 
-if (!url || !key) {
-  throw new Error('Imposta SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY prima del test.');
+if (!url || !key || !adminEmail || !adminPassword) {
+  throw new Error('Imposta SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, AUDIENCE_ADMIN_EMAIL e AUDIENCE_ADMIN_PASSWORD prima del test.');
 }
 
-const client = createClient(url, key, {
+const publicClient = createClient(url, key, {
+  auth: { persistSession: false, autoRefreshToken: false }
+});
+const adminClient = createClient(url, key, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
 const token = label => `${label}-${globalThis.crypto.randomUUID()}-${globalThis.crypto.randomUUID()}`;
 
-async function rpc(name, parameters) {
+const { error: signInError } = await adminClient.auth.signInWithPassword({
+  email: adminEmail,
+  password: adminPassword
+});
+assert.ifError(signInError);
+
+const { data: isAdmin, error: adminCheckError } = await adminClient.rpc('is_audience_admin');
+assert.ifError(adminCheckError);
+assert.equal(isAdmin, true);
+
+async function rpc(name, parameters, { asAdmin = false } = {}) {
+  const client = asAdmin ? adminClient : publicClient;
   const { data, error } = await client.rpc(name, parameters);
   assert.ifError(error);
   return data;
@@ -23,7 +39,7 @@ const hostSecret = token('host');
 const session = await rpc('create_audience_session', {
   p_host_secret: hostSecret,
   p_title: 'Test spettatori'
-});
+}, { asAdmin: true });
 assert.match(session.code, /^[A-Z0-9]{6}$/);
 
 const aliceSecret = token('alice');
@@ -70,7 +86,33 @@ await rpc('sync_audience_session', {
     accepting: true,
     answerRules: [{ answer: 'Aizen', points: 1000 }]
   }
+}, { asAdmin: true });
+
+const relaySnapshot = await rpc('get_audience_relay_snapshot', {
+  p_code: session.code,
+  p_host_secret: hostSecret
 });
+assert.deepEqual(
+  {
+    code: relaySnapshot.code,
+    questionKey: relaySnapshot.questionKey,
+    revealStep: relaySnapshot.revealStep,
+    accepting: relaySnapshot.accepting,
+    leaksAnswers: Object.hasOwn(relaySnapshot, 'answerRules')
+  },
+  {
+    code: session.code,
+    questionKey: 'guess:round:1',
+    revealStep: 1,
+    accepting: true,
+    leaksAnswers: false
+  }
+);
+const invalidRelayCredentials = await publicClient.rpc('get_audience_relay_snapshot', {
+  p_code: session.code,
+  p_host_secret: token('invalid-host')
+});
+assert.ok(invalidRelayCredentials.error, 'Il relay deve rifiutare un segreto host non valido.');
 
 const wrong = await rpc('submit_audience_answer', {
   p_code: session.code,
@@ -103,7 +145,7 @@ await rpc('sync_audience_session', {
     accepting: true,
     answerRules: [{ answer: 'Aizen', points: 500 }]
   }
-});
+}, { asAdmin: true });
 
 const correct = await rpc('submit_audience_answer', {
   p_code: session.code,
@@ -136,7 +178,7 @@ assert.deepEqual(
   { nickname: 'Alice', score: 500, classicPlayersPresent: false }
 );
 
-const directRead = await client.from('audience_sessions').select('*');
+const directRead = await publicClient.from('audience_sessions').select('*');
 assert.ok(directRead.error, 'Le tabelle private non devono essere leggibili dalla Data API.');
 
 await rpc('sync_audience_session', {
@@ -153,6 +195,6 @@ await rpc('sync_audience_session', {
     accepting: false,
     answerRules: []
   }
-});
+}, { asAdmin: true });
 
 console.log(`Audience integration OK · stanza ${session.code} · ${leaderboard.leaderboard.length} partecipanti`);

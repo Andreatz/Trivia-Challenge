@@ -2,6 +2,15 @@
 
 Tool web per ricreare e gestire il gioco **Trivia Challenge** nato da PowerPoint.
 
+## Versione online
+
+- Gioco e pannello host: <https://trivia-challenge-iota.vercel.app/>
+- Risposte spettatori: <https://trivia-challenge-iota.vercel.app/spectator.html>
+- Classifica spettatori: <https://trivia-challenge-iota.vercel.app/leaderboard.html>
+
+La pagina host richiede l'account Supabase dell'Admin. Giocatori e spettatori non
+devono registrarsi: gli spettatori entrano dal QR con il solo nickname.
+
 Questa versione è stata riallineata alla struttura dei file PowerPoint originali: schermata home in stile proiezione, sfondo blu/oro, pulsanti grandi arrotondati, barra punteggi in basso, scorciatoie `PUNTI`, `LISTA ANIME` e `POTERI`, schermata punti dedicata e minigiochi con layout più simili alle slide. I comandi host non sono più in un pannello separato: sono integrati nella stessa plancia 16:9 come HUD da videogame. In modalità fullscreen viene mandata a schermo intero solo la plancia del gioco, quindi la barra superiore dell'app non è visibile.
 
 ## Cosa include
@@ -129,7 +138,7 @@ I dati sono salvati nel `localStorage` del browser. Questo rende il tool immedia
 - conviene esportare spesso il JSON;
 - per condividere una partita con un altro computer basta importare il JSON esportato.
 
-La modalità spettatore è l’unica funzione che richiede un backend condiviso Supabase. La configurazione, la migrazione SQL e le indicazioni per oltre 1.000 partecipanti sono descritte in [`docs/AUDIENCE_MODE.md`](docs/AUDIENCE_MODE.md).
+La modalità spettatore usa Supabase per risposte e punteggi e un relay Cloudflare Durable Objects per oltre 1.000 collegamenti realtime. Configurazione, migrazioni SQL e test di carico sono descritti in [`docs/AUDIENCE_MODE.md`](docs/AUDIENCE_MODE.md).
 
 ## Roadmap tecnica
 

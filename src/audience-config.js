@@ -1,4 +1,5 @@
 export const AUDIENCE_CONFIG = Object.freeze({
-  supabaseUrl: 'https://YOUR_PROJECT_REF.supabase.co',
-  publishableKey: 'YOUR_SUPABASE_PUBLISHABLE_KEY'
+  supabaseUrl: 'https://lxhhueqqdlqkblccpzwu.supabase.co',
+  publishableKey: 'sb_publishable_fYtoths5-nM6JBlyCtn84A_bC5kXNh_',
+  relayUrl: 'https://trivia-audience-relay.triviachallenge.workers.dev'
 });

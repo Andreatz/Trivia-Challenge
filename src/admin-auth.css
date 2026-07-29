@@ -1,0 +1,51 @@
+body.admin-login-view{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 18% 28%,rgba(0,231,255,.16),transparent 30%),
+    radial-gradient(circle at 84% 72%,rgba(255,46,219,.12),transparent 28%),
+    #020714;
+}
+body.admin-login-view #app{
+  width:100%;
+  max-width:none;
+  padding:24px;
+}
+.admin-login-shell{
+  min-height:calc(100vh - 48px);
+  display:grid;
+  place-items:center;
+}
+.admin-login-card{
+  width:min(460px,100%);
+  display:grid;
+  gap:18px;
+  padding:30px;
+  border:1.5px solid rgba(0,231,255,.56);
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(8,30,68,.96),rgba(3,10,28,.98));
+  box-shadow:0 24px 80px rgba(0,0,0,.55),0 0 34px rgba(0,231,255,.16);
+}
+.admin-login-card h1{
+  margin:0;
+  font-family:Orbitron,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.admin-login-card p{margin:0}
+.admin-login-form{
+  display:grid;
+  gap:10px;
+}
+.admin-login-form label{
+  margin-top:4px;
+  color:#dce8ff;
+  font-weight:800;
+}
+.admin-login-form input{min-height:48px}
+.admin-login-form button{margin-top:8px}
+.admin-login-feedback{
+  min-height:1.4em;
+  color:#ff9ba4;
+}

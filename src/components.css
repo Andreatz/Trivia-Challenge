@@ -53,8 +53,7 @@ body[data-view="show"] .player-chip {
   }
 
   body[data-view="show"] .quick-score-panel {
-    position: fixed;
-    bottom: 76px;
+    bottom: calc(var(--player-button-h, 66px) + 24px);
     z-index: var(--z-overlay);
   }
 }

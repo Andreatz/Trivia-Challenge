@@ -1,96 +1,223 @@
 # Modalità spettatore
 
-La modalità spettatore aggiunge due pagine pubbliche:
+La modalità spettatore usa due servizi con responsabilità separate:
 
-- `spectator.html`: ingresso con codice stanza e nickname univoco, risposta da telefono e punteggio personale;
+- **Supabase** conserva stanze, nickname, tentativi e punteggi tramite RPC HTTP;
+- **Cloudflare Workers + Durable Objects** invia in tempo reale domanda e immagine corrente ai telefoni.
+
+Non vengono aperte connessioni Supabase Realtime. Il limite di 200 connessioni del piano
+Supabase Free non si applica quindi agli spettatori.
+
+Le pagine pubbliche sono:
+
+- `spectator.html`: ingresso tramite QR/codice, nickname univoco e risposta da telefono;
 - `leaderboard.html`: classifica live contenente esclusivamente gli spettatori.
 
-L’host gestisce la stanza dalla voce **Spettatori** dell’app principale. Domanda, apertura/chiusura delle risposte e indizio corrente vengono sincronizzati automaticamente dalla modalità Show.
+## 1. Configurazione Supabase
 
-## Configurazione Supabase
+Creare un progetto Supabase dedicato a Trivia Challenge. Non riutilizzare il database di
+un'altra applicazione.
 
-1. Crea o scegli un progetto Supabase.
-2. Applica la migrazione in `supabase/migrations/*_audience_mode.sql`.
+```powershell
+npx supabase login
+npx supabase link --project-ref IL_PROJECT_REF
+npx supabase migration list
+npx supabase db push --dry-run
+npx supabase db push
+```
 
-   Con la CLI:
+Devono essere applicate tutte le migrazioni:
 
-   ```bash
-   supabase link --project-ref IL_PROJECT_REF
-   supabase db push
-   ```
+- `20260729163247_audience_mode.sql`;
+- `20260729210709_audience_cloudflare_relay.sql`;
+- `20260729230008_audience_admin_auth.sql`.
 
-3. Nel dashboard Realtime:
+La seconda migrazione rimuove il Broadcast Supabase e aggiunge l'RPC privata usata dal
+relay per leggere soltanto lo stato pubblico verificato. Non è necessario abilitare
+Realtime nel dashboard Supabase.
 
-   - abilita Realtime;
-   - consenti i canali pubblici, usati soltanto per lo stato pubblico della domanda;
-   - imposta **Max concurrent clients** e **Max events per second** in base al pubblico atteso.
+La terza migrazione autorizza un solo UUID Supabase come Admin. La pagina principale
+richiede email e password; spettatori e giocatori non devono creare account.
 
-4. Copia Project URL e **Publishable key** in `src/audience-config.js`:
+Recuperare dal dashboard:
 
-   ```js
-   export const AUDIENCE_CONFIG = Object.freeze({
-     supabaseUrl: 'https://PROJECT_REF.supabase.co',
-     publishableKey: 'sb_publishable_...'
-   });
-   ```
+- Project URL, per esempio `https://PROJECT_REF.supabase.co`;
+- **Publishable key**, per esempio `sb_publishable_...`.
 
-   La Publishable key è prevista per il browser. Non inserire mai una Secret key o la vecchia `service_role`.
+Non usare mai nel browser o nel Worker una Secret key o una `service_role` key.
 
-5. Esegui `npm run build` e distribuisci l’intero contenuto di `dist/`.
+## 2. Distribuzione del relay Cloudflare
+
+Il Worker si trova in `cloudflare/audience-relay/` e usa un Durable Object SQLite con
+WebSocket Hibernation.
+
+```powershell
+npx wrangler login
+npm run relay:check
+npm run relay:deploy
+```
+
+Dopo il primo deploy, configurare nel Worker quattro variabili. È possibile farlo da
+**Cloudflare Dashboard → Workers & Pages → trivia-audience-relay → Settings → Variables
+and Secrets**, oppure con `wrangler secret put`:
+
+```powershell
+npx wrangler secret put SUPABASE_URL --config cloudflare/audience-relay/wrangler.jsonc
+npx wrangler secret put SUPABASE_PUBLISHABLE_KEY --config cloudflare/audience-relay/wrangler.jsonc
+npx wrangler secret put RELAY_SIGNING_SECRET --config cloudflare/audience-relay/wrangler.jsonc
+```
+
+Valori:
+
+- `SUPABASE_URL`: Project URL Supabase;
+- `SUPABASE_PUBLISHABLE_KEY`: Publishable key Supabase;
+- `ALLOWED_ORIGINS`: origine HTTPS pubblica dell'app, senza slash finale. Non è un
+  segreto e viene configurata in `wrangler.jsonc`; più origini vanno separate da virgola;
+- `RELAY_SIGNING_SECRET`: almeno 32 caratteri casuali. Non inserirlo nel frontend.
+
+Per generare il segreto:
+
+```powershell
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+Verificare il Worker:
+
+```powershell
+Invoke-RestMethod https://NOME_WORKER.SUBDOMAIN.workers.dev/health
+```
+
+La risposta deve contenere:
+
+```json
+{"ok":true,"configured":true}
+```
+
+## 3. Configurazione del frontend
+
+Aggiornare `src/audience-config.js`:
+
+```js
+export const AUDIENCE_CONFIG = Object.freeze({
+  supabaseUrl: 'https://PROJECT_REF.supabase.co',
+  publishableKey: 'sb_publishable_...',
+  relayUrl: 'https://trivia-audience-relay.SUBDOMAIN.workers.dev'
+});
+```
+
+Il CSP incluso accetta i domini `*.workers.dev`. Se viene usato un dominio Cloudflare
+personalizzato, aggiungerlo a `connect-src` in `index.html` e `spectator.html`.
+
+Eseguire infine:
+
+```powershell
+npm run build
+```
+
+e distribuire l'intero contenuto di `dist/` su hosting HTTPS.
+
+## Protocollo e sicurezza
+
+1. Lo spettatore entra con il solo nickname e riceve un token casuale, senza account.
+2. Prima di aprire il WebSocket, il Worker verifica quel token con Supabase.
+3. Il Worker restituisce un ticket HMAC valido per 60 secondi.
+4. Il telefono apre il WebSocket usando il ticket; il token Supabase non compare nell'URL.
+5. L'host salva lo stato in Supabase.
+6. Il Worker verifica il segreto host, legge la sola copia pubblica e la distribuisce.
+
+Ogni partecipante può mantenere una sola connessione attiva: una riconnessione valida
+sostituisce automaticamente il socket precedente.
+
+Le risposte corrette non attraversano Cloudflare. Se il relay è temporaneamente
+irraggiungibile, lo stato resta salvato in Supabase e i telefoni usano un polling HTTP
+lento con jitter fino alla riconnessione.
 
 ## Flusso durante la partita
 
-1. Apri **Spettatori** e premi **Crea stanza spettatori**.
-2. Mostra al pubblico il QR code o il codice di 6 caratteri.
-3. Torna in **Show** e conduci la partita normalmente.
-4. Apri **Classifica live** su un secondo schermo quando serve.
-5. A fine partita premi **Termina sessione**: i telefoni passano alla classifica finale.
+1. Aprire **Spettatori** e premere **Crea stanza spettatori**.
+2. Mostrare il QR code o il codice di sei caratteri.
+3. Tornare in **Show** e condurre la partita normalmente.
+4. Aprire **Classifica live** su un secondo schermo quando serve.
+5. Premere **Termina sessione**: i telefoni ricevono lo stato finale e mostrano il link
+   alla classifica.
 
 Per **Indovina il personaggio**:
 
 - nessuna risposta è accettata prima della prima immagine;
 - ogni immagine rivelata abilita un nuovo tentativo per chi ha sbagliato;
-- il punteggio è quello dell’immagine corrente (1000, 500, 250, 50 o il valore configurato);
+- il punteggio standard è 1000, 500, 250 e 50;
 - dopo una risposta corretta non sono ammessi altri tentativi sullo stesso personaggio.
 
-Per aggiungere più risposte equivalenti, separale con `|` nel campo risposta, per esempio:
+Risposte equivalenti possono essere separate con `|`, per esempio:
 
 ```text
 Sosuke Aizen|Aizen|Sōsuke Aizen
 ```
 
-## Architettura e capacità
+## Capacità
 
-- Le soluzioni e i token sono conservati come dati privati; le tabelle hanno RLS attiva e non sono leggibili direttamente dal client.
-- Valutazione, blocco dei tentativi e accredito punti avvengono atomicamente in Postgres.
-- Il nickname è univoco nella stanza senza distinzione tra maiuscole e minuscole.
-- I telefoni ricevono via Realtime Broadcast soltanto i cambi di domanda/indizio. Le singole risposte non generano un broadcast globale, evitando un effetto quadratico durante i picchi.
-- La pagina classifica interroga una funzione aggregata ogni 2,5 secondi e può restituire fino a 5.000 spettatori.
+Un Durable Object supporta migliaia di WebSocket ibernabili. Per 30 personaggi con
+quattro immagini vengono pubblicati circa 120 eventi host; i messaggi WebSocket in
+uscita non consumano request Cloudflare.
 
-Per oltre 1.000 connessioni simultanee il piano Free (200) e il Pro con spend cap (500) non sono sufficienti. Al momento della configurazione va scelto un piano/quota da almeno 1.000 connessioni e va eseguito un test di carico realistico sulla regione di produzione.
+Il test incluso ha verificato localmente:
+
+- 1.000 WebSocket simultanei;
+- 1.000 consegne su 1.000 per un cambio immagine;
+- riconnessione del telefono e recupero immediato dello stato corrente;
+- nessuna connessione verso Supabase Realtime.
+
+Il database può ricevere al massimo quattro tentativi per personaggio: 120.000 tentativi
+nel caso limite di 1.000 spettatori. Prima dell'evento va comunque eseguito un test
+realistico dalla regione di produzione.
+
+Limiti ufficiali:
+
+- <https://developers.cloudflare.com/durable-objects/platform/pricing/>
+- <https://developers.cloudflare.com/durable-objects/api/state/>
 
 ## Verifica locale
 
-Avvia Supabase e l’app:
+Copiare l'esempio delle variabili del relay:
 
-```bash
-supabase start
-npm run dev
+```powershell
+Copy-Item cloudflare/audience-relay/.dev.vars.example cloudflare/audience-relay/.dev.vars
 ```
 
-Inserisci temporaneamente in `src/audience-config.js` l’URL e la Publishable key mostrati da `supabase status`.
+Inserire nella copia i valori restituiti da `npx supabase status`, quindi usare tre
+terminali:
+
+```powershell
+npx supabase start
+npm run dev
+npm run relay:dev
+```
 
 Test backend:
 
-```bash
-SUPABASE_URL=http://127.0.0.1:54321 \
-SUPABASE_PUBLISHABLE_KEY=sb_publishable_... \
+```powershell
+$env:SUPABASE_URL = "http://127.0.0.1:54321"
+$env:SUPABASE_PUBLISHABLE_KEY = "sb_publishable_..."
+$env:AUDIENCE_ADMIN_EMAIL = "admin@example.com"
+$env:AUDIENCE_ADMIN_PASSWORD = "password-locale"
 npm run test:audience:integration
+```
+
+Test di carico:
+
+```powershell
+$env:AUDIENCE_RELAY_URL = "http://127.0.0.1:8787"
+$env:AUDIENCE_APP_ORIGIN = "http://127.0.0.1:5173"
+$env:CLIENTS = "1000"
+$env:AUDIENCE_ADMIN_EMAIL = "admin@example.com"
+$env:AUDIENCE_ADMIN_PASSWORD = "password-locale"
+npm run test:audience:load
 ```
 
 Test browser multi-dispositivo:
 
-```bash
+```powershell
+$env:AUDIENCE_ADMIN_EMAIL = "admin@example.com"
+$env:AUDIENCE_ADMIN_PASSWORD = "password-locale"
 npx playwright test e2e/audience.spec.js --project=chromium-720p
 ```
-

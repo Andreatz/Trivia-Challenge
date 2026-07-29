@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "python -m http.server 5173 --bind 127.0.0.1",
+    "relay:dev": "wrangler dev --config cloudflare/audience-relay/wrangler.jsonc",
+    "relay:check": "wrangler deploy --dry-run --config cloudflare/audience-relay/wrangler.jsonc",
+    "relay:deploy": "wrangler deploy --config cloudflare/audience-relay/wrangler.jsonc",
     "build": "node scripts/build-static.mjs",
-    "check:syntax": "node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check src/audience-api.js && node --check src/audience-host.js && node --check src/spectator.js && node --check src/leaderboard.js && node --check service-worker.js && node --check src/core/audience-questions.js && node --check src/core/game-contracts.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
+    "check:syntax": "node --check src/admin-auth.js && node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check src/audience-api.js && node --check src/audience-host.js && node --check src/spectator.js && node --check src/leaderboard.js && node --check cloudflare/audience-relay/src/index.js && node --check service-worker.js && node --check src/core/audience-questions.js && node --check src/core/game-contracts.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
     "lint": "eslint . --max-warnings 20",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -25,6 +28,7 @@
     "release:check": "npm run check && npm run test:e2e && node scripts/release-check.mjs",
     "test": "vitest run tests",
     "test:audience:integration": "node scripts/test-audience-integration.mjs",
+    "test:audience:load": "node scripts/load-test-audience-relay.mjs",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
@@ -32,7 +36,9 @@
     "@playwright/test": "^1.61.0",
     "eslint": "^10.5.0",
     "prettier": "^3.8.4",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.9",
+    "wrangler": "4.115.0",
+    "ws": "8.21.1"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.111.0",

@@ -1,8 +1,7 @@
 import {
   audienceConfigStatus,
   audienceRpc,
-  roomCodeFromUrl,
-  subscribeToAudience
+  roomCodeFromUrl
 } from './audience-api.js';
 
 const root = document.getElementById('leaderboard-app');
@@ -15,7 +14,6 @@ const state = {
   updatedAt: null
 };
 let timer = null;
-let unsubscribe = null;
 
 function element(tag, attributes = {}, ...children) {
   const node = document.createElement(tag);
@@ -145,8 +143,6 @@ async function refresh() {
     if (state.session?.status === 'finished') {
       clearInterval(timer);
       timer = null;
-      unsubscribe?.();
-      unsubscribe = null;
     }
   } catch (error) {
     state.error = error.message;
@@ -161,10 +157,6 @@ async function init() {
   if (!audienceConfigStatus().configured || !state.code) return;
   await refresh();
   if (state.session?.status !== 'finished') {
-    unsubscribe = subscribeToAudience(state.code, payload => {
-      state.session = payload;
-      refresh();
-    });
     timer = setInterval(refresh, 2500);
   }
 }
@@ -174,7 +166,6 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('beforeunload', () => {
   clearInterval(timer);
-  unsubscribe?.();
 });
 
 init();

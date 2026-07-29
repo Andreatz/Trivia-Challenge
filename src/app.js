@@ -475,7 +475,10 @@ function top() {
     $('div', {}, $('div', { class: 'kicker' }, 'Studio mode'), $('h1', {}, 'Trivia Challenge Studio')),
     $('nav', { class: 'app-nav' },
       $('span', { class: `save-status ${saveStatus}`, 'data-save-status': '', role: 'status', 'aria-live': 'polite' }, saveStatus === 'pending' ? 'Modifiche in corso' : saveStatus === 'failed' ? 'Salvataggio fallito' : 'Salvato'),
-      nav('show', 'Show'), nav('admin', 'Admin'), nav('scores', 'Punteggi'), nav('audience', 'Spettatori'))
+      nav('show', 'Show'), nav('admin', 'Admin'), nav('scores', 'Punteggi'), nav('audience', 'Spettatori'),
+      view === 'admin'
+        ? $('button', { onclick: () => globalThis.TRIVIA_ADMIN_AUTH?.signOut() }, 'Esci')
+        : null)
   );
 }
 
@@ -542,9 +545,9 @@ function audienceAdmin() {
       $('section', { class: 'panel audience-host-setup stack' },
         $('div', { class: 'kicker' }, 'MODALITÀ SPETTATORE'),
         $('h2', {}, 'Configura il backend condiviso'),
-        $('p', { class: 'muted' }, 'Applica la migrazione Supabase inclusa nel progetto, poi inserisci Project URL e chiave pubblicabile in src/audience-config.js.'),
+        $('p', { class: 'muted' }, 'Applica le migrazioni Supabase, distribuisci il relay Cloudflare e inserisci URL e chiavi pubbliche in src/audience-config.js.'),
         $('code', {}, 'supabase/migrations/*_audience_mode.sql'),
-        $('p', { class: 'muted' }, 'Per oltre 1.000 connessioni simultanee serve un piano con un limite Realtime adeguato; il piano Free non è sufficiente.')
+        $('p', { class: 'muted' }, 'Le connessioni realtime passano da Cloudflare; Supabase gestisce soltanto accessi, risposte e punteggi.')
       )
     );
   }
@@ -557,6 +560,7 @@ function audienceAdmin() {
         $('h2', {}, 'Apri una stanza per il pubblico'),
         $('p', { class: 'muted' }, 'Verranno creati un codice di 6 caratteri e un QR code. I nickname degli spettatori saranno unici all’interno della stanza.'),
         audienceHost.error ? $('div', { class: 'audience-host-error', role: 'alert' }, audienceHost.error) : null,
+        audienceHost.relayWarning ? $('div', { class: 'audience-host-error', role: 'status' }, audienceHost.relayWarning) : null,
         $('button', {
           class: 'btn primary audience-create-room',
           disabled: audienceHost.loading,
@@ -603,7 +607,8 @@ function audienceAdmin() {
             }
           }, 'Termina sessione')
         ),
-        audienceHost.error ? $('div', { class: 'audience-host-error', role: 'alert' }, audienceHost.error) : null
+        audienceHost.error ? $('div', { class: 'audience-host-error', role: 'alert' }, audienceHost.error) : null,
+        audienceHost.relayWarning ? $('div', { class: 'audience-host-error', role: 'status' }, audienceHost.relayWarning) : null
       ),
       $('div', { class: 'audience-qr-wrap' },
         audienceQr(spectatorUrl),
@@ -676,6 +681,7 @@ function show() {
 function stage(content) {
   const selected = cur.screen === 'game' ? game() : null;
   const editableHome = cur.screen === 'hub';
+  const quickPlayer = scorePanelPlayer();
   return $('section', { class: `ppt-stage ${directEdit && (selected || editableHome) ? 'direct-editing' : ''}` },
     stageToolbar(),
     editableHome ? homeSubtitleLayer(directEdit) : null,
@@ -683,6 +689,7 @@ function stage(content) {
     editableHome ? homeMenuRibbonLayer(directEdit) : null,
     $('div', { class: 'stage-content' }, content),
     bottomScores(),
+    quickPlayer ? quickScorePanel(quickPlayer) : null,
     selected ? slideLayer(selected, directEdit) : null,
     directEdit && selected ? directEditTools(selected) : null,
     directEdit && editableHome ? homeEditTools() : null,
@@ -697,7 +704,6 @@ function stageToolbar() {
     $('div', { class: 'stage-brand stage-brand-placeholder' }),
     $('div', { class: `stage-actions ${selectedElementId === 'toolbar-buttons' ? 'toolbar-selected' : ''}`, style: toolbarActionsStyle() },
       toolbarAction({ icon: '▣', label: 'LISTA ANIME', onclick: () => resetStage('library') }),
-      toolbarAction({ icon: 'ϟ', label: 'POTERI', onclick: () => resetStage('powers') }),
       toolbarAction({ icon: '★', label: 'PUNTI', onclick: () => resetStage('points') }),
       toolbarAction({
         icon: '',
@@ -789,7 +795,6 @@ function playerButtonsStyle() {
 }
 
 function bottomScores() {
-  const quickPlayer = scorePanelPlayer();
   return $('div', { class: 'bottom-scorebar', 'aria-label': 'Punteggi giocatori', style: playerButtonsStyle() },
     ...state.players.map(item => $('button', {
       class: `player-chip ${item.id === scorePanelPlayerId ? 'panel-open' : ''}`,
@@ -798,18 +803,20 @@ function bottomScores() {
     },
       $('span', {}, item.name),
       $('strong', { 'aria-live': 'polite' }, item.score || 0)
-    )),
-    quickPlayer ? quickScorePanel(quickPlayer) : null
+    ))
   );
 }
 
 function refreshBottomScores() {
   const current = document.querySelector('.bottom-scorebar');
   if (current) current.replaceWith(bottomScores());
+  document.querySelector('.quick-score-panel')?.remove();
+  const quickPlayer = scorePanelPlayer();
+  if (quickPlayer) document.querySelector('.ppt-stage')?.append(quickScorePanel(quickPlayer));
 }
 
 function quickScorePanel(item) {
-  return $('div', { class: 'quick-score-panel' },
+  return $('div', { class: 'quick-score-panel', style: playerButtonsStyle() },
     $('div', { class: 'quick-score-head' },
       $('div', {}, $('span', {}, 'Punti rapidi'), $('strong', {}, `${item.name}: ${item.score || 0}`)),
       $('button', { class: 'btn small ghost', title: 'Chiudi', 'aria-label': 'Chiudi punti rapidi', onclick: event => { event.stopPropagation(); scorePanelPlayerId = ''; refreshBottomScores(); } }, 'X')

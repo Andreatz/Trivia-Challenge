@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
+    globalThis.TRIVIA_ADMIN_TEST_BYPASS = true;
     if (sessionStorage.getItem('e2e-initialized')) return;
     localStorage.clear();
     sessionStorage.setItem('e2e-initialized', 'true');
@@ -26,10 +27,26 @@ async function horizontalOverflow(page) {
   }));
 }
 
+test('la pagina host richiede il login Admin', async ({ browser }) => {
+  const context = await browser.newContext();
+  const loginPage = await context.newPage();
+  try {
+    await loginPage.goto('/');
+    await expect(loginPage.getByRole('heading', { name: 'Accesso Admin' })).toBeVisible();
+    await expect(loginPage.getByLabel('Email amministratore')).toBeVisible();
+    await expect(loginPage.getByLabel('Password')).toBeVisible();
+    await expect(loginPage.locator('.player-chip')).toHaveCount(0);
+  } finally {
+    await context.close();
+  }
+});
+
 test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page }) => {
   const runtimeErrors = [];
   page.on('pageerror', error => runtimeErrors.push(error.message));
 
+  await expect(page.getByRole('button', { name: 'Esci', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'POTERI', exact: true })).toHaveCount(0);
   await expect(page.locator('.menu-button')).toHaveCount(11);
   await page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO' }).click();
   await expect(page.locator('.guess-tile')).toHaveCount(4);
@@ -39,6 +56,7 @@ test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page 
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
   await expect(page.getByRole('button', { name: /Corretta \+/ })).toHaveCount(0);
   await page.locator('.player-chip').first().click();
+  await expect(page.locator('.quick-score-panel')).toBeVisible();
   await page.getByRole('button', { name: '+1000', exact: true }).click();
   await expect(page.locator('.player-chip').first().locator('strong')).toHaveText('1000');
   await expect(page.getByRole('button', { name: 'PUBBLICO' })).toHaveCount(0);
@@ -48,6 +66,7 @@ test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page 
 
 test('admin usa il manifest locale e rifiuta import non validi', async ({ page }) => {
   await page.getByRole('button', { name: 'ADMIN' }).click();
+  await expect(page.getByRole('button', { name: 'Esci', exact: true })).toBeVisible();
   await expect(page.locator('#local-assets option')).toHaveCount(202);
 
   const immediateSaveStatus = await page.getByLabel('Titolo evento').evaluate(element => {

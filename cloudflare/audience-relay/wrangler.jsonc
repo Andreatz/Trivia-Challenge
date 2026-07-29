@@ -1,0 +1,26 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "trivia-audience-relay",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-01",
+  "vars": {
+    "ALLOWED_ORIGINS": "https://trivia-challenge-iota.vercel.app"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "AUDIENCE_ROOMS",
+        "class_name": "AudienceRoom"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["AudienceRoom"]
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

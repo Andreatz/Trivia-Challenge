@@ -3,3 +3,7 @@ node_modules/
 dist/
 playwright-report/
 test-results/
+.wrangler/
+.dev.vars
+.vercel/
+.env*

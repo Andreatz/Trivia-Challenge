@@ -2,6 +2,7 @@ import {
   audienceConfigStatus,
   audiencePageUrl,
   audienceRpc,
+  publishAudienceState,
   secureToken
 } from './audience-api.js';
 
@@ -18,7 +19,13 @@ function readStoredHost() {
 export class AudienceHostController {
   constructor(onChange = () => {}) {
     this.onChange = onChange;
-    this.configured = audienceConfigStatus().configured;
+    const config = audienceConfigStatus();
+    this.configured = config.configured;
+    this.relayConfigured = config.relayConfigured;
+    this.relayHealthy = false;
+    this.relayWarning = config.relayConfigured
+      ? ''
+      : 'Relay Cloudflare non configurato: i telefoni useranno il fallback HTTP.';
     this.session = null;
     this.secret = '';
     this.loading = false;
@@ -26,6 +33,11 @@ export class AudienceHostController {
     this.lastSnapshot = '';
     this.pendingSync = null;
     this.pollTimer = null;
+    this.relayRetryTimer = null;
+    this.relayRetryAttempt = 0;
+    this.relayPublishing = false;
+    this.relayDirty = false;
+    this.relayCurrentPromise = null;
   }
 
   notify() {
@@ -42,6 +54,7 @@ export class AudienceHostController {
       if (session?.found && session.status !== 'finished') {
         this.session = session;
         this.startPolling();
+        this.publishRelay();
       } else {
         this.clearStored();
       }
@@ -68,6 +81,7 @@ export class AudienceHostController {
       }));
       this.lastSnapshot = '';
       this.startPolling();
+      this.publishRelay();
     } catch (error) {
       this.error = error.message;
       this.session = null;
@@ -97,6 +111,7 @@ export class AudienceHostController {
       this.session = session;
       this.lastSnapshot = snapshot;
       this.error = '';
+      this.publishRelay();
       this.notify();
     } catch (error) {
       this.error = error.message;
@@ -124,6 +139,10 @@ export class AudienceHostController {
           answerRules: []
         }
       });
+      while (this.relayCurrentPromise) {
+        await this.relayCurrentPromise.catch(() => {});
+      }
+      await this.publishRelay(false);
       this.clearStored();
     } catch (error) {
       this.error = error.message;
@@ -144,8 +163,45 @@ export class AudienceHostController {
   clearStored() {
     localStorage.removeItem(STORAGE_KEY);
     clearInterval(this.pollTimer);
+    clearTimeout(this.relayRetryTimer);
     this.pollTimer = null;
+    this.relayRetryTimer = null;
     this.secret = '';
+  }
+
+  async publishRelay(allowRetry = true) {
+    if (!this.relayConfigured || !this.session?.code || !this.secret) return;
+    if (this.relayPublishing) {
+      this.relayDirty = true;
+      return;
+    }
+    this.relayPublishing = true;
+    this.relayDirty = false;
+    try {
+      this.relayCurrentPromise = publishAudienceState(this.session.code, this.secret);
+      await this.relayCurrentPromise;
+      this.relayHealthy = true;
+      this.relayWarning = '';
+      this.relayRetryAttempt = 0;
+      clearTimeout(this.relayRetryTimer);
+      this.relayRetryTimer = null;
+    } catch {
+      this.relayHealthy = false;
+      this.relayWarning = 'Relay Cloudflare temporaneamente non raggiungibile; fallback HTTP attivo.';
+      if (allowRetry && !this.relayRetryTimer) {
+        const base = Math.min(30_000, 1000 * (2 ** Math.min(this.relayRetryAttempt, 5)));
+        this.relayRetryAttempt += 1;
+        this.relayRetryTimer = setTimeout(() => {
+          this.relayRetryTimer = null;
+          this.publishRelay();
+        }, base + Math.random() * 1000);
+      }
+    } finally {
+      this.relayCurrentPromise = null;
+      this.relayPublishing = false;
+      this.notify();
+      if (this.relayDirty && this.secret) this.publishRelay(allowRetry);
+    }
   }
 
   startPolling() {

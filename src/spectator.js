@@ -62,7 +62,7 @@ function connectionBadge() {
   return element('span', {
     class: `connection-badge ${connected ? 'online' : ''}`,
     title: connected ? 'Aggiornamenti in tempo reale attivi' : 'Connessione in aggiornamento'
-  }, connected ? 'LIVE' : 'CONNESSIONE…');
+  }, connected ? 'LIVE' : 'SINCRONIZZAZIONE…');
 }
 
 function codeForm() {
@@ -289,6 +289,7 @@ function subscribe() {
   unsubscribe?.();
   unsubscribe = subscribeToAudience(
     state.code,
+    state.secret,
     payload => {
       const previousKey = responseKey();
       state.session = payload;
@@ -297,6 +298,12 @@ function subscribe() {
         state.messageType = '';
       }
       render();
+      if (payload.status === 'finished') {
+        globalThis.queueMicrotask(() => {
+          unsubscribe?.();
+          unsubscribe = null;
+        });
+      }
     },
     status => {
       state.realtimeStatus = status;

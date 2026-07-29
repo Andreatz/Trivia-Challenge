@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'trivia-challenge-v5';
+const CACHE_VERSION = 'trivia-challenge-v9';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const APP_SHELL = [
   './leaderboard.html',
   './manifest.webmanifest',
   './src/app.js',
+  './src/admin-auth.js',
   './src/audience-api.js',
   './src/audience-config.js',
   './src/audience-host.js',
@@ -21,6 +22,7 @@ const APP_SHELL = [
   './src/core/storage.js',
   './src/core/timer.js',
   './src/styles.css',
+  './src/admin-auth.css',
   './src/components.css',
   './src/anime-theme-overrides.css',
   './src/legacy-glow.css',
