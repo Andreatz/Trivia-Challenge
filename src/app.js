@@ -2891,6 +2891,28 @@ function ensureList(item, key, length, factory) {
   return item[key];
 }
 
+function splitAcceptedAnswers(value) {
+  const seen = new Set();
+  return String(value || '')
+    .split('|')
+    .map(answerValue => answerValue.trim())
+    .filter(answerValue => {
+      const normalized = answerValue.toLocaleLowerCase('it');
+      if (!answerValue || seen.has(normalized)) return false;
+      seen.add(normalized);
+      return true;
+    });
+}
+
+function acceptedAnswersEditor(item, entry, field = 'acceptedAnswers', labelText = 'Alias accettati (separati da |)') {
+  const value = Array.isArray(entry[field]) ? entry[field].join(' | ') : '';
+  return editorInput(labelText, value, nextValue => updateGame(item, () => {
+    const answers = splitAcceptedAnswers(nextValue);
+    if (answers.length) entry[field] = answers;
+    else delete entry[field];
+  }, false));
+}
+
 function pointsEditor(item) {
   const set = (key, value) => updateGame(item, target => target[key] = Number(value || 0), false);
   if (item.type === 'pass') {
@@ -3022,7 +3044,8 @@ function visualContentEditor(item) {
     const words = item.words ||= ['', '', '', '', ''];
     return $('section', { class: 'content-editor' }, $('h3', {}, 'Contenuto rapido'),
       ...Array.from({ length: 5 }, (_, index) => editorInput(`Indizio ${index + 1}`, words[index] || '', value => saveField(() => words[index] = value))),
-      editorInput('Risposta finale', item.answer || '', value => saveField(target => target.answer = value))
+      editorInput('Risposta finale', item.answer || '', value => saveField(target => target.answer = value)),
+      acceptedAnswersEditor(item, item)
     );
   }
   if (item.type === 'guess') {
@@ -3033,6 +3056,7 @@ function visualContentEditor(item) {
     return $('section', { class: 'content-editor', 'data-scroll-key': `guess-content-${item.id}` }, $('h3', {}, `Contenuto dei box - ${roundIndex + 1}/${rounds.length}`),
       guessRoundToolbar(item, rounds, roundIndex, round),
       editorInput('Risposta', round.answer || '', value => saveField(() => round.answer = value)),
+      acceptedAnswersEditor(item, round),
       ...clues.slice(0, 4).map((clue, index) => guessClueEditor(clue, index, saveField))
     );
   }
@@ -3042,6 +3066,7 @@ function visualContentEditor(item) {
       editorArea('Domanda', item.question || '', value => saveField(target => target.question = value)),
       $('div', { class: 'compact-list' }, ...items.map((entry, index) => $('div', { class: 'mini-row' },
         editorInput(`${index + 1}`, entry.label || '', value => saveField(() => entry.label = value)),
+        acceptedAnswersEditor(item, entry),
         editorInput('Immagine locale', entry.image || '', value => saveField(() => entry.image = value)),
         $('label', { class: 'check-field' }, $('input', { type: 'checkbox', checked: !!entry.isBomb, onchange: event => saveField(() => entry.isBomb = event.target.checked) }), 'Bomba')
       )))
@@ -3083,7 +3108,8 @@ function visualContentEditor(item) {
       $('div', { class: 'compact-list' }, ...questions.map((row, index) => $('div', { class: 'mini-row wide' },
         $('strong', {}, row.letter || ABC[index]),
         editorInput('Domanda', row.question || '', value => updateGame(item, () => row.question = value, false)),
-        editorInput('Risposta', row.answer || '', value => updateGame(item, () => row.answer = value, false))
+        editorInput('Risposta', row.answer || '', value => updateGame(item, () => row.answer = value, false)),
+        acceptedAnswersEditor(item, row)
       )))
     );
   }
@@ -3096,7 +3122,8 @@ function visualContentEditor(item) {
         ...category.clues.map((clue, clueIndex) => $('div', { class: 'mini-row wide' },
           editorInput('Valore', clue.value ?? (clueIndex + 1) * 100, value => updateGame(item, () => clue.value = Number(value || 0), false), { type: 'number' }),
           editorInput('Domanda', clue.question || '', value => updateGame(item, () => clue.question = value, false)),
-          editorInput('Risposta', clue.answer || '', value => updateGame(item, () => clue.answer = value, false))
+          editorInput('Risposta', clue.answer || '', value => updateGame(item, () => clue.answer = value, false)),
+          acceptedAnswersEditor(item, clue)
         ))
       ))
     );
@@ -3118,6 +3145,15 @@ function questionEditor(item, key, length, factory, fields) {
         ...fields.map(([labelText, field]) => field === 'optionsText'
           ? editorInput(labelText, Array.isArray(row.options) ? row.options.join(' | ') : '', value => updateGame(item, () => { row.options = value.split('|').map(option => option.trim()).filter(Boolean); }, false))
           : editorInput(labelText, row[field] || '', value => updateGame(item, () => row[field] = value, false))),
+        ...(key === 'songs'
+          ? [
+              acceptedAnswersEditor(item, row, 'acceptedTitles', 'Alias titolo (separati da |)'),
+              acceptedAnswersEditor(item, row, 'acceptedArtists', 'Alias artista (separati da |)'),
+              acceptedAnswersEditor(item, row, 'acceptedAnswers', 'Alias titolo + artista (separati da |)')
+            ]
+          : fields.some(([, field]) => field === 'answer')
+            ? [acceptedAnswersEditor(item, row)]
+            : []),
         $('div', { class: 'row question-row-actions' },
           $('button', { class: 'btn small', disabled: index === 0, onclick: () => reorderQuestion(item, key, index, index - 1) }, 'Su'),
           $('button', { class: 'btn small', disabled: index === rows.length - 1, onclick: () => reorderQuestion(item, key, index, index + 1) }, 'Giù'),

@@ -72,7 +72,9 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
 
   if (game.type === 'bomb') {
     const points = number(game.pointsPerCorrect, 50);
-    const accepted = (game.items || []).filter(item => !item.isBomb).map(item => item.label);
+    const accepted = (game.items || [])
+      .filter(item => !item.isBomb)
+      .flatMap(item => answerValues(item.label, item.acceptedAnswers));
     return {
       gameTitle: game.title,
       questionKey: `${baseKey}:board`,
@@ -186,4 +188,3 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
     answerRules: rules(question.answer, question.acceptedAnswers, definition.points)
   };
 }
-

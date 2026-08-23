@@ -3,6 +3,7 @@ import { GAME_TYPES } from './game-registry.js';
 export const CURRENT_SCHEMA_VERSION = 3;
 
 const MEDIA_FIELDS = new Set(['image', 'audio', 'media', 'detailImage', 'fullImage', 'src', 'art']);
+const ACCEPTED_ANSWER_FIELDS = new Set(['acceptedAnswers', 'acceptedTitles', 'acceptedArtists']);
 export const LEGACY_MEDIA_PATHS = Object.freeze({
   'public/assets/indovina-il-personaggio/anime/doflamimgo-2.png': 'public/assets/indovina-il-personaggio/anime/doflamingo-2.png',
   'public/assets/indovina-il-personaggio/anime/aizen-1.png': 'public/assets/indovina-il-personaggio/anime/aizen-1.webp',
@@ -161,6 +162,7 @@ export function validateDocument(input) {
   });
 
   visitMedia(content, 'content', errors);
+  visitAcceptedAnswers(content, 'content', errors);
   return errors;
 }
 
@@ -242,6 +244,32 @@ function visitMedia(value, path, errors) {
       }
     }
     visitMedia(entry, nextPath, errors);
+  }
+}
+
+function visitAcceptedAnswers(value, path, errors) {
+  if (Array.isArray(value)) {
+    value.forEach((entry, index) => visitAcceptedAnswers(entry, `${path}[${index}]`, errors));
+    return;
+  }
+  if (!isRecord(value)) return;
+
+  for (const [key, entry] of Object.entries(value)) {
+    const nextPath = path ? `${path}.${key}` : key;
+    if (ACCEPTED_ANSWER_FIELDS.has(key)) {
+      if (!Array.isArray(entry)) {
+        errors.push(`${nextPath}: deve essere un elenco di risposte.`);
+        continue;
+      }
+      if (entry.length > 30) errors.push(`${nextPath}: non può contenere più di 30 risposte.`);
+      entry.forEach((answer, index) => {
+        if (typeof answer !== 'string' || !answer.trim() || answer.trim().length > 160) {
+          errors.push(`${nextPath}[${index}]: usa un testo da 1 a 160 caratteri.`);
+        }
+      });
+      continue;
+    }
+    visitAcceptedAnswers(entry, nextPath, errors);
   }
 }
 

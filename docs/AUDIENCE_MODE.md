@@ -154,6 +154,17 @@ Risposte equivalenti possono essere separate con `|`, per esempio:
 Sosuke Aizen|Aizen|Sōsuke Aizen
 ```
 
+Nell'editor visuale è preferibile lasciare la risposta ufficiale nel campo
+**Risposta** e inserire nome, cognome, soprannomi o alter ego nel campo **Alias
+accettati**, sempre separati da `|`. Esempio: risposta `Izuku Midoriya`, alias
+`Izuku | Midoriya | Deku`.
+
+Il server accetta inoltre automaticamente i refusi più comuni dopo aver ignorato
+maiuscole, accenti, punteggiatura e spazi ripetuti: un errore per risposte di 4-7
+caratteri e due errori da 8 caratteri in poi. Le risposte fino a 3 caratteri restano
+esatte per limitare i falsi positivi. Non è quindi necessario salvare ogni typo nel
+database degli alias.
+
 ## Capacità
 
 Un Durable Object supporta migliaia di WebSocket ibernabili. Per 30 personaggi con

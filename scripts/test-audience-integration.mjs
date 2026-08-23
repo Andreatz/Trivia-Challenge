@@ -143,14 +143,17 @@ await rpc('sync_audience_session', {
     points: 500,
     revealStep: 2,
     accepting: true,
-    answerRules: [{ answer: 'Aizen', points: 500 }]
+    answerRules: [
+      { answer: 'Aizen', points: 500 },
+      { answer: 'Sosuke Aizen', points: 500 }
+    ]
   }
 }, { asAdmin: true });
 
 const correct = await rpc('submit_audience_answer', {
   p_code: session.code,
   p_participant_secret: aliceSecret,
-  p_answer: 'aìzen'
+  p_answer: 'Azien'
 });
 assert.deepEqual(
   { ok: correct.ok, result: correct.result, score: correct.score, points: correct.pointsAwarded },

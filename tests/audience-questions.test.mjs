@@ -9,6 +9,7 @@ describe('audienceQuestionState', () => {
       title: 'Indovina',
       rounds: [{
         answer: 'Aizen|Sosuke Aizen',
+        acceptedAnswers: ['Aizen Sosuke', 'Capitano Aizen'],
         points: [1000, 500, 250, 50],
         clues: [{}, {}, {}, {}]
       }]
@@ -24,7 +25,12 @@ describe('audienceQuestionState', () => {
       accepting: true
     });
     expect(second).toMatchObject({ revealStep: 2, points: 500, accepting: true });
-    expect(second.answerRules.map(rule => rule.answer)).toEqual(['Aizen', 'Sosuke Aizen']);
+    expect(second.answerRules.map(rule => rule.answer)).toEqual([
+      'Aizen',
+      'Sosuke Aizen',
+      'Aizen Sosuke',
+      'Capitano Aizen'
+    ]);
   });
 
   it('does not open guess answers before an image or after the host reveals the answer', () => {
@@ -87,5 +93,23 @@ describe('audienceQuestionState', () => {
       { answer: 'Blue Bird - Ikimono-gakari', points: 50 }
     ]);
   });
-});
 
+  it('includes aliases configured for every correct Bomb item', () => {
+    const game = {
+      id: 'bomb-1',
+      type: 'bomb',
+      title: 'Schiva la bomba',
+      pointsPerCorrect: 50,
+      items: [
+        { label: 'Izuku Midoriya', acceptedAnswers: ['Midoriya', 'Deku'], isBomb: false },
+        { label: 'All For One', acceptedAnswers: ['AFO'], isBomb: true }
+      ]
+    };
+
+    expect(audienceQuestionState(game).answerRules).toEqual([
+      { answer: 'Izuku Midoriya', points: 50 },
+      { answer: 'Midoriya', points: 50 },
+      { answer: 'Deku', points: 50 }
+    ]);
+  });
+});

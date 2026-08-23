@@ -62,6 +62,16 @@ test('valida la struttura specifica del tipo di gioco', () => {
   assert.throws(() => prepareDocument(invalid), /rounds/);
 });
 
+test('valida il database di alias accettati per ogni risposta', () => {
+  const valid = validDocument();
+  valid.games[0].rounds[0].acceptedAnswers = ['Midoriya', 'Deku'];
+  assert.doesNotThrow(() => prepareDocument(valid));
+
+  const invalid = validDocument();
+  invalid.games[0].rounds[0].acceptedAnswers = 'Midoriya|Deku';
+  assert.throws(() => prepareDocument(invalid), /elenco di risposte/);
+});
+
 test('migra i percorsi media rinominati senza rompere i contenuti salvati', () => {
   const legacy = validDocument();
   legacy.games[0].rounds[0].clues[0].image = 'public/assets/indovina-il-personaggio/anime/aizen-1.png';

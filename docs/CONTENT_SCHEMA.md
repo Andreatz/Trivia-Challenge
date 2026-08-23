@@ -47,6 +47,30 @@ Ogni minigioco ha sempre questi campi base:
 }
 ```
 
+## Risposte accettate e refusi
+
+Ogni domanda con una risposta testuale può affiancare alla risposta principale un
+elenco `acceptedAnswers`. Qui vanno inseriti nome, cognome, soprannomi, alter ego e
+altre formulazioni equivalenti; non occorre elencare i refusi, perché il backend li
+riconosce automaticamente con una soglia prudente.
+
+```json
+{
+  "answer": "Izuku Midoriya",
+  "acceptedAnswers": ["Izuku", "Midoriya", "Deku"]
+}
+```
+
+L'editor visuale mostra lo stesso elenco come campo separato da `|`. Il confronto
+ignora maiuscole, accenti, punteggiatura e spazi ripetuti. Per testi di 4-7 caratteri
+è tollerato un errore di inserimento, omissione, sostituzione o inversione; da 8
+caratteri in poi ne sono tollerati due. Le risposte fino a 3 caratteri richiedono una
+corrispondenza esatta per evitare falsi positivi.
+
+Per Sarabanda sono disponibili anche `acceptedTitles` e `acceptedArtists`, oltre ad
+`acceptedAnswers` per le varianti complete nel formato titolo-artista. Ogni elenco
+può contenere al massimo 30 valori, ciascuno lungo non più di 160 caratteri.
+
 ## Tipi supportati
 
 | Type | Minigioco |

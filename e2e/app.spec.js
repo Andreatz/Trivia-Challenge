@@ -88,6 +88,29 @@ test('admin usa il manifest locale e rifiuta import non validi', async ({ page }
   await expect(page.locator('.toast', { hasText: 'Import fallito' })).toBeVisible();
 });
 
+test('l’editor salva nome, cognome, soprannomi e alter ego come alias', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-720p', 'Il controllo editoriale viene verificato una volta.');
+  await page.getByRole('button', { name: 'ADMIN' }).click();
+  const gameCard = page.locator('.saved-game', { hasText: 'Indovina il personaggio' });
+  await expect(gameCard).toHaveCount(1);
+  await gameCard.getByRole('button', { name: 'Modifica' }).click();
+
+  const aliases = page.getByLabel('Alias accettati (separati da |)', { exact: true });
+  await expect(aliases).toHaveCount(1);
+  await aliases.fill('Sosuke | Aizen | Capitano Aizen');
+  await aliases.press('Tab');
+  await expect(page.locator('#json')).toHaveValue(/"acceptedAnswers": \[\s+"Sosuke",\s+"Aizen",\s+"Capitano Aizen"/);
+
+  await page.getByRole('button', { name: 'Salva modifiche' }).click();
+  const acceptedAnswers = await page.evaluate(() => {
+    const documentState = JSON.parse(localStorage.getItem('trivia-challenge-v3'));
+    return documentState.content.games
+      .find(game => game.type === 'guess')
+      .rounds[0].acceptedAnswers;
+  });
+  expect(acceptedAnswers).toEqual(['Sosuke', 'Aizen', 'Capitano Aizen']);
+});
+
 test('migra un import v2 e separa le sezioni persistite', async ({ page }) => {
   await page.getByRole('button', { name: 'ADMIN' }).click();
   const legacy = {
