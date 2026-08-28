@@ -3,13 +3,15 @@ export const PRESETS_STORAGE_KEY = 'trivia-challenge-presets-v1';
 export const ANIME_PRESET_ID = 'anime';
 export const STAR_WARS_PRESET_ID = 'star-wars';
 export const ANIME_SEED_REVISION = 'anime-backup-2026-08-28-v1';
+export const STAR_WARS_SEED_REVISION = 'star-wars-content-2026-08-28-v1';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 
-export function createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision = '') {
+export function createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision = '', starWarsSeedRevision = '') {
   return {
     version: PRESET_CATALOG_VERSION,
     animeSeedRevision,
+    starWarsSeedRevision,
     activePresetId: ANIME_PRESET_ID,
     presets: {
       [ANIME_PRESET_ID]: {
@@ -28,8 +30,30 @@ export function createPresetCatalog(animeDocument, starWarsDocument, animeSeedRe
   };
 }
 
-export function preparePresetCatalog(input, { animeDocument, starWarsDocument, animeSeedRevision = '', prepareDocument }) {
-  const fallback = createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision);
+function mergeStarWarsSeed(currentDocument, seedDocument, prepareDocument) {
+  const current = prepareDocument(currentDocument);
+  const next = prepareDocument(seedDocument);
+  const currentGames = new Map((current.content?.games || []).map(game => [game.id, game]));
+  next.content.games = (next.content.games || []).map(game => {
+    const previous = currentGames.get(game.id);
+    if (!previous) return game;
+    const merged = { ...game };
+    for (const key of ['layout', 'customElements', 'showOnHome']) {
+      if (previous[key] != null) merged[key] = clone(previous[key]);
+    }
+    return merged;
+  });
+  for (const key of ['title', 'subtitle', 'homeLayout', 'library', 'powers']) {
+    if (current.content?.[key] != null) next.content[key] = clone(current.content[key]);
+  }
+  if (current.session) next.session = clone(current.session);
+  if (current.settings) next.settings = clone(current.settings);
+  if (Array.isArray(current.history)) next.history = clone(current.history);
+  return prepareDocument(next);
+}
+
+export function preparePresetCatalog(input, { animeDocument, starWarsDocument, animeSeedRevision = '', starWarsSeedRevision = '', prepareDocument }) {
+  const fallback = createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision, starWarsSeedRevision);
   if (!input || typeof input !== 'object' || Array.isArray(input)) return fallback;
 
   const sourcePresets = input.presets && typeof input.presets === 'object' ? input.presets : {};
@@ -58,8 +82,16 @@ export function preparePresetCatalog(input, { animeDocument, starWarsDocument, a
     }
   }
 
+  if (starWarsSeedRevision && input.starWarsSeedRevision !== starWarsSeedRevision) {
+    presets[STAR_WARS_PRESET_ID].document = mergeStarWarsSeed(
+      presets[STAR_WARS_PRESET_ID].document,
+      starWarsDocument,
+      prepareDocument
+    );
+  }
+
   const activePresetId = presets[input.activePresetId] ? input.activePresetId : ANIME_PRESET_ID;
-  return { version: PRESET_CATALOG_VERSION, animeSeedRevision, activePresetId, presets };
+  return { version: PRESET_CATALOG_VERSION, animeSeedRevision, starWarsSeedRevision, activePresetId, presets };
 }
 
 export function updatePresetDocument(catalog, presetId, document) {

@@ -229,6 +229,10 @@ function validateGameShape(game, path, errors) {
   if (game.type === 'pass') {
     if (!isRecord(game.points)) errors.push(`${path}.points: deve contenere i valori per difficoltà.`);
     if (!isRecord(game.bonus)) errors.push(`${path}.bonus: deve contenere i valori per difficoltà.`);
+    if (game.questionSets != null) {
+      if (!isRecord(game.questionSets)) errors.push(`${path}.questionSets: deve contenere le domande per difficoltà.`);
+      else ['facile', 'medio', 'difficile'].forEach(level => requireList(game.questionSets, level, `${path}.questionSets`, errors));
+    }
   }
   if (game.type === 'jeopardy') {
     requireList(game, 'categories', path, errors).forEach((category, index) => {

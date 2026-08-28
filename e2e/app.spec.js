@@ -105,6 +105,16 @@ test('seleziona i preset Anime e Star Wars e usa i nuovi giochi', async ({ page 
   expect(starWarsAppearance).toEqual(animeAppearance);
   await expect(page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: PIXEL' })).toHaveCount(1);
   await expect(page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: INDIZI' })).toHaveCount(1);
+  const starWarsDocument = await page.evaluate(() => JSON.parse(localStorage.getItem('trivia-challenge-v3')));
+  const starWarsGames = Object.fromEntries(starWarsDocument.content.games.map(game => [game.type, game]));
+  expect(starWarsGames.guess.rounds).toHaveLength(10);
+  expect(starWarsGames.clues.questions).toHaveLength(10);
+  expect(starWarsGames.geoguessr.questions).toHaveLength(10);
+  expect(starWarsGames.jeopardy.categories.every(category => category.clues.length === 5)).toBe(true);
+  expect(starWarsGames.pass.duration).toBe(300);
+  expect(starWarsGames.pass.questionSets.facile).toHaveLength(20);
+  expect(starWarsGames.pass.questionSets.medio).toHaveLength(20);
+  expect(starWarsGames.pass.questionSets.difficile).toHaveLength(20);
 
   await page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: PIXEL' }).click();
   await expect(page.locator('.pixel-image-frame img')).toHaveCount(1);
@@ -117,19 +127,23 @@ test('seleziona i preset Anime e Star Wars e usa i nuovi giochi', async ({ page 
   await expect(page.locator('.clue-row')).toHaveCount(10);
   await page.getByRole('button', { name: 'Rivela il primo indizio' }).click();
   await expect(page.locator('.clue-row.revealed')).toHaveCount(1);
-  await expect(page.locator('.clue-row').first()).toContainText('66 BBY');
+  await expect(page.locator('.clue-row').first()).toContainText('26 BBY');
 
   await page.locator('.home-btn').click();
   await page.locator('.menu-button', { hasText: 'GEOGUESSR' }).click();
-  await expect(page.locator('.geoguessr-media img')).toHaveAttribute('src', 'public/assets/star-wars/geoguessr/tatooine.svg');
+  await expect(page.locator('.geoguessr-media img')).toHaveAttribute('src', 'public/assets/star-wars/geoguessr/naboo.webp');
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
-  await expect(page.locator('.geoguessr-answer')).toContainText('Tatooine');
+  await expect(page.locator('.geoguessr-answer')).toContainText('Naboo');
 
   await page.locator('.home-btn').click();
   await page.locator('.menu-button', { hasText: 'JEOPARDY' }).click();
   await expect(page.locator('.jeopardy-cat')).toHaveCount(5);
   await expect(page.locator('.jeopardy-cat').nth(0)).toContainText('Star Wish');
   await expect(page.locator('.jeopardy-cat').nth(4)).toContainText('Titoli Clickbait');
+
+  await page.locator('.home-btn').click();
+  await page.locator('.menu-button', { hasText: 'PASSAPAROLA' }).click();
+  await expect(page.locator('[data-timer-value]')).toHaveText('05:00');
 
   await page.locator('.home-btn').click();
   await page.locator('.preset-switcher').getByRole('button', { name: 'Anime', exact: true }).click();
@@ -144,7 +158,7 @@ test('seleziona i preset Anime e Star Wars e usa i nuovi giochi', async ({ page 
 test('admin usa il manifest locale e rifiuta import non validi', async ({ page }) => {
   await page.getByRole('button', { name: 'ADMIN' }).click();
   await expect(page.getByRole('button', { name: 'Esci', exact: true })).toBeVisible();
-  await expect(page.locator('#local-assets option')).toHaveCount(207);
+  await expect(page.locator('#local-assets option')).toHaveCount(253);
 
   const immediateSaveStatus = await page.getByLabel('Titolo evento').evaluate(element => {
     element.value = 'TRIVIA TEST';
@@ -320,6 +334,27 @@ test('dimensioni dei pulsanti giocatore sono modificabili e persistenti', async 
   await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-gap:8px/);
   await page.reload();
   await expect(page.locator('.bottom-scorebar')).toHaveAttribute('style', /--player-button-h:58px/);
+});
+
+test('il pannello di modifica si può spostare o nascondere per liberare la slide', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-720p', 'Il controllo dell’editor viene verificato una volta.');
+  await page.locator('.preset-switcher').getByRole('button', { name: 'Star Wars', exact: true }).click();
+  await page.locator('.menu-button', { hasText: 'JEOPARDY' }).click();
+  await page.getByRole('button', { name: 'MODIFICA', exact: true }).click();
+
+  const inspector = page.locator('.direct-inspector');
+  await expect(inspector).toHaveClass(/right/);
+  const rightPosition = await inspector.boundingBox();
+  await page.getByRole('button', { name: 'Pannello a sinistra' }).click();
+  await expect(inspector).toHaveClass(/left/);
+  const leftPosition = await inspector.boundingBox();
+  expect(rightPosition).not.toBeNull();
+  expect(leftPosition).not.toBeNull();
+  expect(leftPosition.x).toBeLessThan(rightPosition.x);
+  await page.getByRole('button', { name: 'Nascondi pannello' }).click();
+  await expect(inspector).toHaveCount(0);
+  await page.getByRole('button', { name: 'Mostra pannello' }).click();
+  await expect(page.locator('.direct-inspector')).toHaveClass(/left/);
 });
 
 test('reduced motion disattiva le animazioni non essenziali', async ({ page }) => {

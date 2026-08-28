@@ -24,6 +24,7 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 - **Grafica videogame dinamica** con glow neon, griglia futuristica, animazioni leggere, sweep luminosi e card effetto HUD.
 - **Schermate speciali**: Punti, Lista Anime / argomenti, Poteri.
 - **Admin panel** per creare, modificare, duplicare ed eliminare contenuti.
+- **Modifica diretta senza ostacoli**: il pannello dell'editor può essere spostato a sinistra/destra oppure nascosto temporaneamente per raggiungere e trascinare qualsiasi elemento della slide.
 - **Punteggi manuali** con bonus, correzioni rapide e storico.
 - **Import / export JSON** per backup e preparazione partite.
 - **Modalità spettatore** con ingresso via QR/nickname, risposte da telefono e classifica live separata.
@@ -58,7 +59,7 @@ Il selettore nella schermata principale consente di passare tra i due preset sen
 - punteggi, avanzamento delle domande, layout e impostazioni restano indipendenti;
 - l'importazione JSON sostituisce soltanto il preset attivo e l'esportazione produce il documento del preset attivo.
 
-Il contenuto iniziale Star Wars include una sequenza Pixel completa di Qui-Gon Jinn, una domanda a dieci indizi su Jango Fett, un luogo Geoguessr di esempio e le categorie Jeopardy `Star Wish`, `TripWarsvisor`, `Tinderata Galattica`, `LinkedIn Spaziale` e `Titoli Clickbait`. Domande, alias accettati, immagini, punti e difficoltà restano modificabili dal pannello Admin.
+Il contenuto iniziale Star Wars include 10 personaggi Pixel con 4 immagini progressive ciascuno, 10 personaggi con 10 indizi ciascuno, 10 località Geoguessr, 25 domande Jeopardy distribuite nelle categorie `Star Wish`, `TripWarsvisor`, `Tinderata Galattica`, `LinkedIn Spaziale` e `Titoli Clickbait`, e 3 set Passaparola da 20 domande (`Facile`, `Medio`, `Difficile`). Il timer del Passaparola Star Wars parte da 5 minuti (`05:00`). Una migrazione identificata da revisione installa questo contenuto una sola volta nei browser già inizializzati, conservando layout personalizzati, visibilità dei giochi, punteggi e avanzamento della sessione. Domande, alias accettati, immagini, punti e difficoltà restano modificabili dal pannello Admin.
 
 ## Come avviarlo in locale
 
@@ -121,6 +122,8 @@ L'applicazione esplicita usa `npm run assets:optimize:apply`, conserva percorsi 
 - `Spazio`: avvia o mette in pausa il timer visibile.
 - `Freccia sinistra/destra`: cambia domanda nei giochi sequenziali.
 - `Ctrl+Z`: annulla l'ultima modifica fuori dai campi di testo.
+
+Durante la modifica diretta, usa `Pannello a sinistra/destra` per cambiare lato oppure `Nascondi pannello` per liberare completamente la slide; il pulsante `Mostra pannello` rimane nella barra degli strumenti.
 
 La vista pubblico nasconde azioni host, editor, media controls e interazioni sulla scorebar senza modificare lo stato della partita.
 

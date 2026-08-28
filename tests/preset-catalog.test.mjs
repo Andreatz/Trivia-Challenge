@@ -6,6 +6,7 @@ import {
   createPresetCatalog,
   preparePresetCatalog,
   STAR_WARS_PRESET_ID,
+  STAR_WARS_SEED_REVISION,
   updatePresetDocument
 } from '../src/core/preset-catalog.js';
 
@@ -78,5 +79,46 @@ describe('catalogo preset', () => {
       prepareDocument: value => value
     });
     expect(preparedAgain.presets.anime.document.content.title).toBe('Anime modificato dopo il ripristino');
+  });
+
+  it('aggiorna i contenuti Star Wars una sola volta preservando layout e partita', () => {
+    const anime = document('Anime');
+    const oldStarWars = document('Star Wars personalizzato');
+    oldStarWars.content.homeLayout = { titleX: 61 };
+    oldStarWars.content.games = [{ id: 'star-wars-pass', type: 'pass', questions: [{ answer: 'Vecchia' }], layout: { gameRibbon: { x: 9 } }, showOnHome: false }];
+    oldStarWars.session.players = [{ id: 'p1', name: 'PLAYER', score: 400 }];
+    oldStarWars.history = [{ id: 'h1', points: 400 }];
+    const seed = document('Star Wars dal seed');
+    seed.content.games = [
+      { id: 'star-wars-pass', type: 'pass', questions: [{ answer: 'Nuova' }] },
+      { id: 'star-wars-jeopardy', type: 'jeopardy', categories: [] }
+    ];
+    const existing = createPresetCatalog(anime, oldStarWars);
+
+    const restored = preparePresetCatalog(existing, {
+      animeDocument: anime,
+      starWarsDocument: seed,
+      starWarsSeedRevision: STAR_WARS_SEED_REVISION,
+      prepareDocument: value => value
+    });
+
+    const restoredDocument = restored.presets[STAR_WARS_PRESET_ID].document;
+    expect(restored.starWarsSeedRevision).toBe(STAR_WARS_SEED_REVISION);
+    expect(restoredDocument.content.games).toHaveLength(2);
+    expect(restoredDocument.content.games[0].questions[0].answer).toBe('Nuova');
+    expect(restoredDocument.content.games[0].layout).toEqual({ gameRibbon: { x: 9 } });
+    expect(restoredDocument.content.games[0].showOnHome).toBe(false);
+    expect(restoredDocument.content.homeLayout).toEqual({ titleX: 61 });
+    expect(restoredDocument.session.players[0].score).toBe(400);
+    expect(restoredDocument.history).toEqual([{ id: 'h1', points: 400 }]);
+
+    restoredDocument.content.games[0].questions[0].answer = 'Modifica successiva';
+    const preparedAgain = preparePresetCatalog(restored, {
+      animeDocument: anime,
+      starWarsDocument: seed,
+      starWarsSeedRevision: STAR_WARS_SEED_REVISION,
+      prepareDocument: value => value
+    });
+    expect(preparedAgain.presets[STAR_WARS_PRESET_ID].document.content.games[0].questions[0].answer).toBe('Modifica successiva');
   });
 });

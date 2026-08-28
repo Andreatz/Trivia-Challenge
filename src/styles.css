@@ -1180,6 +1180,14 @@ body[data-view="show"] .bomb-grid{
   box-shadow:0 0 28px rgba(0,231,255,.18);
   pointer-events:auto;
 }
+.direct-inspector.left{
+  left:18px;
+  right:auto;
+}
+.direct-inspector.right{
+  left:auto;
+  right:18px;
+}
 .direct-inspector.wide{
   width:min(680px,calc(100% - 36px));
 }
@@ -1226,15 +1234,12 @@ body[data-view="show"] .bomb-grid{
     display:grid;
   }
   .direct-inspector{
-    left:18px;
-    right:18px;
     top:auto;
     bottom:18px;
-    width:auto;
     max-height:38%;
   }
   .direct-inspector.wide{
-    width:auto;
+    width:min(680px,calc(100% - 36px));
   }
   .direct-basics{
     grid-template-columns:1fr;

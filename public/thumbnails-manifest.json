@@ -992,6 +992,176 @@
       "sourceSha256": "d7cade21bb07efb243e903ecfd8ec2746d75d6361229876d117392fb3ecb035c"
     },
     {
+      "source": "public/assets/star-wars/geoguessr/alderaan.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/alderaan.webp",
+      "sourceSha256": "17ad89b7e496d63571bc52c6a5c45a37d92d6e87c257be9fecc6d788c3196faf"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/coruscant.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/coruscant.webp",
+      "sourceSha256": "307a58c8cd623c50ec511f7266d49edfeea59d79636d14b63bd7fcfce09b3832"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/dagobah.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/dagobah.webp",
+      "sourceSha256": "b6b97c19739e70fd2e92c321f59defc944f59082c06f86b56f1166ddf0d3e421"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/endor.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/endor.webp",
+      "sourceSha256": "2885b806243da2136b45b4ae32eb4edb8f8fd22d6eda33beb121995da1c3e3ae"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/ferrix.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/ferrix.webp",
+      "sourceSha256": "79a6b43a7f3316134f09e51b3ea5f8bd92e91b04059279d11f87452e1f00fb81"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/hoth.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/hoth.webp",
+      "sourceSha256": "ce1d820622d907d67acb2f2878890726339dc165a943aec396714eb210f33841"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/kamino.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/kamino.webp",
+      "sourceSha256": "552466eb3059db3e5e152117373e6e0e22bfa2df1a383711e8d7e77d3c3f9d37"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/mustafar.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/mustafar.webp",
+      "sourceSha256": "5623da9b1e857e309539cf3ebd842728cba4c053b15a5b0a8fd86f840cd7cce0"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/naboo.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/naboo.webp",
+      "sourceSha256": "d8287e446d837cedf00747436bcd8aaad40c381d48683f35f8fd8726fbe7d5ff"
+    },
+    {
+      "source": "public/assets/star-wars/geoguessr/tatooine.webp",
+      "thumbnail": "public/thumbnails/star-wars/geoguessr/tatooine.webp",
+      "sourceSha256": "b94c693f7963ed5ffaaef3cf05f1a341acec720371324027f5d627f89f82be84"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/boba-fett-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/boba-fett-1.webp",
+      "sourceSha256": "977d9aef3167c09c7b04c94c9d510775d9d50f6beee04cb683ec05dac391fe79"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/boba-fett-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/boba-fett-2.webp",
+      "sourceSha256": "4ed5c02e17232e5bde4bb0091da917976aabce0615e843839d0595a9b0a72fe4"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/boba-fett-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/boba-fett-3.webp",
+      "sourceSha256": "71b22d63bd7d4d5e4b4f9468f8622515f1e9cc9c1301d9d7541e62793f48619c"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/boba-fett-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/boba-fett-4.webp",
+      "sourceSha256": "7cce0103b393e4e008c5d9ec8aae942177dcc9d0415fa0f37bfa983332992738"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/c-3po-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/c-3po-1.webp",
+      "sourceSha256": "6238b0671d8683cf7b3a1cb69c30e14d0e496a589fadee94674639febef3aea4"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/c-3po-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/c-3po-2.webp",
+      "sourceSha256": "f776ceeceb41c54175d7732f063b46733f591daf28da98bf0a8c229643b8b987"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/c-3po-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/c-3po-3.webp",
+      "sourceSha256": "cb049c99e18e0694915e9dd25d97ec2c239748e808d187d76adc928cf3ad79d8"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/c-3po-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/c-3po-4.webp",
+      "sourceSha256": "fa82177f999ff3a5adc0e128619febf70d495ada607bc9c8b561ea118d921fa8"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/cara-dune-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/cara-dune-1.webp",
+      "sourceSha256": "7c72f217d03f443c1367e6e24258a292db63aef6df64cb0e53018e1b85f1f9df"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/cara-dune-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/cara-dune-2.webp",
+      "sourceSha256": "772606b6ec9d5cef3af7c746660278ca98e6d11b77678b00effeeeac3886f05a"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/cara-dune-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/cara-dune-3.webp",
+      "sourceSha256": "018f2f0462891824721d9ac8d7b818267bd7d125039c10807391ee968a0bc5cc"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/cara-dune-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/cara-dune-4.webp",
+      "sourceSha256": "041376fb5fbf3cc7c3e2c3dc5655eb7b3ff777c9cd69b8e2b6989af021042247"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/galen-erso-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/galen-erso-1.webp",
+      "sourceSha256": "ea4a8ca5940083460ff54cfbc34218809c6cf4014732bf20e366844e1a822e5e"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/galen-erso-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/galen-erso-2.webp",
+      "sourceSha256": "a6f44305553a6cfbe6c783099e34f6115c3ad4a431d2a885679296580b9c0cee"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/galen-erso-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/galen-erso-3.webp",
+      "sourceSha256": "0f914afafe3e1d513caa2f70b0ba3bfbece7493539aad491124000e89e424fed"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/galen-erso-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/galen-erso-4.webp",
+      "sourceSha256": "7831338d7fd529572cf871525518f55ba6d12733dcc9363ddaaf32a709cacf48"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/general-merrick-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/general-merrick-1.webp",
+      "sourceSha256": "e2a79d16f8880dbee5b8321347fc6373000a2e1b5cd33866e4d6c1c7a369130d"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/general-merrick-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/general-merrick-2.webp",
+      "sourceSha256": "b7f67d5c6036e716fb539729cf68d804836fe25028cd7a0eacbcbb1e0510e217"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/general-merrick-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/general-merrick-3.webp",
+      "sourceSha256": "b5df6ca34aa73db6754c5f7b2c006cce4c8c9b0a7b99b0d957f8912d39116abe"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/general-merrick-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/general-merrick-4.webp",
+      "sourceSha256": "d6511717b34d5e15c426bd5a5dddb40fd7386df050abff39e2ad5355d88c7288"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/palpatine-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/palpatine-1.webp",
+      "sourceSha256": "9cc6b4cafe4416cce5c3b9cb1c770c318f5ceb682abce049d3aed723230aff40"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/palpatine-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/palpatine-2.webp",
+      "sourceSha256": "161c317055db93ca8fa71f4ed581fb2d046689b7f08818164b82d8efa32a2bb7"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/palpatine-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/palpatine-3.webp",
+      "sourceSha256": "4bc174b4a77abc7e660a22fc59d7722e4294ad1b33307c22259f7caf3a20cfc5"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/palpatine-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/palpatine-4.webp",
+      "sourceSha256": "425ae6586d11ade3697a163fb219ab049e324664f3eedb786cec9643fa2f39da"
+    },
+    {
       "source": "public/assets/star-wars/pixel/qui-gon-1.png",
       "thumbnail": "public/thumbnails/star-wars/pixel/qui-gon-1.webp",
       "sourceSha256": "7a9a61a2e4b4bc4d90a67f1cbb9ba3ad380b118b72e51284c362c54b03c0bae6"
@@ -1010,6 +1180,66 @@
       "source": "public/assets/star-wars/pixel/qui-gon-4.png",
       "thumbnail": "public/thumbnails/star-wars/pixel/qui-gon-4.webp",
       "sourceSha256": "4609ef537aaf46457630871e6e33a1a87ec42a7cea37d6ad861245c86aec0c20"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/rey-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/rey-1.webp",
+      "sourceSha256": "5fec142337c2df0595de00b48fdc62ba82e7361e1b5cb5f9be180f2eea17ea4a"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/rey-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/rey-2.webp",
+      "sourceSha256": "e5d3e09f65de1c52f09fc96ff89746e605b59f5debf4eddb462ba15e6dc81ec3"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/rey-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/rey-3.webp",
+      "sourceSha256": "b1cc32c1ade9a8a8bce60fba455d8e5c063ad8189756ad878273fd38c202b272"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/rey-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/rey-4.webp",
+      "sourceSha256": "da376a08bd7a2164eefb68596d8ac6e2c9c82556120eb9e45697d5a9344eaa73"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/sabe-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/sabe-1.webp",
+      "sourceSha256": "a583fedeb2f9c667b3129cf8b4f72e7090df30eed67e873a2658eeb3bf33b4c3"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/sabe-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/sabe-2.webp",
+      "sourceSha256": "837ec3b0014462aa05dd2bc1bcd179522d38d08afdcadb9045f6cf6486e1aab6"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/sabe-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/sabe-3.webp",
+      "sourceSha256": "d1f5df03665d930f5981b8c08374aa5155048ed87b5500a1456b02cabb93a217"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/sabe-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/sabe-4.webp",
+      "sourceSha256": "9a829c91aed8d48b6bdfcf704e146ddacb375a08a0b3faa356636c8cf440039e"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/yoda-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/yoda-1.webp",
+      "sourceSha256": "c6b21b71efb42b2a7ab9fbe954ff421d806ad2d566385c906b10c1378f5bcf5f"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/yoda-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/yoda-2.webp",
+      "sourceSha256": "6107cf083fff9b71720b8fd0a159400849deb64207622b08136bbbc5a1481a93"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/yoda-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/yoda-3.webp",
+      "sourceSha256": "a2d3c09c13324fa00025a812bb910d5a09a0c15c5574efc0826dc9f153e50a12"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/yoda-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/yoda-4.webp",
+      "sourceSha256": "6d8c393553fb0546bd690b53d3685ce0338cd022995af41d4893d3f5d24fdd4b"
     }
   ]
 }

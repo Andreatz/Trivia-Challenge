@@ -1007,9 +1007,179 @@
       "bytes": 225576
     },
     {
+      "path": "public/assets/star-wars/geoguessr/alderaan.webp",
+      "type": "image/webp",
+      "bytes": 468516
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/coruscant.webp",
+      "type": "image/webp",
+      "bytes": 1309110
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/dagobah.webp",
+      "type": "image/webp",
+      "bytes": 95712
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/endor.webp",
+      "type": "image/webp",
+      "bytes": 1123838
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/ferrix.webp",
+      "type": "image/webp",
+      "bytes": 402508
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/hoth.webp",
+      "type": "image/webp",
+      "bytes": 292104
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/kamino.webp",
+      "type": "image/webp",
+      "bytes": 184632
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/mustafar.webp",
+      "type": "image/webp",
+      "bytes": 540424
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/naboo.webp",
+      "type": "image/webp",
+      "bytes": 364038
+    },
+    {
       "path": "public/assets/star-wars/geoguessr/tatooine.svg",
       "type": "image/svg+xml",
       "bytes": 2406
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/tatooine.webp",
+      "type": "image/webp",
+      "bytes": 26444
+    },
+    {
+      "path": "public/assets/star-wars/pixel/boba-fett-1.png",
+      "type": "image/png",
+      "bytes": 3860
+    },
+    {
+      "path": "public/assets/star-wars/pixel/boba-fett-2.png",
+      "type": "image/png",
+      "bytes": 5463
+    },
+    {
+      "path": "public/assets/star-wars/pixel/boba-fett-3.png",
+      "type": "image/png",
+      "bytes": 11471
+    },
+    {
+      "path": "public/assets/star-wars/pixel/boba-fett-4.png",
+      "type": "image/png",
+      "bytes": 178566
+    },
+    {
+      "path": "public/assets/star-wars/pixel/c-3po-1.png",
+      "type": "image/png",
+      "bytes": 3361
+    },
+    {
+      "path": "public/assets/star-wars/pixel/c-3po-2.png",
+      "type": "image/png",
+      "bytes": 5915
+    },
+    {
+      "path": "public/assets/star-wars/pixel/c-3po-3.png",
+      "type": "image/png",
+      "bytes": 14075
+    },
+    {
+      "path": "public/assets/star-wars/pixel/c-3po-4.png",
+      "type": "image/png",
+      "bytes": 230506
+    },
+    {
+      "path": "public/assets/star-wars/pixel/cara-dune-1.png",
+      "type": "image/png",
+      "bytes": 3815
+    },
+    {
+      "path": "public/assets/star-wars/pixel/cara-dune-2.png",
+      "type": "image/png",
+      "bytes": 3937
+    },
+    {
+      "path": "public/assets/star-wars/pixel/cara-dune-3.png",
+      "type": "image/png",
+      "bytes": 20625
+    },
+    {
+      "path": "public/assets/star-wars/pixel/cara-dune-4.png",
+      "type": "image/png",
+      "bytes": 249464
+    },
+    {
+      "path": "public/assets/star-wars/pixel/galen-erso-1.png",
+      "type": "image/png",
+      "bytes": 3605
+    },
+    {
+      "path": "public/assets/star-wars/pixel/galen-erso-2.png",
+      "type": "image/png",
+      "bytes": 4914
+    },
+    {
+      "path": "public/assets/star-wars/pixel/galen-erso-3.png",
+      "type": "image/png",
+      "bytes": 7942
+    },
+    {
+      "path": "public/assets/star-wars/pixel/galen-erso-4.png",
+      "type": "image/png",
+      "bytes": 172570
+    },
+    {
+      "path": "public/assets/star-wars/pixel/general-merrick-1.png",
+      "type": "image/png",
+      "bytes": 3628
+    },
+    {
+      "path": "public/assets/star-wars/pixel/general-merrick-2.png",
+      "type": "image/png",
+      "bytes": 3797
+    },
+    {
+      "path": "public/assets/star-wars/pixel/general-merrick-3.png",
+      "type": "image/png",
+      "bytes": 12604
+    },
+    {
+      "path": "public/assets/star-wars/pixel/general-merrick-4.png",
+      "type": "image/png",
+      "bytes": 156106
+    },
+    {
+      "path": "public/assets/star-wars/pixel/palpatine-1.png",
+      "type": "image/png",
+      "bytes": 2811
+    },
+    {
+      "path": "public/assets/star-wars/pixel/palpatine-2.png",
+      "type": "image/png",
+      "bytes": 4751
+    },
+    {
+      "path": "public/assets/star-wars/pixel/palpatine-3.png",
+      "type": "image/png",
+      "bytes": 10049
+    },
+    {
+      "path": "public/assets/star-wars/pixel/palpatine-4.png",
+      "type": "image/png",
+      "bytes": 167292
     },
     {
       "path": "public/assets/star-wars/pixel/qui-gon-1.png",
@@ -1030,6 +1200,66 @@
       "path": "public/assets/star-wars/pixel/qui-gon-4.png",
       "type": "image/png",
       "bytes": 170962
+    },
+    {
+      "path": "public/assets/star-wars/pixel/rey-1.png",
+      "type": "image/png",
+      "bytes": 3077
+    },
+    {
+      "path": "public/assets/star-wars/pixel/rey-2.png",
+      "type": "image/png",
+      "bytes": 4542
+    },
+    {
+      "path": "public/assets/star-wars/pixel/rey-3.png",
+      "type": "image/png",
+      "bytes": 9619
+    },
+    {
+      "path": "public/assets/star-wars/pixel/rey-4.png",
+      "type": "image/png",
+      "bytes": 142048
+    },
+    {
+      "path": "public/assets/star-wars/pixel/sabe-1.png",
+      "type": "image/png",
+      "bytes": 4294
+    },
+    {
+      "path": "public/assets/star-wars/pixel/sabe-2.png",
+      "type": "image/png",
+      "bytes": 4425
+    },
+    {
+      "path": "public/assets/star-wars/pixel/sabe-3.png",
+      "type": "image/png",
+      "bytes": 15545
+    },
+    {
+      "path": "public/assets/star-wars/pixel/sabe-4.png",
+      "type": "image/png",
+      "bytes": 245950
+    },
+    {
+      "path": "public/assets/star-wars/pixel/yoda-1.png",
+      "type": "image/png",
+      "bytes": 3445
+    },
+    {
+      "path": "public/assets/star-wars/pixel/yoda-2.png",
+      "type": "image/png",
+      "bytes": 6140
+    },
+    {
+      "path": "public/assets/star-wars/pixel/yoda-3.png",
+      "type": "image/png",
+      "bytes": 4893
+    },
+    {
+      "path": "public/assets/star-wars/pixel/yoda-4.png",
+      "type": "image/png",
+      "bytes": 173422
     },
     {
       "path": "public/assets/ui-bg-anime-neon.svg",

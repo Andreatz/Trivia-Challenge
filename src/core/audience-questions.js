@@ -1,3 +1,5 @@
+import { passQuestionsForDifficulty } from './game-rules.js';
+
 const GUESS_POINTS = [1000, 500, 250, 50];
 
 function number(value, fallback = 0) {
@@ -166,7 +168,8 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
     };
   }
 
-  const question = game.questions?.[index];
+  const questionSource = game.type === 'pass' ? passQuestionsForDifficulty(game) : game.questions;
+  const question = questionSource?.[index];
   if (!question) return waiting(game.title);
   const definitions = {
     said: {
@@ -204,7 +207,7 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
 
   return {
     gameTitle: game.title,
-    questionKey: `${baseKey}:question:${index}`,
+    questionKey: `${baseKey}:question:${game.type === 'pass' ? `${game.difficulty || 'facile'}:` : ''}${index}`,
     questionType: game.type,
     prompt: definition.prompt || `Domanda ${index + 1}`,
     points: definition.points,

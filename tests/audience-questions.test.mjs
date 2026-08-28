@@ -119,6 +119,29 @@ describe('audienceQuestionState', () => {
     });
   });
 
+  it('pubblica il set Passaparola della difficoltà attiva', () => {
+    const game = {
+      id: 'pass-1',
+      type: 'pass',
+      title: 'Passaparola',
+      difficulty: 'medio',
+      points: { facile: 5, medio: 10, difficile: 20 },
+      questions: [{ letter: 'A', question: 'Fallback', answer: 'Fallback' }],
+      questionSets: {
+        facile: [{ letter: 'A', question: 'Facile?', answer: 'Anakin' }],
+        medio: [{ letter: 'A', question: 'Medio?', answer: 'Ackbar', acceptedAnswers: ['Ammiraglio Ackbar'] }],
+        difficile: [{ letter: 'A', question: 'Difficile?', answer: 'Ahsoka' }]
+      }
+    };
+
+    expect(audienceQuestionState(game, { i: 0 })).toMatchObject({
+      questionKey: 'pass-1:pass:question:medio:0',
+      prompt: 'Medio?',
+      points: 10,
+      answerRules: [{ answer: 'Ackbar', points: 10 }, { answer: 'Ammiraglio Ackbar', points: 10 }]
+    });
+  });
+
   it('keeps spectators waiting when the show is not on an active question', () => {
     const game = {
       id: 'quote-1',

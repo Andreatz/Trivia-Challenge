@@ -16,6 +16,12 @@ export function passBonusForDifficulty(game) {
   return Number.isFinite(value) ? value : 0;
 }
 
+export function passQuestionsForDifficulty(game) {
+  const difficulty = game?.difficulty || 'facile';
+  const questions = game?.questionSets?.[difficulty];
+  return Array.isArray(questions) && questions.length ? questions : (Array.isArray(game?.questions) ? game.questions : []);
+}
+
 export function nextPassIndex(questions, currentIndex) {
   if (!Array.isArray(questions) || questions.length === 0) return -1;
 

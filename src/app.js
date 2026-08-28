@@ -2,6 +2,7 @@ import {
   calculateBombScore,
   guessPointsForReveal,
   nextPassIndex,
+  passQuestionsForDifficulty,
   passSummary
 } from './core/game-rules.js';
 import { CURRENT_SCHEMA_VERSION, prepareDocument, serializeDocument } from './core/schema.js';
@@ -17,6 +18,7 @@ import {
   preparePresetCatalog,
   PRESETS_STORAGE_KEY,
   STAR_WARS_PRESET_ID,
+  STAR_WARS_SEED_REVISION,
   updatePresetDocument
 } from './core/preset-catalog.js';
 import { AudienceHostController } from './audience-host.js';
@@ -166,6 +168,8 @@ let editing = '';
 let selectedElementId = '';
 let directEdit = false;
 let directEditPanel = 'layers';
+let directInspectorSide = 'right';
+let directInspectorHidden = false;
 let scorePanelPlayerId = '';
 let undoStack = [];
 let lastSavedSnapshot = JSON.stringify(serializeDocument(state));
@@ -186,6 +190,7 @@ function load() {
   result.errors.forEach(({ key, error }) => console.warn(`Salvataggio ${key} ignorato:`, error));
   const animeDocument = bundledAnimeDocument || result.document || serializeDocument(defaults());
   const animeSeedRevision = bundledAnimeDocument ? ANIME_SEED_REVISION : '';
+  const starWarsSeedRevision = STAR_WARS_SEED_REVISION;
   const starWarsDocument = serializeDocument(starWarsDefaults(animeDocument));
   let rawCatalog = null;
   try {
@@ -195,14 +200,16 @@ function load() {
       animeDocument,
       starWarsDocument,
       animeSeedRevision,
+      starWarsSeedRevision,
       prepareDocument
     });
   } catch (error) {
     console.warn('Catalogo preset ignorato:', error);
-    presetCatalog = createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision);
+    presetCatalog = createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision, starWarsSeedRevision);
   }
   const restoredBundledAnime = Boolean(animeSeedRevision) && rawCatalog?.animeSeedRevision !== animeSeedRevision;
-  if (!restoredBundledAnime && result.document && result.key === KEY && presetCatalog.presets[presetCatalog.activePresetId]) {
+  const restoredStarWarsSeed = rawCatalog?.starWarsSeedRevision !== starWarsSeedRevision;
+  if (!restoredBundledAnime && !restoredStarWarsSeed && result.document && result.key === KEY && presetCatalog.presets[presetCatalog.activePresetId]) {
     presetCatalog.presets[presetCatalog.activePresetId].document = clone(result.document);
   }
   activePresetId = presetCatalog.activePresetId;
@@ -1746,9 +1753,11 @@ function homeEditTools() {
   return $('div', { class: 'direct-edit-tools' },
     $('div', { class: 'direct-toolbar' },
       $('span', { class: 'edit-badge' }, 'MODIFICA HOME'),
+      $('button', { class: 'btn ghost', onclick: () => { directInspectorHidden = !directInspectorHidden; render(); } }, directInspectorHidden ? 'Mostra pannello' : 'Nascondi pannello'),
+      !directInspectorHidden ? $('button', { class: 'btn ghost', onclick: () => { directInspectorSide = directInspectorSide === 'right' ? 'left' : 'right'; render(); } }, directInspectorSide === 'right' ? 'Pannello a sinistra' : 'Pannello a destra') : null,
       $('button', { class: 'btn ghost', onclick: () => { directEdit = false; render(); } }, 'Chiudi strumenti')
     ),
-    $('aside', { class: 'direct-inspector wide' },
+    !directInspectorHidden ? $('aside', { class: `direct-inspector wide ${directInspectorSide}` },
       $('div', { class: 'stack native-content-panel' },
         globalTitlePanel(),
         $('section', { class: 'content-editor layout-editor' },
@@ -1819,7 +1828,8 @@ function homeEditTools() {
         ),
         $('button', { class: 'btn', onclick: () => { state.homeLayout = { ...DEFAULT_HOME_LAYOUT }; save(); render(); } }, 'Reset layout Home')
       )
-    )
+      )
+    : null
   );
 }
 
@@ -2585,16 +2595,17 @@ function guillotine(g) {
 }
 
 function pass(g) {
-  const questions = (g.questions || []).map((question, index) => ({
+  const difficulty = g.difficulty || 'facile';
+  const progressKey = g.questionSets ? `questions-${difficulty}` : 'questions';
+  const questions = passQuestionsForDifficulty(g).map((question, index) => ({
     ...question,
-    status: progressEntry(g, 'questions', index).status || 'pending'
+    status: progressEntry(g, progressKey, index).status || 'pending'
   }));
   const q = questions[cur.i] || questions[0];
-  const difficulty = g.difficulty || 'facile';
   if (!q) return $('div', { class: 'intro-screen' }, 'Nessuna domanda.');
   const summary = passSummary(questions);
   const advance = status => {
-    progressEntry(g, 'questions', cur.i).status = status;
+    progressEntry(g, progressKey, cur.i).status = status;
     questions[cur.i].status = status;
     const next = nextPassIndex(questions, cur.i);
     if (next >= 0) cur.i = next;
@@ -2989,9 +3000,11 @@ function directEditTools(item) {
       $('button', { class: `btn ${directEditPanel === 'content' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'content'; render(); } }, 'Contenuto'),
       $('button', { class: `btn ${directEditPanel === 'align' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'align'; render(); } }, 'Allinea'),
       $('button', { class: `btn ${directEditPanel === 'players' ? 'primary' : ''}`, onclick: () => { directEditPanel = 'players'; render(); } }, 'Giocatori'),
+      $('button', { class: 'btn ghost', onclick: () => { directInspectorHidden = !directInspectorHidden; render(); } }, directInspectorHidden ? 'Mostra pannello' : 'Nascondi pannello'),
+      !directInspectorHidden ? $('button', { class: 'btn ghost', onclick: () => { directInspectorSide = directInspectorSide === 'right' ? 'left' : 'right'; render(); } }, directInspectorSide === 'right' ? 'Pannello a sinistra' : 'Pannello a destra') : null,
       $('button', { class: 'btn ghost', onclick: () => { directEdit = false; selectedElementId = ''; render(); } }, 'Chiudi strumenti')
     ),
-    $('aside', { class: `direct-inspector ${directEditPanel === 'content' ? 'wide' : ''}` },
+    !directInspectorHidden ? $('aside', { class: `direct-inspector ${directEditPanel === 'content' ? 'wide' : ''} ${directInspectorSide}` },
       directEditPanel === 'content'
         ? nativeContentPanel(item)
         : directEditPanel === 'align'
@@ -2999,7 +3012,7 @@ function directEditTools(item) {
         : directEditPanel === 'players'
         ? playerButtonsPanel()
         : selected ? elementInspector(item, selected) : $('p', { class: 'muted' }, 'Aggiungi o seleziona un oggetto sulla pagina.')
-    )
+    ) : null
   );
 }
 
@@ -3159,7 +3172,8 @@ function pointsEditor(item) {
       $('strong', {}, 'Punti per difficoltà'),
       $('div', { class: 'grid two' },
         ...['facile', 'medio', 'difficile'].map(level => editorInput(`Punti ${level}`, item.points[level] ?? 0, value => updateGame(item, () => item.points[level] = Number(value || 0), false), { type: 'number' })),
-        ...['facile', 'medio', 'difficile'].map(level => editorInput(`Bonus ${level}`, item.bonus[level] ?? 0, value => updateGame(item, () => item.bonus[level] = Number(value || 0), false), { type: 'number' }))
+        ...['facile', 'medio', 'difficile'].map(level => editorInput(`Bonus ${level}`, item.bonus[level] ?? 0, value => updateGame(item, () => item.bonus[level] = Number(value || 0), false), { type: 'number' })),
+        editorInput('Timer (secondi)', item.duration ?? 300, value => updateGame(item, target => target.duration = Math.max(1, Number(value || 300)), false), { type: 'number' })
       )
     );
   }
@@ -3370,9 +3384,17 @@ function visualContentEditor(item) {
     ['Spiegazione', 'explanation']
   ]);
   if (item.type === 'pass') {
-    const questions = ensureList(item, 'questions', ABC.length, index => ({ letter: ABC[index], question: `Con la ${ABC[index]}: domanda`, answer: '' }));
+    const difficulty = item.difficulty || 'facile';
+    const target = item.questionSets?.[difficulty] ? item.questionSets : item;
+    const key = item.questionSets?.[difficulty] ? difficulty : 'questions';
+    const questions = ensureList(target, key, ABC.length, index => ({ letter: ABC[index], question: `Con la ${ABC[index]}: domanda`, answer: '' }));
     return $('section', { class: 'content-editor' }, $('h3', {}, 'Domande Passaparola'),
-      $('label', { class: 'editor-field' }, 'Difficoltà', $('select', { onchange: event => updateGame(item, target => target.difficulty = event.target.value, false) },
+      $('label', { class: 'editor-field' }, 'Difficoltà', $('select', { onchange: event => updateGame(item, targetGame => {
+        targetGame.difficulty = event.target.value;
+        cur.i = 0;
+        cur.answer = false;
+        delete cur.timer;
+      }, false) },
         ...['facile', 'medio', 'difficile'].map(level => $('option', { value: level, selected: (item.difficulty || 'facile') === level }, level))
       )),
       $('div', { class: 'compact-list' }, ...questions.map((row, index) => $('div', { class: 'mini-row wide' },

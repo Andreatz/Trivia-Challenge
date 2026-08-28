@@ -7,6 +7,7 @@ import {
   nextPassIndex,
   passBonusForDifficulty,
   passPointsForDifficulty,
+  passQuestionsForDifficulty,
   passSummary
 } from '../src/core/game-rules.js';
 
@@ -18,6 +19,21 @@ test('Passaparola legge punti e bonus dalla difficoltà attiva', () => {
   };
   assert.equal(passPointsForDifficulty(game), 10);
   assert.equal(passBonusForDifficulty(game), 500);
+});
+
+test('Passaparola usa il set di domande della difficoltà attiva', () => {
+  const game = {
+    difficulty: 'difficile',
+    questions: [{ answer: 'Fallback' }],
+    questionSets: {
+      facile: [{ answer: 'Facile' }],
+      medio: [{ answer: 'Medio' }],
+      difficile: [{ answer: 'Difficile' }]
+    }
+  };
+  assert.equal(passQuestionsForDifficulty(game)[0].answer, 'Difficile');
+  delete game.questionSets;
+  assert.equal(passQuestionsForDifficulty(game)[0].answer, 'Fallback');
 });
 
 test('Passaparola visita prima le domande pending e poi quelle passate', () => {
