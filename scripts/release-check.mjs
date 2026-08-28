@@ -15,12 +15,15 @@ if (!contentSchema.includes(`schemaVersion\": ${CURRENT_SCHEMA_VERSION}`)) {
 const frontendFiles = [
   'index.html', 'manifest.webmanifest', 'service-worker.js',
   'src/app.js', 'src/fullscreen.js', 'src/pwa.js',
-  'src/styles.css', 'src/anime-theme-overrides.css', 'src/legacy-glow.css', 'src/fullscreen.css'
+  'src/styles.css', 'src/anime-theme-overrides.css', 'src/preset-themes.css',
+  'src/legacy-glow.css', 'src/fullscreen.css'
 ];
 for (const file of frontendFiles) {
   const source = await read(file);
-  const withoutSvgNamespace = source.replaceAll('http://www.w3.org/2000/svg', '');
-  if (/https?:\/\//i.test(withoutSvgNamespace)) failures.push(`${file}: contiene una dipendenza URL remota.`);
+  const withoutNonDependencies = source
+    .replaceAll('http://www.w3.org/2000/svg', '')
+    .replace(/<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/gi, '');
+  if (/https?:\/\//i.test(withoutNonDependencies)) failures.push(`${file}: contiene una dipendenza URL remota.`);
 }
 
 const worker = await read('service-worker.js');
