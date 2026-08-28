@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'trivia-challenge-v11';
+const CACHE_VERSION = 'trivia-challenge-v12';
 const APP_SHELL = [
   './',
   './index.html',

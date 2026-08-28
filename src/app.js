@@ -937,6 +937,9 @@ function hub() {
                 return;
               }
               gameId = item.id;
+              if (item.type === 'jeopardy') {
+                gameProgress(item).clues = {};
+              }
               resetStage('game');
             },
             onpointerdown: directEdit ? event => startHomeMenuButtonDrag(event, item, index, false) : null
@@ -2653,16 +2656,12 @@ function jeopardy(g) {
       $('div', { class: 'jeopardy-cat' }, $('span', { class: 'cat-icon' }, categoryIcon(category.name)), $('strong', {}, category.name)),
       ...(category.clues || []).map((clue, clueIndex) => {
         const clueProgress = progressEntry(g, 'clues', `${categoryIndex}:${clueIndex}`);
-        return $('button', { class: `jeopardy-cell ${clueProgress.used ? 'used' : ''}`, onclick: () => {
-          if (clueProgress.used) {
-            if (!confirm(`Riaprire la domanda ${category.name} da ${clue.value} punti?`)) return;
-            delete gameProgress(g).clues[`${categoryIndex}:${clueIndex}`];
-            save();
-            render();
-            return;
-          }
+        if (clueProgress.used) return $('div', { class: 'jeopardy-cell used', 'aria-hidden': 'true' });
+        return $('button', { class: 'jeopardy-cell', onclick: () => {
+          clueProgress.used = true;
           cur.jeo = { c: categoryIndex, q: clueIndex };
           cur.answer = false;
+          save();
           render();
         } }, clue.value);
       })

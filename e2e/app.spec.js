@@ -357,6 +357,24 @@ test('il pannello di modifica si può spostare o nascondere per liberare la slid
   await expect(page.locator('.direct-inspector')).toHaveClass(/left/);
 });
 
+test('Jeopardy nasconde la casella giocata e ripristina il tabellone rientrando dalla Home', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'chromium-720p', 'Il flusso Jeopardy viene verificato una volta.');
+  await page.locator('.preset-switcher').getByRole('button', { name: 'Star Wars', exact: true }).click();
+  await page.locator('.menu-button', { hasText: 'JEOPARDY' }).click();
+
+  await expect(page.locator('button.jeopardy-cell')).toHaveCount(25);
+  await page.locator('button.jeopardy-cell').first().click();
+  await expect(page.locator('.jeopardy-question')).toContainText('Star Wish · 100 punti');
+  await page.getByRole('button', { name: 'Torna al tabellone' }).click();
+  await expect(page.locator('button.jeopardy-cell')).toHaveCount(24);
+  await expect(page.locator('.jeopardy-cell.used')).toHaveCount(1);
+
+  await page.locator('.home-btn').click();
+  await page.locator('.menu-button', { hasText: 'JEOPARDY' }).click();
+  await expect(page.locator('button.jeopardy-cell')).toHaveCount(25);
+  await expect(page.locator('.jeopardy-cell.used')).toHaveCount(0);
+});
+
 test('reduced motion disattiva le animazioni non essenziali', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const duration = await page.locator('.stage-content').evaluate(element => getComputedStyle(element).animationDuration);
