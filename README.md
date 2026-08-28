@@ -18,6 +18,7 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 - **Modalità Show** in formato 16:9, pensata per TV o proiettore.
 - **Fullscreen presentazione**: usa il pulsante `⛶` o il tasto `F` per mostrare solo la plancia di gioco, senza header dell'app.
 - **Home stile PowerPoint** con pulsanti per i minigiochi.
+- **Preset separati Anime e Star Wars** selezionabili dalla Home, ciascuno con contenuti, layout, punteggi e avanzamento indipendenti.
 - **HUD host integrato nella slide** con selezione giocatore, selezione minigioco, correzioni rapide, reset, log e link rapidi.
 - **Scorebar fissa in basso** con giocatori/squadre selezionabili.
 - **Grafica videogame dinamica** con glow neon, griglia futuristica, animazioni leggere, sweep luminosi e card effetto HUD.
@@ -34,16 +35,30 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 
 1. **Indovina il personaggio**: 4 indizi/immagini rivelabili in stile tile PowerPoint. Punteggi: 1000, 500, 250, 50.
    Nell'editor dei box puoi aggiungere/duplicare/eliminare slide e regolare adattamento, posizione X/Y e zoom del ritaglio per ogni immagine.
-2. **Schiva la Bomba**: griglia da 20 elementi, 16 corretti e 4 bombe/intrusi. Ogni risposta corretta vale 50 punti.
-3. **Chi l'ha detto**: audio da ascoltare e risposta rivelabile tramite immagine/video. 100 punti.
-4. **Occhio al dettaglio**: dettaglio iniziale e immagine completa in risposta. 200 punti.
-5. **Completa la Frase**: citazione parziale da completare perfettamente. 200 punti.
-6. **Reazione a catena**: 20 domande sequenziali su un argomento. 50 punti ciascuna.
-7. **Le Dieci Fatiche**: 10 domande miste. 100 punti ciascuna.
-8. **Ghigliottina**: 5 parole collegate da una risposta comune. 200 punti.
-9. **Passaparola**: 21 lettere dell'alfabeto italiano in disposizione circolare, con difficoltà e bonus finali.
-10. **Jeopardy**: tabellone a categorie con valori diversi per difficoltà.
-11. **Sarabanda**: 25 punti per titolo, 25 per artista, 50 punti a risposta completa.
+2. **Indovina il personaggio: Indizi**: 10 indizi progressivi; il valore disponibile diminuisce a ogni rivelazione.
+3. **Geoguessr**: immagine di un luogo e risposta relativa al pianeta di appartenenza.
+4. **Schiva la Bomba**: griglia da 20 elementi, 16 corretti e 4 bombe/intrusi. Ogni risposta corretta vale 50 punti.
+5. **Chi l'ha detto**: audio da ascoltare e risposta rivelabile tramite immagine/video. 100 punti.
+6. **Occhio al dettaglio**: dettaglio iniziale e immagine completa in risposta. 200 punti.
+7. **Completa la Frase**: citazione parziale da completare perfettamente. 200 punti.
+8. **Reazione a catena**: 20 domande sequenziali su un argomento. 50 punti ciascuna.
+9. **Le Dieci Fatiche**: 10 domande miste. 100 punti ciascuna.
+10. **Ghigliottina**: 5 parole collegate da una risposta comune. 200 punti.
+11. **Passaparola**: 21 lettere dell'alfabeto italiano in disposizione circolare, con difficoltà e bonus finali.
+12. **Jeopardy**: tabellone a categorie con valori diversi per difficoltà.
+13. **Sarabanda**: 25 punti per titolo, 25 per artista, 50 punti a risposta completa.
+
+## Preset Anime e Star Wars
+
+Il selettore nella schermata principale consente di passare tra i due preset senza mescolarne lo stato:
+
+- **Anime** viene creato acquisendo automaticamente il salvataggio presente nel browser al primo avvio della versione con preset. Mantiene gli undici giochi, la grafica e i contenuti già configurati.
+- **Star Wars** contiene `Indovina il personaggio: Pixel`, `Indovina il personaggio: Indizi`, `Geoguessr`, `Jeopardy` e `Passaparola`, con un tema blu, oro e arancio dedicato.
+- ogni modifica fatta dall'Admin viene salvata nel preset attivo;
+- punteggi, avanzamento delle domande, layout e impostazioni restano indipendenti;
+- l'importazione JSON sostituisce soltanto il preset attivo e l'esportazione produce il documento del preset attivo.
+
+Il contenuto iniziale Star Wars include una sequenza Pixel completa di Qui-Gon Jinn, una domanda a dieci indizi su Jango Fett, un luogo Geoguessr di esempio e le categorie Jeopardy `Star Wish`, `TripWarsvisor`, `Tinderata Galattica`, `LinkedIn Spaziale` e `Titoli Clickbait`. Domande, alias accettati, immagini, punti e difficoltà restano modificabili dal pannello Admin.
 
 ## Come avviarlo in locale
 
@@ -132,7 +147,7 @@ L'app le usa come riferimento visivo dentro l'admin, senza confonderle con i med
 
 ## Persistenza dei dati
 
-I dati sono salvati nel `localStorage` del browser. Questo rende il tool immediato e senza backend, ma significa che:
+I dati e il catalogo dei preset sono salvati nel `localStorage` del browser. Questo rende il tool immediato e senza backend, ma significa che:
 
 - i dati restano sul browser/dispositivo usato;
 - conviene esportare spesso il JSON;

@@ -9,7 +9,7 @@
     "relay:check": "wrangler deploy --dry-run --config cloudflare/audience-relay/wrangler.jsonc",
     "relay:deploy": "wrangler deploy --config cloudflare/audience-relay/wrangler.jsonc",
     "build": "node scripts/build-static.mjs",
-    "check:syntax": "node --check src/admin-auth.js && node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check src/audience-api.js && node --check src/audience-host.js && node --check src/spectator.js && node --check src/leaderboard.js && node --check cloudflare/audience-relay/src/index.js && node --check service-worker.js && node --check src/core/audience-questions.js && node --check src/core/game-contracts.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
+    "check:syntax": "node --check src/admin-auth.js && node --check src/app.js && node --check src/fullscreen.js && node --check src/pwa.js && node --check src/audience-api.js && node --check src/audience-host.js && node --check src/spectator.js && node --check src/leaderboard.js && node --check cloudflare/audience-relay/src/index.js && node --check service-worker.js && node --check src/core/audience-questions.js && node --check src/core/game-contracts.js && node --check src/core/game-registry.js && node --check src/core/game-rules.js && node --check src/core/preset-catalog.js && node --check src/core/schema.js && node --check src/core/storage.js && node --check src/core/timer.js",
     "lint": "eslint . --max-warnings 20",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

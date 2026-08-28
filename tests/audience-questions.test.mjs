@@ -33,6 +33,48 @@ describe('audienceQuestionState', () => {
     ]);
   });
 
+  it('apre le risposte del gioco a indizi con il punteggio del passo corrente', () => {
+    const game = {
+      id: 'clues-1',
+      type: 'clues',
+      title: 'Dieci indizi',
+      questions: [{
+        answer: 'Jango Fett',
+        acceptedAnswers: ['Jango'],
+        clues: ['66 BBY', 'Orlo Esterno'],
+        points: [1000, 900]
+      }]
+    };
+
+    expect(audienceQuestionState(game, { i: 0, revealed: 2, answer: false })).toMatchObject({
+      questionKey: 'clues-1:clues:question:0',
+      questionType: 'clues',
+      prompt: 'Indizio 2 di 2: Orlo Esterno',
+      points: 900,
+      accepting: true,
+      answerRules: [{ answer: 'Jango Fett', points: 900 }, { answer: 'Jango', points: 900 }]
+    });
+  });
+
+  it('pubblica la domanda e gli alias di Geoguessr', () => {
+    const game = {
+      id: 'geo-1',
+      type: 'geoguessr',
+      title: 'Geoguessr',
+      points: 300,
+      questions: [{ prompt: 'Quale pianeta?', answer: 'Tatooine', acceptedAnswers: ['Tatooine Prime'] }]
+    };
+
+    expect(audienceQuestionState(game, { i: 0, answer: false })).toMatchObject({
+      questionKey: 'geo-1:geoguessr:question:0',
+      questionType: 'geoguessr',
+      prompt: 'Quale pianeta?',
+      points: 300,
+      accepting: true,
+      answerRules: [{ answer: 'Tatooine', points: 300 }, { answer: 'Tatooine Prime', points: 300 }]
+    });
+  });
+
   it('does not open guess answers before an image or after the host reveals the answer', () => {
     const game = {
       id: 'guess-1',
@@ -43,6 +85,22 @@ describe('audienceQuestionState', () => {
 
     expect(audienceQuestionState(game, { i: 0, revealed: 0 }).accepting).toBe(false);
     expect(audienceQuestionState(game, { i: 0, revealed: 1, answer: true }).accepting).toBe(false);
+  });
+
+  it('apre subito la prima immagine della variante Pixel', () => {
+    const game = {
+      id: 'pixel-1',
+      type: 'guess',
+      variant: 'pixel',
+      title: 'Pixel',
+      rounds: [{ answer: 'Qui-Gon Jinn', points: [1000, 500], clues: [{}, {}] }]
+    };
+
+    expect(audienceQuestionState(game, { i: 0, revealed: 0, answer: false })).toMatchObject({
+      revealStep: 1,
+      points: 1000,
+      accepting: true
+    });
   });
 
   it('extracts the selected Jeopardy clue and its value', () => {

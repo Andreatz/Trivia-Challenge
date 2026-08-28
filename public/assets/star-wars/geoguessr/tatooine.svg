@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Paesaggio desertico con due soli</title>
+  <desc id="desc">Illustrazione stilizzata di un insediamento tra dune, rocce e due soli.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#241545"/>
+      <stop offset=".48" stop-color="#d16345"/>
+      <stop offset="1" stop-color="#f4b562"/>
+    </linearGradient>
+    <linearGradient id="sand" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#db8d3a"/>
+      <stop offset="1" stop-color="#8f4928"/>
+    </linearGradient>
+    <radialGradient id="sun"><stop stop-color="#fff8bd"/><stop offset=".62" stop-color="#ffc94a"/><stop offset="1" stop-color="#ff8b2c" stop-opacity="0"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1170" cy="190" r="112" fill="url(#sun)" filter="url(#glow)"/>
+  <circle cx="1170" cy="190" r="67" fill="#ffe87d"/>
+  <circle cx="1370" cy="275" r="76" fill="url(#sun)" filter="url(#glow)"/>
+  <circle cx="1370" cy="275" r="43" fill="#ffd35b"/>
+  <path d="M0 620 180 470l168 32 176-164 153 189 198-71 150 98 207-42 168 108 200-24v304H0Z" fill="#633334" opacity=".72"/>
+  <path d="M0 672c253-104 432-67 657 42 226 109 485-107 943-6v192H0Z" fill="url(#sand)"/>
+  <path d="M0 790c293-103 583-25 799 37 250 72 482-54 801-73v146H0Z" fill="#b96932" opacity=".78"/>
+  <g fill="#ddb675" stroke="#6f472e" stroke-width="8">
+    <path d="M310 635v-87a101 101 0 0 1 202 0v87Z"/>
+    <rect x="288" y="616" width="248" height="105" rx="18"/>
+    <path d="M575 678v-54a72 72 0 0 1 144 0v54Z"/>
+    <rect x="555" y="666" width="183" height="73" rx="14"/>
+    <path d="M765 679v-112a82 82 0 0 1 164 0v112Z"/>
+    <rect x="742" y="660" width="210" height="86" rx="15"/>
+  </g>
+  <g fill="#3d2c2c">
+    <rect x="386" y="632" width="47" height="89" rx="21"/>
+    <rect x="626" y="684" width="34" height="55" rx="16"/>
+    <rect x="825" y="675" width="43" height="71" rx="19"/>
+  </g>
+  <path d="M78 728h132l50 27H43Z" fill="#32262d"/>
+  <path d="M1045 719h209l85 44h-365Z" fill="#32262d"/>
+  <text x="80" y="110" fill="#fff4ce" font-family="Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="8" opacity=".72">OUTER RIM LOCATION</text>
+</svg>

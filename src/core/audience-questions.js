@@ -51,7 +51,8 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
     const round = game.rounds?.[index];
     if (!round) return waiting(game.title);
     const clues = round.clues || [];
-    const step = Math.min(Math.max(0, number(navigation.revealed)), clues.length);
+    const minimumStep = game.variant === 'pixel' ? 1 : 0;
+    const step = Math.min(Math.max(minimumStep, number(navigation.revealed)), clues.length);
     const points = number(
       round.points?.[step - 1] ?? clues[step - 1]?.label,
       GUESS_POINTS[step - 1] || 0
@@ -67,6 +68,26 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
       revealStep: step,
       accepting: isOpen && step > 0,
       answerRules: rules(round.answer, round.acceptedAnswers, points)
+    };
+  }
+
+  if (game.type === 'clues') {
+    const question = game.questions?.[index];
+    if (!question) return waiting(game.title);
+    const clues = question.clues || [];
+    const step = Math.min(Math.max(0, number(navigation.revealed)), clues.length);
+    const points = number(question.points?.[Math.max(step - 1, 0)], 0);
+    return {
+      gameTitle: game.title,
+      questionKey: `${baseKey}:question:${index}`,
+      questionType: 'clues',
+      prompt: step
+        ? `Indizio ${step} di ${clues.length}: ${clues[step - 1]}`
+        : 'Attendi che venga rivelato il primo indizio.',
+      points,
+      revealStep: step,
+      accepting: isOpen && step > 0,
+      answerRules: rules(question.answer, question.acceptedAnswers, points)
     };
   }
 
@@ -172,6 +193,10 @@ export function audienceQuestionState(game, navigation = {}, active = true) {
     pass: {
       prompt: question.question,
       points: number(game.points?.[game.difficulty || 'facile'], 5)
+    },
+    geoguessr: {
+      prompt: question.prompt || 'Su quale pianeta si trova questo luogo?',
+      points: number(question.points ?? game.points, 300)
     }
   };
   const definition = definitions[game.type];

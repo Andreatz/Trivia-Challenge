@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 
 import { createGameTemplates, GAME_DEFINITIONS, GAME_TYPES, MENU_ORDER } from '../src/core/game-registry.js';
 
-test('il registro espone esattamente gli undici minigiochi', () => {
-  assert.equal(GAME_TYPES.size, 11);
+test('il registro espone tutti i tredici tipi di minigioco', () => {
+  assert.equal(GAME_TYPES.size, 13);
   assert.deepEqual(new Set(MENU_ORDER), new Set(Object.keys(GAME_DEFINITIONS)));
 });
 

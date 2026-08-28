@@ -211,8 +211,19 @@ function validateGameShape(game, path, errors) {
     requireList(game, 'items', path, errors);
     if (!Number.isFinite(Number(game.pointsPerCorrect))) errors.push(`${path}.pointsPerCorrect: valore numerico obbligatorio.`);
   }
-  if (['said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(game.type)) {
+  if (['geoguessr', 'said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(game.type)) {
     requireList(game, 'questions', path, errors);
+  }
+  if (game.type === 'clues') {
+    requireList(game, 'questions', path, errors).forEach((question, index) => {
+      if (!isRecord(question)) {
+        errors.push(`${path}.questions[${index}]: deve essere un oggetto.`);
+        return;
+      }
+      requireList(question, 'clues', `${path}.questions[${index}]`, errors, 10);
+      const points = requireList(question, 'points', `${path}.questions[${index}]`, errors, 10);
+      if (points.some(value => !Number.isFinite(Number(value)))) errors.push(`${path}.questions[${index}].points: usa soltanto valori numerici.`);
+    });
   }
   if (game.type === 'guillotine') requireList(game, 'words', path, errors, 5);
   if (game.type === 'pass') {

@@ -229,12 +229,12 @@
     {
       "source": "public/assets/indovina-il-personaggio/anime/berthold-2.png",
       "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/berthold-2.webp",
-      "sourceSha256": "b00967916a327f7bafd58322120189167fc1cf117f6a4cfc7f8d7e124ccf229a"
+      "sourceSha256": "1c0624b65a8bc6bfdc0c6bb6b5f39e94b7ecfd90eecdccfa2797c27e0bb78b21"
     },
     {
       "source": "public/assets/indovina-il-personaggio/anime/berthold-3.png",
       "thumbnail": "public/thumbnails/indovina-il-personaggio/anime/berthold-3.webp",
-      "sourceSha256": "1c0624b65a8bc6bfdc0c6bb6b5f39e94b7ecfd90eecdccfa2797c27e0bb78b21"
+      "sourceSha256": "b00967916a327f7bafd58322120189167fc1cf117f6a4cfc7f8d7e124ccf229a"
     },
     {
       "source": "public/assets/indovina-il-personaggio/anime/berthold-4.png",
@@ -990,6 +990,26 @@
       "source": "public/assets/schiva-la-bomba/pngwing.com.png",
       "thumbnail": "public/thumbnails/schiva-la-bomba/pngwing.com.webp",
       "sourceSha256": "d7cade21bb07efb243e903ecfd8ec2746d75d6361229876d117392fb3ecb035c"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/qui-gon-1.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/qui-gon-1.webp",
+      "sourceSha256": "7a9a61a2e4b4bc4d90a67f1cbb9ba3ad380b118b72e51284c362c54b03c0bae6"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/qui-gon-2.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/qui-gon-2.webp",
+      "sourceSha256": "e728ba3edc745522a76f7c18fb5d5e52603b10ff5397b23dbfe99b9a643a622f"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/qui-gon-3.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/qui-gon-3.webp",
+      "sourceSha256": "675b9b73445c5b3d25072cb79681d1d517bd1be7dd76261b417ec78f8ab3b4b5"
+    },
+    {
+      "source": "public/assets/star-wars/pixel/qui-gon-4.png",
+      "thumbnail": "public/thumbnails/star-wars/pixel/qui-gon-4.webp",
+      "sourceSha256": "4609ef537aaf46457630871e6e33a1a87ec42a7cea37d6ad861245c86aec0c20"
     }
   ]
 }

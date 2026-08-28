@@ -244,12 +244,12 @@
     {
       "path": "public/assets/indovina-il-personaggio/anime/berthold-2.png",
       "type": "image/png",
-      "bytes": 3319222
+      "bytes": 1959996
     },
     {
       "path": "public/assets/indovina-il-personaggio/anime/berthold-3.png",
       "type": "image/png",
-      "bytes": 1959996
+      "bytes": 3319222
     },
     {
       "path": "public/assets/indovina-il-personaggio/anime/berthold-4.png",
@@ -1005,6 +1005,31 @@
       "path": "public/assets/schiva-la-bomba/pngwing.com.png",
       "type": "image/png",
       "bytes": 225576
+    },
+    {
+      "path": "public/assets/star-wars/geoguessr/tatooine.svg",
+      "type": "image/svg+xml",
+      "bytes": 2406
+    },
+    {
+      "path": "public/assets/star-wars/pixel/qui-gon-1.png",
+      "type": "image/png",
+      "bytes": 3027
+    },
+    {
+      "path": "public/assets/star-wars/pixel/qui-gon-2.png",
+      "type": "image/png",
+      "bytes": 3654
+    },
+    {
+      "path": "public/assets/star-wars/pixel/qui-gon-3.png",
+      "type": "image/png",
+      "bytes": 8064
+    },
+    {
+      "path": "public/assets/star-wars/pixel/qui-gon-4.png",
+      "type": "image/png",
+      "bytes": 170962
     },
     {
       "path": "public/assets/ui-bg-anime-neon.svg",

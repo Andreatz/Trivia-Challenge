@@ -5,6 +5,16 @@
     "invalid": { "id": "game-guess", "type": "guess", "title": "Indovina", "rounds": [] }
   },
   {
+    "type": "clues",
+    "valid": { "id": "game-clues", "type": "clues", "title": "Dieci indizi", "questions": [{ "answer": "Jango Fett", "clues": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], "points": [1000, 900, 750, 600, 400, 200, 100, 50, 20, 10] }] },
+    "invalid": { "id": "game-clues", "type": "clues", "title": "Dieci indizi", "questions": [{ "answer": "Jango Fett", "clues": ["Solo uno"], "points": [1000] }] }
+  },
+  {
+    "type": "geoguessr",
+    "valid": { "id": "game-geoguessr", "type": "geoguessr", "title": "Geoguessr", "points": 300, "questions": [{ "prompt": "Quale pianeta?", "image": "public/assets/star-wars/geoguessr/tatooine.svg", "answer": "Tatooine" }] },
+    "invalid": { "id": "game-geoguessr", "type": "geoguessr", "title": "Geoguessr", "questions": [] }
+  },
+  {
     "type": "bomb",
     "valid": { "id": "game-bomb", "type": "bomb", "title": "Bomba", "pointsPerCorrect": 50, "items": [{ "label": "A", "isBomb": false }] },
     "invalid": { "id": "game-bomb", "type": "bomb", "title": "Bomba", "pointsPerCorrect": "no", "items": [] }

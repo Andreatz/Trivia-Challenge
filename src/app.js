@@ -1,14 +1,23 @@
 import {
   calculateBombScore,
+  guessPointsForReveal,
   nextPassIndex,
   passSummary
 } from './core/game-rules.js';
 import { CURRENT_SCHEMA_VERSION, prepareDocument, serializeDocument } from './core/schema.js';
 import { formatTimer, pauseTimer, resetTimer, startTimer, timerRemaining } from './core/timer.js';
-import { categoryIcon, createGameTemplates, GAME_LABELS } from './core/game-registry.js';
+import { categoryIcon, createGameTemplates, createStarWarsGames, GAME_LABELS } from './core/game-registry.js';
 import { createGameContracts } from './core/game-contracts.js';
 import { backupDocument, readFirstValid, writeDocument } from './core/storage.js';
 import { audienceQuestionState } from './core/audience-questions.js';
+import {
+  ANIME_PRESET_ID,
+  createPresetCatalog,
+  preparePresetCatalog,
+  PRESETS_STORAGE_KEY,
+  STAR_WARS_PRESET_ID,
+  updatePresetDocument
+} from './core/preset-catalog.js';
 import { AudienceHostController } from './audience-host.js';
 
 const KEY = 'trivia-challenge-v3';
@@ -79,9 +88,10 @@ const powers = [
 ];
 
 const templates = createGameTemplates({ createId: id, alphabet: ABC });
+const ANIME_GAME_TYPES = ['guess', 'bomb', 'said', 'detail', 'quote', 'chain', 'labors', 'guillotine', 'pass', 'jeopardy', 'sarabanda'];
 const gameContracts = createGameContracts(
   Object.fromEntries(Object.entries(TYPES).map(([type, gameLabel]) => [type, { label: gameLabel }])),
-  { guess, bomb, said, detail, quote, chain, labors, guillotine, pass, jeopardy, sarabanda }
+  { guess, clues: cluesGame, geoguessr, bomb, said, detail, quote, chain, labors, guillotine, pass, jeopardy, sarabanda }
 );
 
 const defaults = () => ({
@@ -90,7 +100,7 @@ const defaults = () => ({
   subtitle: 'ANIME EDITION',
   homeLayout: { ...DEFAULT_HOME_LAYOUT },
   players: [{ id: id('p'), name: 'LIVIO', score: 0 }, { id: id('p'), name: 'MELIA', score: 0 }, { id: id('p'), name: 'MAGGI', score: 0 }],
-  games: Object.values(templates).map(factory => factory()),
+  games: ANIME_GAME_TYPES.map(type => templates[type]()),
   library: animeList,
   powers,
   settings: { soundsEnabled: true, alertsEnabled: true },
@@ -98,6 +108,26 @@ const defaults = () => ({
   session: { games: {} }
 });
 
+const starWarsDefaults = () => ({
+  schemaVersion: CURRENT_SCHEMA_VERSION,
+  title: 'TRIVIA CHALLENGE',
+  subtitle: 'STAR WARS EDITION',
+  homeLayout: { ...DEFAULT_HOME_LAYOUT },
+  players: [
+    { id: 'star-wars-player-1', name: 'GIOCATORE 1', score: 0 },
+    { id: 'star-wars-player-2', name: 'GIOCATORE 2', score: 0 },
+    { id: 'star-wars-player-3', name: 'GIOCATORE 3', score: 0 }
+  ],
+  games: createStarWarsGames({ alphabet: ABC }),
+  library: ['Andor', 'Ahsoka', 'The Mandalorian', 'Obi-Wan Kenobi', 'The Clone Wars', 'Rebels', 'Tales of the Jedi'],
+  powers: [],
+  settings: { soundsEnabled: true, alertsEnabled: true },
+  history: [],
+  session: { games: {} }
+});
+
+let presetCatalog;
+let activePresetId = ANIME_PRESET_ID;
 let state = load();
 const restoredNavigation = state.session?.navigation || {};
 let view = ['show', 'admin', 'scores', 'audience'].includes(restoredNavigation.view) ? restoredNavigation.view : 'show';
@@ -130,7 +160,25 @@ const audienceHost = new AudienceHostController(() => {
 function load() {
   const result = readFirstValid(localStorage, [KEY, ...LEGACY_KEYS], prepareDocument);
   result.errors.forEach(({ key, error }) => console.warn(`Salvataggio ${key} ignorato:`, error));
-  return result.document ? hydrate(result.document) : defaults();
+  const animeDocument = result.document || serializeDocument(defaults());
+  const starWarsDocument = serializeDocument(starWarsDefaults());
+  try {
+    const rawCatalog = localStorage.getItem(PRESETS_STORAGE_KEY);
+    presetCatalog = preparePresetCatalog(rawCatalog ? JSON.parse(rawCatalog) : null, {
+      animeDocument,
+      starWarsDocument,
+      prepareDocument
+    });
+  } catch (error) {
+    console.warn('Catalogo preset ignorato:', error);
+    presetCatalog = createPresetCatalog(animeDocument, starWarsDocument);
+  }
+  if (result.document && result.key === KEY && presetCatalog.presets[presetCatalog.activePresetId]) {
+    presetCatalog.presets[presetCatalog.activePresetId].document = clone(result.document);
+  }
+  activePresetId = presetCatalog.activePresetId;
+  writeDocument(localStorage, PRESETS_STORAGE_KEY, presetCatalog);
+  return hydrate(presetCatalog.presets[activePresetId].document);
 }
 
 function hydrate(data) {
@@ -188,6 +236,8 @@ function save() {
   const nextContentSnapshot = JSON.stringify(editorialSnapshot(state));
   try {
     writeDocument(localStorage, KEY, nextSnapshot);
+    updatePresetDocument(presetCatalog, activePresetId, JSON.parse(nextSnapshot));
+    writeDocument(localStorage, PRESETS_STORAGE_KEY, presetCatalog);
     if (nextContentSnapshot !== lastSavedContentSnapshot) {
       undoStack.push(lastSavedContentSnapshot);
       if (undoStack.length > UNDO_LIMIT) undoStack.shift();
@@ -238,7 +288,7 @@ function handleUndoShortcut(event) {
 function currentQuestionCount(item = game()) {
   if (!item) return 0;
   if (item.type === 'guess') return item.rounds?.length || 0;
-  if (['said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(item.type)) return item.questions?.length || 0;
+  if (['clues', 'geoguessr', 'said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(item.type)) return item.questions?.length || 0;
   if (item.type === 'sarabanda') return item.songs?.length || 0;
   return 0;
 }
@@ -492,6 +542,7 @@ function render() {
   timerInterval = null;
   document.body.dataset.view = view;
   document.body.dataset.audience = audienceMode ? 'public' : 'host';
+  document.body.dataset.preset = activePresetId;
   document.getElementById('app').replaceChildren(
     top(),
     view === 'show' ? show() : view === 'admin' ? admin() : view === 'scores' ? scores() : audienceAdmin()
@@ -703,7 +754,7 @@ function stageToolbar() {
     $('button', { class: 'gear-btn home-btn', title: 'Home', 'aria-label': 'Home', onclick: () => resetStage('hub') }, homeIcon()),
     $('div', { class: 'stage-brand stage-brand-placeholder' }),
     $('div', { class: `stage-actions ${selectedElementId === 'toolbar-buttons' ? 'toolbar-selected' : ''}`, style: toolbarActionsStyle() },
-      toolbarAction({ icon: '▣', label: 'LISTA ANIME', onclick: () => resetStage('library') }),
+      toolbarAction({ icon: '▣', label: activePresetId === STAR_WARS_PRESET_ID ? 'ARCHIVIO' : 'LISTA ANIME', onclick: () => resetStage('library') }),
       toolbarAction({ icon: '★', label: 'PUNTI', onclick: () => resetStage('points') }),
       toolbarAction({
         icon: '',
@@ -835,6 +886,7 @@ function hub() {
   const freeform = directEdit || hasHomeMenuButtonLayouts();
   if (freeform) ensureHomeMenuButtonLayouts(groups);
   return $('div', { class: `hub-screen ${freeform ? 'home-freeform' : ''}` },
+    presetSwitcher(),
     groups.length
       ? $('div', { class: 'menu-board' },
           ...groups.map((item, index) => $('button', {
@@ -862,6 +914,38 @@ function hub() {
         )
       : $('div', { class: 'hub-empty' }, 'Nessun minigioco selezionato per la Home')
   );
+}
+
+function presetSwitcher() {
+  return $('section', { class: 'preset-switcher', 'aria-label': 'Seleziona preset' },
+    $('span', {}, 'PRESET'),
+    ...Object.values(presetCatalog.presets).map(preset => $('button', {
+      class: preset.id === activePresetId ? 'active' : '',
+      'aria-pressed': preset.id === activePresetId ? 'true' : 'false',
+      onclick: () => switchPreset(preset.id)
+    }, preset.name))
+  );
+}
+
+function switchPreset(presetId) {
+  if (presetId === activePresetId || !presetCatalog.presets[presetId]) return;
+  if (!save()) return;
+  activePresetId = presetId;
+  presetCatalog.activePresetId = presetId;
+  state = hydrate(presetCatalog.presets[presetId].document);
+  view = 'show';
+  gameId = state.games[0]?.id;
+  cur = { screen: 'hub', i: 0, revealed: 0, answer: false, selected: [], jeo: null, laborOpen: false, guillotine: null };
+  editing = '';
+  selectedElementId = '';
+  directEdit = false;
+  scorePanelPlayerId = '';
+  undoStack = [];
+  lastSavedSnapshot = JSON.stringify(serializeDocument(state));
+  lastSavedContentSnapshot = JSON.stringify(editorialSnapshot(state));
+  save();
+  render();
+  toast(`Preset ${presetCatalog.presets[presetId].name} caricato`);
 }
 
 function gameScreen() {
@@ -2090,6 +2174,7 @@ function guess(g) {
   const round = rounds[cur.i] || rounds[0];
   if (!round) return $('div', { class: 'intro-screen' }, 'Nessun round.');
   const clues = (round.clues || []).map(item => typeof item === 'string' ? { label: '?', image: item } : item);
+  if (g.variant === 'pixel') return pixelGuess(rounds, round, clues);
   const shown = Math.min(cur.revealed, clues.length);
   const freeform = directEdit || hasGuessTileLayouts(g) || hasGuessControlLayouts(g);
   if (freeform) ensureGuessTileLayouts(g, clues.length);
@@ -2163,6 +2248,129 @@ function guess(g) {
       ),
       $('button', { class: 'btn', disabled: cur.i >= rounds.length - 1, onclick: () => { if (directEdit) return; chooseGuessRound(cur.i + 1, rounds.length); } }, '→'),
       resizeHandle('pager')
+    )
+  );
+}
+
+function pixelGuess(rounds, round, clues) {
+  const step = Math.min(Math.max(Number(cur.revealed || 0), 1), Math.max(clues.length, 1));
+  const clue = clues[step - 1];
+  const points = guessPointsForReveal(round, step);
+  return $('div', { class: 'pixel-guess-screen' },
+    $('div', { class: 'pixel-progress', 'aria-label': `Immagine ${step} di ${clues.length}` },
+      ...clues.map((_, index) => $('span', { class: index + 1 === step ? 'active' : index + 1 < step ? 'seen' : '' }, index + 1))
+    ),
+    $('div', { class: 'pixel-image-frame' }, clue ? guessClueMedia(clue, `Immagine Pixel ${step}`) : $('span', { class: 'muted' }, 'Immagine non configurata')),
+    $('aside', { class: 'pixel-controls' },
+      $('div', { class: 'pixel-step-label' }, `IMMAGINE ${step} / ${clues.length}`),
+      $('div', { class: 'clues-points-now' }, $('strong', {}, points), $('span', {}, 'PUNTI')),
+      $('div', { class: `clues-answer ${cur.answer ? 'on' : ''}` }, cur.answer ? round.answer : 'RISPOSTA NASCOSTA'),
+      $('div', { class: 'host-actions' },
+        $('button', {
+          class: 'btn primary',
+          disabled: step >= clues.length,
+          onclick: () => {
+            cur.revealed = Math.min(clues.length, step + 1);
+            save();
+            render();
+          }
+        }, step >= clues.length ? 'Immagine finale' : `Mostra immagine ${step + 1}`),
+        $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi risposta' : 'Mostra risposta')
+      ),
+      rounds.length > 1 ? $('div', { class: 'pager' },
+        $('button', { class: 'btn', disabled: cur.i <= 0, onclick: () => chooseGuessRound(cur.i - 1, rounds.length) }, '←'),
+        $('span', {}, `${cur.i + 1} / ${rounds.length}`),
+        $('button', { class: 'btn', disabled: cur.i >= rounds.length - 1, onclick: () => chooseGuessRound(cur.i + 1, rounds.length) }, '→')
+      ) : null
+    )
+  );
+}
+
+function cluesGame(g) {
+  const questions = g.questions || [];
+  const q = questions[cur.i] || questions[0];
+  if (!q) return $('div', { class: 'intro-screen' }, 'Nessuna domanda a indizi.');
+  const clues = Array.isArray(q.clues) ? q.clues : [];
+  const shown = Math.min(Math.max(0, cur.revealed), clues.length);
+  const availablePoints = shown > 0 ? guessPointsForReveal(q, shown) : Number(q.points?.[0] || 0);
+  const progress = progressEntry(g, 'questions', cur.i);
+  const chooseQuestion = index => {
+    cur.i = clamp(index, 0, Math.max(questions.length - 1, 0));
+    cur.revealed = 0;
+    cur.answer = false;
+    save();
+    render();
+  };
+  return $('div', { class: 'clues-screen' },
+    $('div', { class: 'clues-list', 'aria-label': 'Indizi del personaggio' },
+      ...clues.map((clue, index) => $('button', {
+        class: `clue-row ${index < shown ? 'revealed' : 'covered'}`,
+        'aria-label': index < shown ? `Indizio ${index + 1}: ${clue}` : `Indizio ${index + 1} nascosto`,
+        onclick: () => {
+          if (index > shown) return;
+          cur.revealed = Math.max(cur.revealed, index + 1);
+          progress.cluesUsed = cur.revealed;
+          save();
+          render();
+        }
+      },
+        $('strong', { class: 'clue-number' }, index + 1),
+        $('span', { class: 'clue-text' }, index < shown ? clue : 'INDIZIO NASCOSTO'),
+        $('strong', { class: 'clue-points' }, q.points?.[index] ?? 0)
+      ))
+    ),
+    $('aside', { class: 'clues-side' },
+      q.image ? $('div', { class: 'clues-character' }, media(q.image, q.answer)) : $('div', { class: 'clues-character placeholder' }, $('span', {}, 'CHI È?')),
+      $('div', { class: `clues-answer ${cur.answer ? 'on' : ''}` }, cur.answer ? q.answer : 'RISPOSTA NASCOSTA'),
+      $('div', { class: 'clues-points-now' }, $('strong', {}, availablePoints), $('span', {}, 'PUNTI')),
+      $('div', { class: 'host-actions' },
+        $('button', {
+          class: 'btn primary',
+          disabled: shown >= clues.length,
+          onclick: () => {
+            cur.revealed = Math.min(clues.length, shown + 1);
+            progress.cluesUsed = cur.revealed;
+            save();
+            render();
+          }
+        }, shown ? `Rivela indizio ${shown + 1}` : 'Rivela il primo indizio'),
+        $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; render(); } }, cur.answer ? 'Nascondi risposta' : 'Mostra risposta')
+      ),
+      questions.length > 1 ? $('div', { class: 'pager' },
+        $('button', { class: 'btn', disabled: cur.i <= 0, onclick: () => chooseQuestion(cur.i - 1) }, '←'),
+        $('span', {}, `${cur.i + 1} / ${questions.length}`),
+        $('button', { class: 'btn', disabled: cur.i >= questions.length - 1, onclick: () => chooseQuestion(cur.i + 1) }, '→')
+      ) : null
+    )
+  );
+}
+
+function geoguessr(g) {
+  const questions = g.questions || [];
+  const q = questions[cur.i] || questions[0];
+  if (!q) return $('div', { class: 'intro-screen' }, 'Nessun luogo configurato.');
+  const progress = progressEntry(g, 'questions', cur.i);
+  const chooseQuestion = index => {
+    cur.i = clamp(index, 0, Math.max(questions.length - 1, 0));
+    cur.answer = false;
+    save();
+    render();
+  };
+  return $('div', { class: 'geoguessr-screen' },
+    $('div', { class: 'geoguessr-media' }, media(q.image, q.answer, { eager: true, fit: q.fit || 'cover', positionX: q.positionX, positionY: q.positionY, zoom: q.zoom })),
+    $('aside', { class: 'geoguessr-panel' },
+      $('div', { class: 'geoguessr-kicker' }, `LUOGO ${cur.i + 1} / ${questions.length}`),
+      $('h2', {}, q.prompt || 'Su quale pianeta si trova questo luogo?'),
+      $('div', { class: `geoguessr-answer ${cur.answer ? 'on' : ''}` }, cur.answer ? q.answer : '?'),
+      $('div', { class: 'clues-points-now' }, $('strong', {}, Number(q.points ?? g.points ?? 300)), $('span', {}, 'PUNTI')),
+      $('div', { class: 'host-actions' },
+        $('button', { class: 'btn', onclick: () => { cur.answer = !cur.answer; progress.status = cur.answer ? 'revealed' : 'pending'; render(); } }, cur.answer ? 'Nascondi risposta' : 'Mostra risposta')
+      ),
+      $('div', { class: 'pager' },
+        $('button', { class: 'btn', disabled: cur.i <= 0, onclick: () => chooseQuestion(cur.i - 1) }, '←'),
+        $('span', {}, `${cur.i + 1} / ${questions.length}`),
+        $('button', { class: 'btn', disabled: cur.i >= questions.length - 1, onclick: () => chooseQuestion(cur.i + 1) }, '→')
+      )
     )
   );
 }
@@ -3072,6 +3280,39 @@ function visualContentEditor(item) {
       )))
     );
   }
+  if (item.type === 'clues') {
+    const rows = Array.isArray(item.questions) && item.questions.length
+      ? item.questions
+      : ensureList(item, 'questions', 1, () => templates.clues().questions[0]);
+    rows.forEach(row => {
+      row.clues ||= Array.from({ length: 10 }, (_, index) => `Indizio ${index + 1}`);
+      row.points ||= [1000, 900, 750, 600, 400, 200, 100, 50, 20, 10];
+      while (row.clues.length < 10) row.clues.push(`Indizio ${row.clues.length + 1}`);
+      while (row.points.length < row.clues.length) row.points.push(0);
+    });
+    return $('section', { class: 'content-editor' }, $('h3', {}, 'Domande a 10 indizi'),
+      ...rows.map((row, questionIndex) => $('div', { class: 'stack panel-lite clue-question-editor' },
+        $('div', { class: 'row' },
+          $('strong', {}, `Personaggio ${questionIndex + 1}`),
+          $('button', { class: 'btn small', onclick: () => duplicateQuestion(item, 'questions', questionIndex) }, 'Duplica'),
+          $('button', { class: 'btn small danger', disabled: rows.length <= 1, onclick: () => deleteQuestion(item, 'questions', questionIndex) }, 'Elimina')
+        ),
+        editorInput('Risposta', row.answer || '', value => updateGame(item, () => row.answer = value, false)),
+        acceptedAnswersEditor(item, row),
+        editorInput('Immagine personaggio (opzionale)', row.image || '', value => updateGame(item, () => row.image = value, false)),
+        ...row.clues.slice(0, 10).map((clue, clueIndex) => $('div', { class: 'grid two clue-editor-row' },
+          editorInput(`Indizio ${clueIndex + 1}`, clue, value => updateGame(item, () => row.clues[clueIndex] = value, false)),
+          editorInput('Punti', row.points[clueIndex] ?? 0, value => updateGame(item, () => row.points[clueIndex] = Number(value || 0), false), { type: 'number' })
+        ))
+      )),
+      $('button', { class: 'btn success', onclick: () => updateGame(item, target => target.questions.push(clone(templates.clues().questions[0]))) }, 'Aggiungi personaggio')
+    );
+  }
+  if (item.type === 'geoguessr') return questionEditor(item, 'questions', 1, index => ({ prompt: `Luogo ${index + 1}: su quale pianeta si trova?`, image: '', answer: '' }), [
+    ['Domanda', 'prompt'],
+    ['Immagine del luogo', 'image'],
+    ['Risposta', 'answer']
+  ]);
   if (item.type === 'said') return questionEditor(item, 'questions', 10, index => ({ prompt: `Audio ${index + 1}`, audio: '', answer: '' }), [
     ['Prompt', 'prompt'],
     ['Audio', 'audio'],
@@ -3236,7 +3477,7 @@ function validateGameForEditor(item) {
   if (!item || typeof item !== 'object' || Array.isArray(item)) return ['Il minigioco deve essere un oggetto JSON.'];
   if (!TYPES[item.type]) errors.push('Tipo di minigioco non supportato.');
   if (!String(item.title || '').trim()) errors.push('Il titolo è obbligatorio.');
-  const listKey = item.type === 'guess' ? 'rounds' : item.type === 'bomb' ? 'items' : item.type === 'sarabanda' ? 'songs' : ['said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(item.type) ? 'questions' : item.type === 'jeopardy' ? 'categories' : null;
+  const listKey = item.type === 'guess' ? 'rounds' : item.type === 'bomb' ? 'items' : item.type === 'sarabanda' ? 'songs' : ['clues', 'geoguessr', 'said', 'detail', 'quote', 'chain', 'labors', 'pass'].includes(item.type) ? 'questions' : item.type === 'jeopardy' ? 'categories' : null;
   if (listKey && (!Array.isArray(item[listKey]) || !item[listKey].length)) errors.push(`${listKey}: aggiungi almeno un elemento.`);
   return errors;
 }

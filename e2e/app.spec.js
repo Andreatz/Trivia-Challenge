@@ -64,10 +64,56 @@ test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page 
   expect(runtimeErrors).toEqual([]);
 });
 
+test('seleziona i preset Anime e Star Wars e usa i nuovi giochi', async ({ page }) => {
+  const switcher = page.locator('.preset-switcher');
+  await expect(switcher.getByRole('button', { name: 'Anime', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.menu-button')).toHaveCount(11);
+
+  await switcher.getByRole('button', { name: 'Star Wars', exact: true }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-preset', 'star-wars');
+  await expect(page.locator('.menu-button')).toHaveCount(5);
+  await expect(page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: PIXEL' })).toHaveCount(1);
+  await expect(page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: INDIZI' })).toHaveCount(1);
+
+  await page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: PIXEL' }).click();
+  await expect(page.locator('.pixel-image-frame img')).toHaveCount(1);
+  await expect(page.locator('.pixel-image-frame img')).toHaveAttribute('src', 'public/assets/star-wars/pixel/qui-gon-1.png');
+  await page.getByRole('button', { name: 'Mostra immagine 2' }).click();
+  await expect(page.locator('.pixel-image-frame img')).toHaveAttribute('src', 'public/assets/star-wars/pixel/qui-gon-2.png');
+
+  await page.locator('.home-btn').click();
+  await page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: INDIZI' }).click();
+  await expect(page.locator('.clue-row')).toHaveCount(10);
+  await page.getByRole('button', { name: 'Rivela il primo indizio' }).click();
+  await expect(page.locator('.clue-row.revealed')).toHaveCount(1);
+  await expect(page.locator('.clue-row').first()).toContainText('66 BBY');
+
+  await page.locator('.home-btn').click();
+  await page.locator('.menu-button', { hasText: 'GEOGUESSR' }).click();
+  await expect(page.locator('.geoguessr-media img')).toHaveAttribute('src', 'public/assets/star-wars/geoguessr/tatooine.svg');
+  await page.getByRole('button', { name: 'Mostra risposta' }).click();
+  await expect(page.locator('.geoguessr-answer')).toContainText('Tatooine');
+
+  await page.locator('.home-btn').click();
+  await page.locator('.menu-button', { hasText: 'JEOPARDY' }).click();
+  await expect(page.locator('.jeopardy-cat')).toHaveCount(5);
+  await expect(page.locator('.jeopardy-cat').nth(0)).toContainText('Star Wish');
+  await expect(page.locator('.jeopardy-cat').nth(4)).toContainText('Titoli Clickbait');
+
+  await page.locator('.home-btn').click();
+  await page.locator('.preset-switcher').getByRole('button', { name: 'Anime', exact: true }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-preset', 'anime');
+  await expect(page.locator('.menu-button')).toHaveCount(11);
+
+  const catalog = await page.evaluate(() => JSON.parse(localStorage.getItem('trivia-challenge-presets-v1')));
+  expect(catalog.presets.anime.name).toBe('Anime');
+  expect(catalog.presets['star-wars'].document.content.games).toHaveLength(5);
+});
+
 test('admin usa il manifest locale e rifiuta import non validi', async ({ page }) => {
   await page.getByRole('button', { name: 'ADMIN' }).click();
   await expect(page.getByRole('button', { name: 'Esci', exact: true })).toBeVisible();
-  await expect(page.locator('#local-assets option')).toHaveCount(202);
+  await expect(page.locator('#local-assets option')).toHaveCount(207);
 
   const immediateSaveStatus = await page.getByLabel('Titolo evento').evaluate(element => {
     element.value = 'TRIVIA TEST';
@@ -296,7 +342,7 @@ test('fullscreen entra ed esce senza perdere la sessione', async ({ page }) => {
 test('crea tutti i tipi di minigioco dall’editor', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-720p', 'Matrice editor eseguita una volta nel viewport host.');
   await page.getByRole('button', { name: 'ADMIN' }).click();
-  const types = ['guess', 'bomb', 'said', 'detail', 'quote', 'chain', 'labors', 'guillotine', 'pass', 'jeopardy', 'sarabanda'];
+  const types = ['guess', 'clues', 'geoguessr', 'bomb', 'said', 'detail', 'quote', 'chain', 'labors', 'guillotine', 'pass', 'jeopardy', 'sarabanda'];
   for (const [index, type] of types.entries()) {
     await page.locator('#type').selectOption(type);
     await page.locator('#title').fill(`E2E ${type}`);

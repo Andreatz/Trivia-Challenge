@@ -42,6 +42,56 @@
       },
       {
         "id": "game-demo-02",
+        "type": "clues",
+        "title": "Indovina il personaggio: Indizi",
+        "menuTitle": "INDOVINA IL PERSONAGGIO: INDIZI",
+        "questions": [
+          {
+            "answer": "Nome personaggio",
+            "acceptedAnswers": [],
+            "clues": [
+              "Indizio 1",
+              "Indizio 2",
+              "Indizio 3",
+              "Indizio 4",
+              "Indizio 5",
+              "Indizio 6",
+              "Indizio 7",
+              "Indizio 8",
+              "Indizio 9",
+              "Indizio 10"
+            ],
+            "points": [
+              1000,
+              900,
+              750,
+              600,
+              400,
+              200,
+              100,
+              50,
+              20,
+              10
+            ]
+          }
+        ]
+      },
+      {
+        "id": "game-demo-03",
+        "type": "geoguessr",
+        "title": "Geoguessr",
+        "menuTitle": "GEOGUESSR",
+        "points": 300,
+        "questions": [
+          {
+            "prompt": "Su quale pianeta si trova questo luogo?",
+            "image": "",
+            "answer": "Pianeta"
+          }
+        ]
+      },
+      {
+        "id": "game-demo-04",
         "type": "bomb",
         "title": "Schiva la Bomba",
         "menuTitle": "SCHIVA LA BOMBA!",
@@ -151,7 +201,7 @@
         ]
       },
       {
-        "id": "game-demo-03",
+        "id": "game-demo-05",
         "type": "said",
         "title": "Chi l'ha detto",
         "menuTitle": "CHI L'HA DETTO",
@@ -166,7 +216,7 @@
         ]
       },
       {
-        "id": "game-demo-04",
+        "id": "game-demo-06",
         "type": "detail",
         "title": "Occhio al dettaglio",
         "menuTitle": "OCCHIO AL DETTAGLIO",
@@ -180,7 +230,7 @@
         ]
       },
       {
-        "id": "game-demo-05",
+        "id": "game-demo-07",
         "type": "quote",
         "title": "Completa la Frase",
         "menuTitle": "COMPLETA LA FRASE",
@@ -194,7 +244,7 @@
         ]
       },
       {
-        "id": "game-demo-06",
+        "id": "game-demo-08",
         "type": "chain",
         "title": "Reazione a catena",
         "menuTitle": "REAZIONE A CATENA",
@@ -284,7 +334,7 @@
         ]
       },
       {
-        "id": "game-demo-07",
+        "id": "game-demo-09",
         "type": "labors",
         "title": "Le Dieci Fatiche",
         "menuTitle": "LE DIECI FATICHE",
@@ -378,7 +428,7 @@
         ]
       },
       {
-        "id": "game-demo-08",
+        "id": "game-demo-10",
         "type": "guillotine",
         "title": "Ghigliottina",
         "menuTitle": "GHIGLIOTTINA",
@@ -393,7 +443,7 @@
         "answer": "Risposta collegata"
       },
       {
-        "id": "game-demo-09",
+        "id": "game-demo-11",
         "type": "pass",
         "title": "Passaparola",
         "menuTitle": "PASSAPAROLA",
@@ -517,7 +567,7 @@
         ]
       },
       {
-        "id": "game-demo-10",
+        "id": "game-demo-12",
         "type": "jeopardy",
         "title": "Jeopardy",
         "menuTitle": "JEOPARDY",
@@ -675,7 +725,7 @@
         ]
       },
       {
-        "id": "game-demo-11",
+        "id": "game-demo-13",
         "type": "sarabanda",
         "title": "Sarabanda",
         "menuTitle": "SARABANDA",

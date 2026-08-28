@@ -1,0 +1,429 @@
+.preset-switcher {
+  position: relative;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto 6px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(3, 10, 28, 0.86);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+}
+
+.preset-switcher > span {
+  padding: 0 8px 0 12px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.preset-switcher button {
+  min-width: 112px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 9px 15px;
+  color: #cdd9ef;
+  background: transparent;
+  font: 800 0.8rem/1.1 Orbitron, sans-serif;
+  text-transform: uppercase;
+  transition: 160ms ease;
+}
+
+.preset-switcher button:hover,
+.preset-switcher button.active {
+  border-color: rgba(0, 231, 255, 0.72);
+  color: #fff;
+  background: linear-gradient(180deg, rgba(16, 77, 137, 0.95), rgba(5, 28, 71, 0.95));
+  box-shadow: 0 0 20px rgba(0, 231, 255, 0.26);
+}
+
+.hub-screen.home-freeform > .preset-switcher {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.clues-screen,
+.geoguessr-screen,
+.pixel-guess-screen {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(270px, 0.75fr);
+  gap: clamp(18px, 2.4vw, 42px);
+  align-items: center;
+}
+
+.pixel-guess-screen {
+  grid-template-columns: minmax(360px, 1.35fr) minmax(270px, 0.65fr);
+  position: relative;
+}
+
+.pixel-image-frame {
+  width: min(100%, 720px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  justify-self: end;
+  border: 3px solid #ffc400;
+  border-radius: 24px;
+  background: #071530;
+  box-shadow: 0 0 42px rgba(255, 196, 0, 0.23);
+}
+
+.pixel-image-frame img,
+.pixel-image-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pixel-controls {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.pixel-step-label {
+  color: #ffc400;
+  font: 900 clamp(1rem, 1.7vw, 1.6rem)/1 Orbitron, sans-serif;
+  letter-spacing: 0.12em;
+}
+
+.pixel-progress {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  transform: translateX(-50%);
+}
+
+.pixel-progress span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 196, 0, 0.38);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(2, 12, 37, 0.86);
+  font-weight: 900;
+}
+
+.pixel-progress span.seen,
+.pixel-progress span.active {
+  border-color: #ffc400;
+  color: #071530;
+  background: #ffc400;
+}
+
+.pixel-progress span.active {
+  box-shadow: 0 0 0 5px rgba(255, 196, 0, 0.18), 0 0 20px rgba(255, 196, 0, 0.42);
+}
+
+.clues-list {
+  display: grid;
+  gap: clamp(5px, 0.7vh, 10px);
+  min-width: 0;
+}
+
+.clue-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 92px;
+  align-items: center;
+  min-height: clamp(38px, 5vh, 58px);
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid rgba(0, 231, 255, 0.7);
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(13, 49, 105, 0.96), rgba(4, 20, 55, 0.98));
+  box-shadow: inset 0 0 24px rgba(0, 136, 255, 0.1), 0 0 16px rgba(0, 231, 255, 0.12);
+  text-align: left;
+}
+
+.clue-row.covered {
+  opacity: 0.58;
+}
+
+.clue-row.covered:not(:first-child) {
+  cursor: default;
+}
+
+.clue-row.revealed {
+  border-color: #ffc400;
+}
+
+.clue-number,
+.clue-points {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #ffc400;
+  font: 900 clamp(1rem, 1.6vw, 1.55rem)/1 Orbitron, sans-serif;
+}
+
+.clue-number {
+  border-right: 2px solid currentColor;
+}
+
+.clue-points {
+  border-left: 2px solid currentColor;
+}
+
+.clue-text {
+  min-width: 0;
+  padding: 7px 16px;
+  overflow: hidden;
+  font-weight: 900;
+  font-size: clamp(0.78rem, 1.25vw, 1.15rem);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clue-row.covered .clue-text {
+  color: rgba(255, 255, 255, 0.32);
+  letter-spacing: 0.12em;
+}
+
+.clues-side,
+.geoguessr-panel {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.clues-character {
+  width: min(100%, 390px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid #ffc400;
+  border-radius: 24% 8% 24% 8%;
+  color: #071530;
+  background: radial-gradient(circle at 50% 38%, #ffe59b, #ffc42b 70%);
+  box-shadow: 0 0 34px rgba(255, 196, 0, 0.26);
+}
+
+.clues-character img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.clues-character.placeholder span {
+  font: 900 clamp(2.4rem, 5vw, 5rem)/1 Orbitron, sans-serif;
+  transform: rotate(-8deg);
+}
+
+.clues-answer,
+.geoguessr-answer {
+  width: min(100%, 420px);
+  min-height: 58px;
+  display: grid;
+  place-items: center;
+  padding: 10px 18px;
+  border: 2px solid rgba(255, 196, 0, 0.52);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.48);
+  background: rgba(0, 0, 0, 0.66);
+  font: 900 clamp(0.8rem, 1.25vw, 1.15rem)/1.2 Orbitron, sans-serif;
+  text-align: center;
+}
+
+.clues-answer.on,
+.geoguessr-answer.on {
+  color: #fff;
+  border-color: #49ff9a;
+  box-shadow: 0 0 20px rgba(73, 255, 154, 0.22);
+}
+
+.clues-points-now {
+  display: grid;
+  justify-items: center;
+  line-height: 1;
+}
+
+.clues-points-now strong {
+  color: #ffc400;
+  font: 900 clamp(1.7rem, 3vw, 3rem)/1 Orbitron, sans-serif;
+}
+
+.clues-points-now span {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.geoguessr-screen {
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.65fr);
+}
+
+.geoguessr-media {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 3px solid #ffc400;
+  border-radius: 22px;
+  background: #0a1530;
+  box-shadow: 0 0 36px rgba(255, 196, 0, 0.2);
+}
+
+.geoguessr-media img,
+.geoguessr-media video {
+  width: 100%;
+  height: 100%;
+}
+
+.geoguessr-kicker {
+  color: #ffc400;
+  font: 900 0.82rem/1 Orbitron, sans-serif;
+  letter-spacing: 0.16em;
+}
+
+.geoguessr-panel h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.35rem, 2.4vw, 2.5rem);
+  text-align: center;
+}
+
+body[data-view="show"][data-preset="star-wars"] .ppt-stage {
+  background:
+    radial-gradient(circle at 48% 14%, rgba(255, 188, 45, 0.13), transparent 18%),
+    linear-gradient(118deg, transparent 0 11%, rgba(255, 157, 43, 0.32) 11.2% 11.6%, transparent 11.8% 82%, rgba(255, 157, 43, 0.26) 82.2% 82.6%, transparent 82.8%),
+    radial-gradient(ellipse at 50% 110%, #073c69 0, #021535 46%, #02051c 78%);
+}
+
+body[data-view="show"][data-preset="star-wars"] .ppt-stage::before {
+  opacity: 0.5;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(255, 195, 77, 0.7) 0 1px, transparent 1.5px);
+  background-position: 0 0, 53px 38px;
+  background-size: 92px 92px, 137px 137px;
+}
+
+body[data-view="show"][data-preset="star-wars"] .ppt-stage::after {
+  border-color: rgba(255, 174, 54, 0.48);
+  box-shadow: inset 0 0 50px rgba(255, 153, 31, 0.08);
+}
+
+body[data-preset="star-wars"] .ppt-button,
+body[data-preset="star-wars"] .top-action,
+body[data-preset="star-wars"] .jeopardy-cat,
+body[data-preset="star-wars"] .jeopardy-cell,
+body[data-preset="star-wars"] .guess-tile {
+  border-color: #ffc400;
+  background: linear-gradient(180deg, rgba(13, 61, 139, 0.96), rgba(3, 25, 74, 0.98));
+  box-shadow: inset 0 0 24px rgba(29, 119, 255, 0.12), 0 0 18px rgba(255, 196, 0, 0.16);
+}
+
+body[data-view="show"][data-preset="star-wars"] .home-menu-ribbon-block,
+body[data-view="show"][data-preset="star-wars"] .gear-btn {
+  border-color: #ffc400;
+  box-shadow: 0 0 22px rgba(255, 196, 0, 0.2);
+}
+
+body[data-preset="star-wars"] .ppt-button:hover,
+body[data-preset="star-wars"] .jeopardy-cell:hover {
+  border-color: #ffe07a;
+  box-shadow: inset 0 0 28px rgba(29, 119, 255, 0.18), 0 0 28px rgba(255, 196, 0, 0.34);
+}
+
+body[data-preset="star-wars"] .preset-switcher button:hover,
+body[data-preset="star-wars"] .preset-switcher button.active {
+  border-color: #ffc400;
+  color: #071530;
+  background: linear-gradient(180deg, #ffe073, #ffb900);
+  box-shadow: 0 0 22px rgba(255, 196, 0, 0.3);
+}
+
+body[data-preset="star-wars"] .cat-icon,
+body[data-preset="star-wars"] .jeopardy-cat strong::after {
+  color: #ffc400;
+  background: #ffc400;
+}
+
+.clue-question-editor {
+  margin-bottom: 14px;
+}
+
+@media (max-width: 980px) {
+  .clues-screen,
+  .geoguessr-screen,
+  .pixel-guess-screen {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .pixel-image-frame {
+    justify-self: center;
+    width: min(560px, 90vw);
+  }
+
+  .pixel-progress {
+    position: static;
+    grid-column: 1;
+    grid-row: 3;
+    transform: none;
+  }
+
+  .clues-side {
+    grid-template-columns: minmax(130px, 220px) minmax(200px, 1fr);
+  }
+
+  .clues-character {
+    grid-row: span 3;
+  }
+}
+
+@media (max-width: 700px) {
+  .preset-switcher {
+    flex-wrap: wrap;
+    width: calc(100% - 16px);
+    border-radius: 18px;
+  }
+
+  .preset-switcher > span {
+    width: 100%;
+    text-align: center;
+  }
+
+  .preset-switcher button {
+    flex: 1;
+    min-width: 110px;
+  }
+
+  .clue-row {
+    grid-template-columns: 44px minmax(0, 1fr) 68px;
+  }
+
+  .clues-side {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .clues-character {
+    grid-row: auto;
+    width: min(260px, 82vw);
+  }
+}
