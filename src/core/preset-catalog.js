@@ -2,12 +2,14 @@ export const PRESET_CATALOG_VERSION = 1;
 export const PRESETS_STORAGE_KEY = 'trivia-challenge-presets-v1';
 export const ANIME_PRESET_ID = 'anime';
 export const STAR_WARS_PRESET_ID = 'star-wars';
+export const ANIME_SEED_REVISION = 'anime-backup-2026-08-28-v1';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 
-export function createPresetCatalog(animeDocument, starWarsDocument) {
+export function createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision = '') {
   return {
     version: PRESET_CATALOG_VERSION,
+    animeSeedRevision,
     activePresetId: ANIME_PRESET_ID,
     presets: {
       [ANIME_PRESET_ID]: {
@@ -26,8 +28,8 @@ export function createPresetCatalog(animeDocument, starWarsDocument) {
   };
 }
 
-export function preparePresetCatalog(input, { animeDocument, starWarsDocument, prepareDocument }) {
-  const fallback = createPresetCatalog(animeDocument, starWarsDocument);
+export function preparePresetCatalog(input, { animeDocument, starWarsDocument, animeSeedRevision = '', prepareDocument }) {
+  const fallback = createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision);
   if (!input || typeof input !== 'object' || Array.isArray(input)) return fallback;
 
   const sourcePresets = input.presets && typeof input.presets === 'object' ? input.presets : {};
@@ -48,8 +50,16 @@ export function preparePresetCatalog(input, { animeDocument, starWarsDocument, p
     }
   }
 
+  if (animeSeedRevision && input.animeSeedRevision !== animeSeedRevision) {
+    presets[ANIME_PRESET_ID].document = prepareDocument(animeDocument);
+    const sharedHomeLayout = starWarsDocument?.content?.homeLayout;
+    if (sharedHomeLayout && presets[STAR_WARS_PRESET_ID]?.document?.content) {
+      presets[STAR_WARS_PRESET_ID].document.content.homeLayout = clone(sharedHomeLayout);
+    }
+  }
+
   const activePresetId = presets[input.activePresetId] ? input.activePresetId : ANIME_PRESET_ID;
-  return { version: PRESET_CATALOG_VERSION, activePresetId, presets };
+  return { version: PRESET_CATALOG_VERSION, animeSeedRevision, activePresetId, presets };
 }
 
 export function updatePresetDocument(catalog, presetId, document) {

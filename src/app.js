@@ -12,6 +12,7 @@ import { backupDocument, readFirstValid, writeDocument } from './core/storage.js
 import { audienceQuestionState } from './core/audience-questions.js';
 import {
   ANIME_PRESET_ID,
+  ANIME_SEED_REVISION,
   createPresetCatalog,
   preparePresetCatalog,
   PRESETS_STORAGE_KEY,
@@ -23,6 +24,7 @@ import { AudienceHostController } from './audience-host.js';
 const KEY = 'trivia-challenge-v3';
 const LEGACY_KEYS = ['trivia-challenge-v2', 'trivia-challenge-v1'];
 const BACKUP_KEY = 'trivia-challenge-backup';
+const BUNDLED_ANIME_PRESET_URL = 'public/presets/anime-2026-08-28.json';
 const ABC = 'ABCDEFGHILMNOPQRSTUVZ'.split('');
 
 const TYPES = GAME_LABELS;
@@ -108,11 +110,33 @@ const defaults = () => ({
   session: { games: {} }
 });
 
-const starWarsDefaults = () => ({
+function sharedHomeLayout(document) {
+  const content = document?.content && typeof document.content === 'object' ? document.content : document;
+  const layout = clone(content?.homeLayout || {});
+  delete layout.menuButtons;
+  return { ...DEFAULT_HOME_LAYOUT, ...layout };
+}
+
+async function loadBundledAnimeDocument() {
+  try {
+    const response = await fetch(BUNDLED_ANIME_PRESET_URL, { cache: 'no-cache' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const document = prepareDocument(await response.json());
+    document.session.navigation = { view: 'show', screen: 'hub', i: 0, revealed: 0 };
+    return document;
+  } catch (error) {
+    console.warn('Preset Anime incluso non disponibile:', error);
+    return null;
+  }
+}
+
+const bundledAnimeDocument = await loadBundledAnimeDocument();
+
+const starWarsDefaults = animeDocument => ({
   schemaVersion: CURRENT_SCHEMA_VERSION,
   title: 'TRIVIA CHALLENGE',
   subtitle: 'STAR WARS EDITION',
-  homeLayout: { ...DEFAULT_HOME_LAYOUT },
+  homeLayout: sharedHomeLayout(animeDocument),
   players: [
     { id: 'star-wars-player-1', name: 'GIOCATORE 1', score: 0 },
     { id: 'star-wars-player-2', name: 'GIOCATORE 2', score: 0 },
@@ -160,24 +184,30 @@ const audienceHost = new AudienceHostController(() => {
 function load() {
   const result = readFirstValid(localStorage, [KEY, ...LEGACY_KEYS], prepareDocument);
   result.errors.forEach(({ key, error }) => console.warn(`Salvataggio ${key} ignorato:`, error));
-  const animeDocument = result.document || serializeDocument(defaults());
-  const starWarsDocument = serializeDocument(starWarsDefaults());
+  const animeDocument = bundledAnimeDocument || result.document || serializeDocument(defaults());
+  const animeSeedRevision = bundledAnimeDocument ? ANIME_SEED_REVISION : '';
+  const starWarsDocument = serializeDocument(starWarsDefaults(animeDocument));
+  let rawCatalog = null;
   try {
-    const rawCatalog = localStorage.getItem(PRESETS_STORAGE_KEY);
-    presetCatalog = preparePresetCatalog(rawCatalog ? JSON.parse(rawCatalog) : null, {
+    const serializedCatalog = localStorage.getItem(PRESETS_STORAGE_KEY);
+    rawCatalog = serializedCatalog ? JSON.parse(serializedCatalog) : null;
+    presetCatalog = preparePresetCatalog(rawCatalog, {
       animeDocument,
       starWarsDocument,
+      animeSeedRevision,
       prepareDocument
     });
   } catch (error) {
     console.warn('Catalogo preset ignorato:', error);
-    presetCatalog = createPresetCatalog(animeDocument, starWarsDocument);
+    presetCatalog = createPresetCatalog(animeDocument, starWarsDocument, animeSeedRevision);
   }
-  if (result.document && result.key === KEY && presetCatalog.presets[presetCatalog.activePresetId]) {
+  const restoredBundledAnime = Boolean(animeSeedRevision) && rawCatalog?.animeSeedRevision !== animeSeedRevision;
+  if (!restoredBundledAnime && result.document && result.key === KEY && presetCatalog.presets[presetCatalog.activePresetId]) {
     presetCatalog.presets[presetCatalog.activePresetId].document = clone(result.document);
   }
   activePresetId = presetCatalog.activePresetId;
   writeDocument(localStorage, PRESETS_STORAGE_KEY, presetCatalog);
+  writeDocument(localStorage, KEY, presetCatalog.presets[activePresetId].document);
   return hydrate(presetCatalog.presets[activePresetId].document);
 }
 
@@ -918,7 +948,6 @@ function hub() {
 
 function presetSwitcher() {
   return $('section', { class: 'preset-switcher', 'aria-label': 'Seleziona preset' },
-    $('span', {}, 'PRESET'),
     ...Object.values(presetCatalog.presets).map(preset => $('button', {
       class: preset.id === activePresetId ? 'active' : '',
       'aria-pressed': preset.id === activePresetId ? 'true' : 'false',

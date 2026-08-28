@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'trivia-challenge-v9';
+const CACHE_VERSION = 'trivia-challenge-v10';
 const APP_SHELL = [
   './',
   './index.html',
@@ -18,6 +18,7 @@ const APP_SHELL = [
   './src/core/game-rules.js',
   './src/core/game-contracts.js',
   './src/core/game-registry.js',
+  './src/core/preset-catalog.js',
   './src/core/schema.js',
   './src/core/storage.js',
   './src/core/timer.js',
@@ -25,6 +26,7 @@ const APP_SHELL = [
   './src/admin-auth.css',
   './src/components.css',
   './src/anime-theme-overrides.css',
+  './src/preset-themes.css',
   './src/legacy-glow.css',
   './src/fullscreen.css',
   './src/audience.css',
@@ -34,7 +36,8 @@ const APP_SHELL = [
   './public/assets/favicon.svg',
   './public/assets-manifest.json',
   './public/thumbnails-manifest.json',
-  './public/assets/Background.jpeg'
+  './public/assets/Background.jpeg',
+  './public/presets/anime-2026-08-28.json'
 ];
 
 self.addEventListener('install', event => {

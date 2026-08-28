@@ -16,14 +16,6 @@
   backdrop-filter: blur(14px);
 }
 
-.preset-switcher > span {
-  padding: 0 8px 0 12px;
-  color: rgba(255, 255, 255, 0.66);
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-}
-
 .preset-switcher button {
   min-width: 112px;
   border: 1px solid transparent;
@@ -75,10 +67,10 @@
   place-items: center;
   overflow: hidden;
   justify-self: end;
-  border: 3px solid #ffc400;
+  border: 3px solid rgba(0, 231, 255, 0.82);
   border-radius: 24px;
   background: #071530;
-  box-shadow: 0 0 42px rgba(255, 196, 0, 0.23);
+  box-shadow: 0 0 42px rgba(0, 231, 255, 0.23);
 }
 
 .pixel-image-frame img,
@@ -281,10 +273,10 @@
   min-height: 0;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  border: 3px solid #ffc400;
+  border: 3px solid rgba(0, 231, 255, 0.82);
   border-radius: 22px;
   background: #0a1530;
-  box-shadow: 0 0 36px rgba(255, 196, 0, 0.2);
+  box-shadow: 0 0 36px rgba(0, 231, 255, 0.2);
 }
 
 .geoguessr-media img,
@@ -304,63 +296,6 @@
   color: #fff;
   font-size: clamp(1.35rem, 2.4vw, 2.5rem);
   text-align: center;
-}
-
-body[data-view="show"][data-preset="star-wars"] .ppt-stage {
-  background:
-    radial-gradient(circle at 48% 14%, rgba(255, 188, 45, 0.13), transparent 18%),
-    linear-gradient(118deg, transparent 0 11%, rgba(255, 157, 43, 0.32) 11.2% 11.6%, transparent 11.8% 82%, rgba(255, 157, 43, 0.26) 82.2% 82.6%, transparent 82.8%),
-    radial-gradient(ellipse at 50% 110%, #073c69 0, #021535 46%, #02051c 78%);
-}
-
-body[data-view="show"][data-preset="star-wars"] .ppt-stage::before {
-  opacity: 0.5;
-  background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(255, 195, 77, 0.7) 0 1px, transparent 1.5px);
-  background-position: 0 0, 53px 38px;
-  background-size: 92px 92px, 137px 137px;
-}
-
-body[data-view="show"][data-preset="star-wars"] .ppt-stage::after {
-  border-color: rgba(255, 174, 54, 0.48);
-  box-shadow: inset 0 0 50px rgba(255, 153, 31, 0.08);
-}
-
-body[data-preset="star-wars"] .ppt-button,
-body[data-preset="star-wars"] .top-action,
-body[data-preset="star-wars"] .jeopardy-cat,
-body[data-preset="star-wars"] .jeopardy-cell,
-body[data-preset="star-wars"] .guess-tile {
-  border-color: #ffc400;
-  background: linear-gradient(180deg, rgba(13, 61, 139, 0.96), rgba(3, 25, 74, 0.98));
-  box-shadow: inset 0 0 24px rgba(29, 119, 255, 0.12), 0 0 18px rgba(255, 196, 0, 0.16);
-}
-
-body[data-view="show"][data-preset="star-wars"] .home-menu-ribbon-block,
-body[data-view="show"][data-preset="star-wars"] .gear-btn {
-  border-color: #ffc400;
-  box-shadow: 0 0 22px rgba(255, 196, 0, 0.2);
-}
-
-body[data-preset="star-wars"] .ppt-button:hover,
-body[data-preset="star-wars"] .jeopardy-cell:hover {
-  border-color: #ffe07a;
-  box-shadow: inset 0 0 28px rgba(29, 119, 255, 0.18), 0 0 28px rgba(255, 196, 0, 0.34);
-}
-
-body[data-preset="star-wars"] .preset-switcher button:hover,
-body[data-preset="star-wars"] .preset-switcher button.active {
-  border-color: #ffc400;
-  color: #071530;
-  background: linear-gradient(180deg, #ffe073, #ffb900);
-  box-shadow: 0 0 22px rgba(255, 196, 0, 0.3);
-}
-
-body[data-preset="star-wars"] .cat-icon,
-body[data-preset="star-wars"] .jeopardy-cat strong::after {
-  color: #ffc400;
-  background: #ffc400;
 }
 
 .clue-question-editor {
@@ -401,11 +336,6 @@ body[data-preset="star-wars"] .jeopardy-cat strong::after {
     flex-wrap: wrap;
     width: calc(100% - 16px);
     border-radius: 18px;
-  }
-
-  .preset-switcher > span {
-    width: 100%;
-    text-align: center;
   }
 
   .preset-switcher button {

@@ -27,6 +27,24 @@ async function horizontalOverflow(page) {
   }));
 }
 
+async function showAllAnimeGames(page) {
+  await expect(page.locator('.menu-button')).toHaveCount(1);
+  await page.evaluate(() => {
+    const catalogKey = 'trivia-challenge-presets-v1';
+    const documentKey = 'trivia-challenge-v3';
+    const catalog = JSON.parse(localStorage.getItem(catalogKey));
+    const animeDocument = catalog.presets.anime.document;
+    animeDocument.content.games.forEach(game => {
+      game.showOnHome = true;
+    });
+    catalog.activePresetId = 'anime';
+    localStorage.setItem(catalogKey, JSON.stringify(catalog));
+    localStorage.setItem(documentKey, JSON.stringify(animeDocument));
+  });
+  await page.reload();
+  await expect(page.locator('.menu-button')).toHaveCount(11);
+}
+
 test('la pagina host richiede il login Admin', async ({ browser }) => {
   const context = await browser.newContext();
   const loginPage = await context.newPage();
@@ -47,7 +65,7 @@ test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page 
 
   await expect(page.getByRole('button', { name: 'Esci', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'POTERI', exact: true })).toHaveCount(0);
-  await expect(page.locator('.menu-button')).toHaveCount(11);
+  await expect(page.locator('.menu-button')).toHaveCount(1);
   await page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO' }).click();
   await expect(page.locator('.guess-tile')).toHaveCount(4);
   await page.locator('.guess-tile').first().click();
@@ -66,12 +84,25 @@ test('home e punteggio simultaneo funzionano senza turno attivo', async ({ page 
 
 test('seleziona i preset Anime e Star Wars e usa i nuovi giochi', async ({ page }) => {
   const switcher = page.locator('.preset-switcher');
+  await expect(switcher).not.toContainText('PRESET');
   await expect(switcher.getByRole('button', { name: 'Anime', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.menu-button')).toHaveCount(11);
+  await expect(page.locator('.menu-button')).toHaveCount(1);
+  const animeAppearance = await page.evaluate(() => ({
+    stage: getComputedStyle(document.querySelector('.ppt-stage')).backgroundImage,
+    button: getComputedStyle(document.querySelector('.menu-button')).backgroundImage
+  }));
+  const bundledAnime = await page.evaluate(() => JSON.parse(localStorage.getItem('trivia-challenge-presets-v1')).presets.anime.document);
+  expect(bundledAnime.content.games).toHaveLength(11);
+  expect(bundledAnime.content.games.find(game => game.type === 'guess').rounds).toHaveLength(23);
 
   await switcher.getByRole('button', { name: 'Star Wars', exact: true }).click();
   await expect(page.locator('body')).toHaveAttribute('data-preset', 'star-wars');
   await expect(page.locator('.menu-button')).toHaveCount(5);
+  const starWarsAppearance = await page.evaluate(() => ({
+    stage: getComputedStyle(document.querySelector('.ppt-stage')).backgroundImage,
+    button: getComputedStyle(document.querySelector('.menu-button')).backgroundImage
+  }));
+  expect(starWarsAppearance).toEqual(animeAppearance);
   await expect(page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: PIXEL' })).toHaveCount(1);
   await expect(page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO: INDIZI' })).toHaveCount(1);
 
@@ -103,7 +134,7 @@ test('seleziona i preset Anime e Star Wars e usa i nuovi giochi', async ({ page 
   await page.locator('.home-btn').click();
   await page.locator('.preset-switcher').getByRole('button', { name: 'Anime', exact: true }).click();
   await expect(page.locator('body')).toHaveAttribute('data-preset', 'anime');
-  await expect(page.locator('.menu-button')).toHaveCount(11);
+  await expect(page.locator('.menu-button')).toHaveCount(1);
 
   const catalog = await page.evaluate(() => JSON.parse(localStorage.getItem('trivia-challenge-presets-v1')));
   expect(catalog.presets.anime.name).toBe('Anime');
@@ -181,6 +212,14 @@ test('migra un import v2 e separa le sezioni persistite', async ({ page }) => {
 });
 
 test('annulla l’ultimo punteggio senza annullare i contenuti', async ({ page }) => {
+  await expect(page.locator('.menu-button')).toHaveCount(1);
+  const initialState = await page.evaluate(() => {
+    const documentState = JSON.parse(localStorage.getItem('trivia-challenge-v3'));
+    return {
+      historyIds: documentState.history.map(entry => entry.id),
+      firstPlayerScore: documentState.session.players[0].score
+    };
+  });
   await page.locator('.menu-button', { hasText: 'INDOVINA IL PERSONAGGIO' }).click();
   await page.locator('.guess-tile').first().click();
   await page.getByRole('button', { name: 'Mostra risposta' }).click();
@@ -189,10 +228,10 @@ test('annulla l’ultimo punteggio senza annullare i contenuti', async ({ page }
   await page.getByRole('button', { name: 'ADMIN' }).click();
   await page.getByRole('button', { name: 'Punteggi' }).click();
   await page.getByRole('button', { name: 'Annulla ultimo punteggio' }).click();
-  await expect(page.locator('.mega-score').first()).toHaveText('0');
+  await expect(page.locator('.mega-score').first()).toHaveText(String(initialState.firstPlayerScore));
   const persisted = await page.evaluate(() => JSON.parse(localStorage.getItem('trivia-challenge-v3')));
   expect(persisted.content.games).toHaveLength(11);
-  expect(persisted.history).toHaveLength(0);
+  expect(persisted.history.map(entry => entry.id)).toEqual(initialState.historyIds);
 });
 
 test('shell PWA e layout non generano overflow orizzontale', async ({ page }) => {
@@ -204,6 +243,7 @@ test('shell PWA e layout non generano overflow orizzontale', async ({ page }) =>
 test('tutti gli undici minigiochi si aprono senza errori runtime', async ({ page }) => {
   const runtimeErrors = [];
   page.on('pageerror', error => runtimeErrors.push(error.message));
+  await showAllAnimeGames(page);
 
   for (let index = 0; index < 11; index += 1) {
     await page.locator('.menu-button').nth(index).click();
@@ -231,7 +271,7 @@ test('la shell riparte offline dopo il primo caricamento', async ({ page, contex
   await context.setOffline(true);
   try {
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.menu-button')).toHaveCount(11);
+    await expect(page.locator('.menu-button')).toHaveCount(1);
   } finally {
     await context.setOffline(false);
   }
@@ -289,6 +329,7 @@ test('reduced motion disattiva le animazioni non essenziali', async ({ page }) =
 });
 
 test('pannello punteggio non ricrea il player audio', async ({ page }) => {
+  await showAllAnimeGames(page);
   await page.locator('.menu-button', { hasText: "CHI L'HA DETTO" }).click();
   const audio = page.locator('audio').first();
   await expect(audio).toBeVisible();
@@ -336,7 +377,7 @@ test('fullscreen entra ed esce senza perdere la sessione', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(true);
   await page.getByRole('button', { name: 'Esci da schermo intero' }).click();
   await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(false);
-  await expect(page.locator('.menu-button')).toHaveCount(11);
+  await expect(page.locator('.menu-button')).toHaveCount(1);
 });
 
 test('crea tutti i tipi di minigioco dall’editor', async ({ page }, testInfo) => {
@@ -358,6 +399,7 @@ test('crea tutti i tipi di minigioco dall’editor', async ({ page }, testInfo) 
 
 test('completa il flusso principale di tutti gli undici minigiochi', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium-720p', 'Matrice completa eseguita una volta nel viewport host.');
+  await showAllAnimeGames(page);
   const open = async name => {
     await page.locator('.menu-button', { hasText: name }).click();
   };

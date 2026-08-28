@@ -52,8 +52,8 @@ Questa versione è stata riallineata alla struttura dei file PowerPoint original
 
 Il selettore nella schermata principale consente di passare tra i due preset senza mescolarne lo stato:
 
-- **Anime** viene creato acquisendo automaticamente il salvataggio presente nel browser al primo avvio della versione con preset. Mantiene gli undici giochi, la grafica e i contenuti già configurati.
-- **Star Wars** contiene `Indovina il personaggio: Pixel`, `Indovina il personaggio: Indizi`, `Geoguessr`, `Jeopardy` e `Passaparola`, con un tema blu, oro e arancio dedicato.
+- **Anime** viene inizializzato dal backup verificato del 28 agosto 2026 incluso in `public/presets/`. Una migrazione identificata da revisione ripristina una sola volta questo backup anche se il browser aveva già creato un preset Anime incompleto; le modifiche successive non vengono sovrascritte.
+- **Star Wars** contiene `Indovina il personaggio: Pixel`, `Indovina il personaggio: Indizi`, `Geoguessr`, `Jeopardy` e `Passaparola` e usa lo stesso tema grafico, gli stessi sfondi e gli stessi pulsanti del preset Anime.
 - ogni modifica fatta dall'Admin viene salvata nel preset attivo;
 - punteggi, avanzamento delle domande, layout e impostazioni restano indipendenti;
 - l'importazione JSON sostituisce soltanto il preset attivo e l'esportazione produce il documento del preset attivo.

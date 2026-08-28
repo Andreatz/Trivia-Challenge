@@ -1,0 +1,1766 @@
+{
+  "schemaVersion": 3,
+  "content": {
+    "title": "TRIVIA CHALLENGE",
+    "subtitle": "ANIME EDITION",
+    "homeLayout": {
+      "titleX": 50.20833412806193,
+      "titleY": 18.296297002721715,
+      "titleW": 66,
+      "titleSize": 82,
+      "subtitleX": 49.84374841054281,
+      "subtitleY": 11.68518536179154,
+      "subtitleW": 44,
+      "subtitleSize": 18,
+      "menuX": 49.27083651224772,
+      "menuY": 31.074074780499494,
+      "menuW": 38,
+      "toolbarButtonW": 94,
+      "toolbarButtonH": 38,
+      "toolbarButtonFont": 0.6199999694824219,
+      "toolbarGap": 12,
+      "playerButtonW": 200,
+      "playerButtonH": 66,
+      "playerButtonFont": 0.76,
+      "playerButtonGap": 12,
+      "menuButtons": {
+        "game-9k9cqx-mqnx5xum": {
+          "x": 36.480134473306414,
+          "y": 53.85965447676809,
+          "w": 24.5572266984746,
+          "h": 24.298247755619514
+        }
+      }
+    },
+    "games": [
+      {
+        "id": "game-9k9cqx-mqnx5xum",
+        "type": "guess",
+        "title": "Indovina il personaggio",
+        "menuTitle": "INDOVINA IL PERSONAGGIO",
+        "rounds": [
+          {
+            "answer": "Kaguya",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/kaguya-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/kaguya-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/kaguya-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/kaguya-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Berthold Huber",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/berthold-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/berthold-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/berthold-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/berthold-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Naruto",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/naruto-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/naruto-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/naruto-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/naruto-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Ichigo",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/ichigo-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/ichigo-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/ichigo-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/ichigo-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Donquixote Doflamingo",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/doflamingo-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/doflamingo-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/doflamingo-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/doflamingo-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Zeke Jaeger",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/zeke-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/zeke-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/zeke-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/zeke-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Killua Zoldyck",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/killua-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/killua-2.jpeg"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/killua-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/killua-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Aizen",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/aizen-1.webp"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/aizen-2.webp"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/aizen-3.webp"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/aizen-4.webp"
+              }
+            ]
+          },
+          {
+            "answer": "Gon Freecs",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/gon-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/gon-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/gon-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/gon-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Kakashi",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/kakashi-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/kakashi-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/kakashi-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/kakashi-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Annie Leonhart",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/annie-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/annie-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/annie-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/annie-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Sakura Haruno",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/sakura-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/sakura-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/sakura-4.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/sakura-3.png"
+              }
+            ]
+          },
+          {
+            "answer": "Ulquiorra Schiffen",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/ulquiorra-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/ulquiorra-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/ulquiorra-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/ulquiorra-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Chrollo",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/chrollo-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/chrollo-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/chrollo-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/chrollo-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Nico Robin",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/nicorobin-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/nicorobin-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/nicorobin-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/nicorobin-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Netero",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/netero-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/netero-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/netero-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/netero-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Eren Jaeger",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/eren-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/eren-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/eren-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/eren-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Gaara",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/gaara-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/gaara-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/gaara-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/gaara-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Ace",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/ace-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/ace-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/ace-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/ace-4.jpg"
+              }
+            ]
+          },
+          {
+            "answer": "Kurapika",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/kurapika-1.jpg"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/kurapika-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/kurapika-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/kurapika-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Boa Hancock",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/boa-1.jpg"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/boa-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/boa-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/boa-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Levi Ackerman",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/levi-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/levi-2.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/levi-3.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/levi-4.png"
+              }
+            ]
+          },
+          {
+            "answer": "Monkey D. Luffy",
+            "points": [
+              1000,
+              500,
+              250,
+              50
+            ],
+            "clues": [
+              {
+                "label": "1000",
+                "image": "public/assets/indovina-il-personaggio/anime/luffy-1.png"
+              },
+              {
+                "label": "500",
+                "image": "public/assets/indovina-il-personaggio/anime/luffy-3.png"
+              },
+              {
+                "label": "250",
+                "image": "public/assets/indovina-il-personaggio/anime/luffy-2.png"
+              },
+              {
+                "label": "50",
+                "image": "public/assets/indovina-il-personaggio/anime/luffy-4.png"
+              }
+            ]
+          }
+        ],
+        "layout": {
+          "guessTiles": [
+            {
+              "x": 15.26041785875956,
+              "y": 12.185185891610605,
+              "w": 36,
+              "h": 35
+            },
+            {
+              "x": 52.59374761581421,
+              "y": 12.185185891610601,
+              "w": 36,
+              "h": 35
+            },
+            {
+              "x": 15.26041785875956,
+              "y": 48.7592606721101,
+              "w": 36,
+              "h": 35
+            },
+            {
+              "x": 52.59374761581421,
+              "y": 48.7592606721101,
+              "w": 36,
+              "h": 35
+            }
+          ],
+          "guessTileCoordinateSpace": "stage-v2",
+          "guessControls": {
+            "answerButton": {
+              "x": 0,
+              "y": 92,
+              "w": 14,
+              "h": 5,
+              "label": "Mostra risposta"
+            },
+            "answerBox": {
+              "x": 41.88542461395264,
+              "y": 84.90740458170573,
+              "w": 19.843746423721313,
+              "h": 5,
+              "label": "Risposta nascosta"
+            },
+            "pager": {
+              "x": 76,
+              "y": 91,
+              "w": 24,
+              "h": 6,
+              "label": "Selettore slide"
+            }
+          },
+          "gameRibbon": {
+            "x": 30.895834922790527,
+            "y": 2.4999999889621027,
+            "w": 38,
+            "h": 5.4,
+            "label": "Titolo minigioco"
+          }
+        },
+        "customElements": [],
+        "showOnHome": true
+      },
+      {
+        "id": "game-k26a3l-mqnx5xum",
+        "type": "bomb",
+        "title": "Schiva la Bomba",
+        "menuTitle": "SCHIVA LA BOMBA!",
+        "question": "Trova i 16 elementi collegati alla domanda ed evita le 4 bombe.",
+        "pointsPerCorrect": 50,
+        "items": [
+          {
+            "label": "Elemento 1",
+            "image": "public/assets/schiva-la-bomba/Gilgamesh.png",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 2",
+            "image": "public/assets/schiva-la-bomba/92d1690b591d42988322de6699e97474_1611356315530.png",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 3",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 4",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 5",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 6",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 7",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 8",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 9",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 10",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 11",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 12",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 13",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 14",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 15",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 16",
+            "image": "",
+            "isBomb": false
+          },
+          {
+            "label": "Elemento 17",
+            "image": "",
+            "isBomb": true
+          },
+          {
+            "label": "Elemento 18",
+            "image": "",
+            "isBomb": true
+          },
+          {
+            "label": "Elemento 19",
+            "image": "",
+            "isBomb": true
+          },
+          {
+            "label": "Elemento 20",
+            "image": "",
+            "isBomb": true
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-0oqp4c-mqnx5xum",
+        "type": "said",
+        "title": "Chi l'ha detto",
+        "menuTitle": "CHI L'HA DETTO",
+        "points": 100,
+        "questions": [
+          {
+            "prompt": "Ascolta l'audio e indovina il personaggio.",
+            "audio": "public/assets/audio/demo-tone.wav",
+            "answer": "Aizen",
+            "media": "public/assets/indovina-il-personaggio/anime/aizen-1.webp"
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-zynry7-mqnx5xum",
+        "type": "detail",
+        "title": "Occhio al dettaglio",
+        "menuTitle": "OCCHIO AL DETTAGLIO",
+        "points": 200,
+        "questions": [
+          {
+            "detailImage": "public/assets/indovina-il-personaggio/anime/aizen-2.webp",
+            "fullImage": "public/assets/indovina-il-personaggio/anime/aizen-3.webp",
+            "answer": "Aizen"
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-9gm1fb-mqnx5xum",
+        "type": "quote",
+        "title": "Completa la Frase",
+        "menuTitle": "COMPLETA LA FRASE",
+        "points": 200,
+        "questions": [
+          {
+            "partial": "Io sono tuo...",
+            "answer": "padre",
+            "source": "Star Wars"
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-or01ie-mqnx5xum",
+        "type": "chain",
+        "title": "Reazione a catena",
+        "menuTitle": "REAZIONE A CATENA",
+        "topic": "Argomento",
+        "points": 50,
+        "questions": [
+          {
+            "question": "Domanda sequenziale 1",
+            "answer": "Risposta 1"
+          },
+          {
+            "question": "Domanda sequenziale 2",
+            "answer": "Risposta 2"
+          },
+          {
+            "question": "Domanda sequenziale 3",
+            "answer": "Risposta 3"
+          },
+          {
+            "question": "Domanda sequenziale 4",
+            "answer": "Risposta 4"
+          },
+          {
+            "question": "Domanda sequenziale 5",
+            "answer": "Risposta 5"
+          },
+          {
+            "question": "Domanda sequenziale 6",
+            "answer": "Risposta 6"
+          },
+          {
+            "question": "Domanda sequenziale 7",
+            "answer": "Risposta 7"
+          },
+          {
+            "question": "Domanda sequenziale 8",
+            "answer": "Risposta 8"
+          },
+          {
+            "question": "Domanda sequenziale 9",
+            "answer": "Risposta 9"
+          },
+          {
+            "question": "Domanda sequenziale 10",
+            "answer": "Risposta 10"
+          },
+          {
+            "question": "Domanda sequenziale 11",
+            "answer": "Risposta 11"
+          },
+          {
+            "question": "Domanda sequenziale 12",
+            "answer": "Risposta 12"
+          },
+          {
+            "question": "Domanda sequenziale 13",
+            "answer": "Risposta 13"
+          },
+          {
+            "question": "Domanda sequenziale 14",
+            "answer": "Risposta 14"
+          },
+          {
+            "question": "Domanda sequenziale 15",
+            "answer": "Risposta 15"
+          },
+          {
+            "question": "Domanda sequenziale 16",
+            "answer": "Risposta 16"
+          },
+          {
+            "question": "Domanda sequenziale 17",
+            "answer": "Risposta 17"
+          },
+          {
+            "question": "Domanda sequenziale 18",
+            "answer": "Risposta 18"
+          },
+          {
+            "question": "Domanda sequenziale 19",
+            "answer": "Risposta 19"
+          },
+          {
+            "question": "Domanda sequenziale 20",
+            "answer": "Risposta 20"
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-5rceyj-mqnx5xum",
+        "type": "labors",
+        "title": "Le Dieci Fatiche",
+        "menuTitle": "LE DIECI FATICHE",
+        "points": 100,
+        "questions": [
+          {
+            "kind": "risposta secca",
+            "question": "Fatica 1",
+            "options": [],
+            "answer": "Risposta 1",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "risposta multipla",
+            "question": "Fatica 2",
+            "options": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "answer": "Risposta 2",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "elenco",
+            "question": "Fatica 3",
+            "options": [],
+            "answer": "Risposta 3",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "spiegazione",
+            "question": "Fatica 4",
+            "options": [],
+            "answer": "Risposta 4",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "risposta secca",
+            "question": "Fatica 5",
+            "options": [],
+            "answer": "Risposta 5",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "risposta multipla",
+            "question": "Fatica 6",
+            "options": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "answer": "Risposta 6",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "elenco",
+            "question": "Fatica 7",
+            "options": [],
+            "answer": "Risposta 7",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "spiegazione",
+            "question": "Fatica 8",
+            "options": [],
+            "answer": "Risposta 8",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "risposta secca",
+            "question": "Fatica 9",
+            "options": [],
+            "answer": "Risposta 9",
+            "explanation": "Spiegazione opzionale."
+          },
+          {
+            "kind": "risposta multipla",
+            "question": "Fatica 10",
+            "options": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "answer": "Risposta 10",
+            "explanation": "Spiegazione opzionale."
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-88nyhr-mqnx5xum",
+        "type": "guillotine",
+        "title": "Ghigliottina",
+        "menuTitle": "GHIGLIOTTINA",
+        "points": 200,
+        "words": [
+          "parola 1",
+          "parola 2",
+          "parola 3",
+          "parola 4",
+          "parola 5"
+        ],
+        "answer": "Risposta collegata",
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-rqe70r-mqnx5xum",
+        "type": "pass",
+        "title": "Passaparola",
+        "menuTitle": "PASSAPAROLA",
+        "difficulty": "facile",
+        "points": {
+          "facile": 5,
+          "medio": 10,
+          "difficile": 20
+        },
+        "bonus": {
+          "facile": 200,
+          "medio": 500,
+          "difficile": 1000
+        },
+        "questions": [
+          {
+            "letter": "A",
+            "question": "Con la A: domanda",
+            "answer": "Risposta con A"
+          },
+          {
+            "letter": "B",
+            "question": "Con la B: domanda",
+            "answer": "Risposta con B"
+          },
+          {
+            "letter": "C",
+            "question": "Con la C: domanda",
+            "answer": "Risposta con C"
+          },
+          {
+            "letter": "D",
+            "question": "Con la D: domanda",
+            "answer": "Risposta con D"
+          },
+          {
+            "letter": "E",
+            "question": "Con la E: domanda",
+            "answer": "Risposta con E"
+          },
+          {
+            "letter": "F",
+            "question": "Con la F: domanda",
+            "answer": "Risposta con F"
+          },
+          {
+            "letter": "G",
+            "question": "Con la G: domanda",
+            "answer": "Risposta con G"
+          },
+          {
+            "letter": "H",
+            "question": "Con la H: domanda",
+            "answer": "Risposta con H"
+          },
+          {
+            "letter": "I",
+            "question": "Con la I: domanda",
+            "answer": "Risposta con I"
+          },
+          {
+            "letter": "L",
+            "question": "Con la L: domanda",
+            "answer": "Risposta con L"
+          },
+          {
+            "letter": "M",
+            "question": "Con la M: domanda",
+            "answer": "Risposta con M"
+          },
+          {
+            "letter": "N",
+            "question": "Con la N: domanda",
+            "answer": "Risposta con N"
+          },
+          {
+            "letter": "O",
+            "question": "Con la O: domanda",
+            "answer": "Risposta con O"
+          },
+          {
+            "letter": "P",
+            "question": "Con la P: domanda",
+            "answer": "Risposta con P"
+          },
+          {
+            "letter": "Q",
+            "question": "Con la Q: domanda",
+            "answer": "Risposta con Q"
+          },
+          {
+            "letter": "R",
+            "question": "Con la R: domanda",
+            "answer": "Risposta con R"
+          },
+          {
+            "letter": "S",
+            "question": "Con la S: domanda",
+            "answer": "Risposta con S"
+          },
+          {
+            "letter": "T",
+            "question": "Con la T: domanda",
+            "answer": "Risposta con T"
+          },
+          {
+            "letter": "U",
+            "question": "Con la U: domanda",
+            "answer": "Risposta con U"
+          },
+          {
+            "letter": "V",
+            "question": "Con la V: domanda",
+            "answer": "Risposta con V"
+          },
+          {
+            "letter": "Z",
+            "question": "Con la Z: domanda",
+            "answer": "Risposta con Z"
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-6u0425-mqnx5xum",
+        "type": "jeopardy",
+        "title": "Jeopardy",
+        "menuTitle": "JEOPARDY",
+        "categories": [
+          {
+            "name": "Anime",
+            "clues": [
+              {
+                "value": 100,
+                "question": "Domanda Anime da 100",
+                "answer": "Risposta Anime 100"
+              },
+              {
+                "value": 200,
+                "question": "Domanda Anime da 200",
+                "answer": "Risposta Anime 200"
+              },
+              {
+                "value": 300,
+                "question": "Domanda Anime da 300",
+                "answer": "Risposta Anime 300"
+              },
+              {
+                "value": 400,
+                "question": "Domanda Anime da 400",
+                "answer": "Risposta Anime 400"
+              },
+              {
+                "value": 500,
+                "question": "Domanda Anime da 500",
+                "answer": "Risposta Anime 500"
+              }
+            ]
+          },
+          {
+            "name": "Cinema",
+            "clues": [
+              {
+                "value": 100,
+                "question": "Domanda Cinema da 100",
+                "answer": "Risposta Cinema 100"
+              },
+              {
+                "value": 200,
+                "question": "Domanda Cinema da 200",
+                "answer": "Risposta Cinema 200"
+              },
+              {
+                "value": 300,
+                "question": "Domanda Cinema da 300",
+                "answer": "Risposta Cinema 300"
+              },
+              {
+                "value": 400,
+                "question": "Domanda Cinema da 400",
+                "answer": "Risposta Cinema 400"
+              },
+              {
+                "value": 500,
+                "question": "Domanda Cinema da 500",
+                "answer": "Risposta Cinema 500"
+              }
+            ]
+          },
+          {
+            "name": "Serie TV",
+            "clues": [
+              {
+                "value": 100,
+                "question": "Domanda Serie TV da 100",
+                "answer": "Risposta Serie TV 100"
+              },
+              {
+                "value": 200,
+                "question": "Domanda Serie TV da 200",
+                "answer": "Risposta Serie TV 200"
+              },
+              {
+                "value": 300,
+                "question": "Domanda Serie TV da 300",
+                "answer": "Risposta Serie TV 300"
+              },
+              {
+                "value": 400,
+                "question": "Domanda Serie TV da 400",
+                "answer": "Risposta Serie TV 400"
+              },
+              {
+                "value": 500,
+                "question": "Domanda Serie TV da 500",
+                "answer": "Risposta Serie TV 500"
+              }
+            ]
+          },
+          {
+            "name": "Musica",
+            "clues": [
+              {
+                "value": 100,
+                "question": "Domanda Musica da 100",
+                "answer": "Risposta Musica 100"
+              },
+              {
+                "value": 200,
+                "question": "Domanda Musica da 200",
+                "answer": "Risposta Musica 200"
+              },
+              {
+                "value": 300,
+                "question": "Domanda Musica da 300",
+                "answer": "Risposta Musica 300"
+              },
+              {
+                "value": 400,
+                "question": "Domanda Musica da 400",
+                "answer": "Risposta Musica 400"
+              },
+              {
+                "value": 500,
+                "question": "Domanda Musica da 500",
+                "answer": "Risposta Musica 500"
+              }
+            ]
+          },
+          {
+            "name": "Gaming",
+            "clues": [
+              {
+                "value": 100,
+                "question": "Domanda Gaming da 100",
+                "answer": "Risposta Gaming 100"
+              },
+              {
+                "value": 200,
+                "question": "Domanda Gaming da 200",
+                "answer": "Risposta Gaming 200"
+              },
+              {
+                "value": 300,
+                "question": "Domanda Gaming da 300",
+                "answer": "Risposta Gaming 300"
+              },
+              {
+                "value": 400,
+                "question": "Domanda Gaming da 400",
+                "answer": "Risposta Gaming 400"
+              },
+              {
+                "value": 500,
+                "question": "Domanda Gaming da 500",
+                "answer": "Risposta Gaming 500"
+              }
+            ]
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      },
+      {
+        "id": "game-1f3c5q-mqnx5xum",
+        "type": "sarabanda",
+        "title": "Sarabanda",
+        "menuTitle": "SARABANDA",
+        "pointsTitle": 25,
+        "pointsArtist": 25,
+        "songs": [
+          {
+            "audio": "public/assets/audio/demo-tone.wav",
+            "title": "Tono demo",
+            "artist": "Trivia Challenge"
+          }
+        ],
+        "layout": {},
+        "customElements": [],
+        "showOnHome": false
+      }
+    ],
+    "library": [
+      "Attack on Titan",
+      "Berserk",
+      "Bleach",
+      "Chainsaw Man",
+      "Code Geass",
+      "Death Note",
+      "Demon Slayer",
+      "Dragon Ball",
+      "Frieren",
+      "Hunter X Hunter",
+      "Jujutsu Kaisen",
+      "Made in Abyss",
+      "My Hero Academia",
+      "Naruto",
+      "One Piece",
+      "One Punch Man",
+      "Overlord",
+      "Pokemon",
+      "Seven Deadly Sins",
+      "Vinland Saga"
+    ],
+    "powers": [
+      {
+        "player": "Livio",
+        "name": "Mussolivio non vuole",
+        "text": "Rendi nulla la risposta di un avversario e impediscigli di prendere punti. Massimo due utilizzi."
+      },
+      {
+        "player": "Livio",
+        "name": "The Wolf of Avezzano",
+        "text": "Se rispondi correttamente, ottieni un bonus extra deciso dal presentatore."
+      },
+      {
+        "player": "Melia",
+        "name": "Don Meliadolf",
+        "text": "Puoi aiutare un avversario rispondendo al posto suo: se la risposta è corretta, entrambi prendete punti."
+      },
+      {
+        "player": "Melia",
+        "name": "Bodyguard personale",
+        "text": "Una protezione speciale ti salva da una penalità o da un furto punti."
+      },
+      {
+        "player": "Maggi",
+        "name": "In medio stat virtus",
+        "text": "Se al termine di un minigioco sei esattamente secondo, ottieni 200 punti."
+      },
+      {
+        "player": "Maggi",
+        "name": "Freebooter",
+        "text": "Rubi una possibilità o un piccolo bonus a un avversario, a discrezione del presentatore."
+      }
+    ]
+  },
+  "session": {
+    "games": {
+      "game-9k9cqx-mqnx5xum": {
+        "rounds": {
+          "0": {}
+        }
+      },
+      "game-k26a3l-mqnx5xum": {},
+      "game-ytx9em-ms6nly2b": {}
+    },
+    "players": [
+      {
+        "id": "p-tn065x-mqnx5xum",
+        "name": "LIVIO",
+        "score": 0
+      },
+      {
+        "id": "p-21cwb1-mrflwkz9",
+        "name": "MELIA",
+        "score": 0
+      },
+      {
+        "id": "p-hcb89o-ms6iz3fx",
+        "name": "MAGGI",
+        "score": 0
+      }
+    ],
+    "navigation": {
+      "view": "show",
+      "screen": "game",
+      "gameId": "game-9k9cqx-mqnx5xum",
+      "i": 22,
+      "revealed": 4
+    }
+  },
+  "settings": {
+    "soundsEnabled": true,
+    "alertsEnabled": true
+  },
+  "history": [
+    {
+      "id": "h-a53cak-ms6p50eo",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "LIVIO",
+      "points": 250,
+      "reason": "pannello rapido",
+      "at": "2026-07-29T23:08:56.784Z"
+    },
+    {
+      "id": "h-kizvsf-ms6p4zk1",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "MELIA",
+      "points": 250,
+      "reason": "pannello rapido",
+      "at": "2026-07-29T23:08:55.681Z"
+    },
+    {
+      "id": "h-zg1mlq-ms6iy62o",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "CECCIO PRIME",
+      "points": -250,
+      "reason": "pannello rapido",
+      "at": "2026-07-29T20:15:39.840Z"
+    },
+    {
+      "id": "h-qv82mz-ms6iy4o1",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "MARTA CULO",
+      "points": -250,
+      "reason": "pannello rapido",
+      "at": "2026-07-29T20:15:38.017Z"
+    },
+    {
+      "id": "h-atux86-mrfogjyu",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T01:20:08.983Z"
+    },
+    {
+      "id": "h-4ocjok-mrfo5b95",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T01:11:24.473Z"
+    },
+    {
+      "id": "h-02d3v9-mrfo5amx",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T01:11:23.673Z"
+    },
+    {
+      "id": "h-uy6pik-mrfo5a5m",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T01:11:23.051Z"
+    },
+    {
+      "id": "h-1j8lo5-mrfnybpe",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T01:05:58.466Z"
+    },
+    {
+      "id": "h-rei96n-mrfnvcxd",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T01:03:40.081Z"
+    },
+    {
+      "id": "h-315pf5-mrfnokp7",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:58:23.563Z"
+    },
+    {
+      "id": "h-6gh4pn-mrfnok0b",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:58:22.667Z"
+    },
+    {
+      "id": "h-ajksmv-mrfnojdf",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:58:21.843Z"
+    },
+    {
+      "id": "h-icxccn-mrfnld9m",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:55:53.962Z"
+    },
+    {
+      "id": "h-73f1ks-mrfnlces",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:55:52.852Z"
+    },
+    {
+      "id": "h-v37rrk-mrfnlb2c",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:55:51.108Z"
+    },
+    {
+      "id": "h-a79gci-mrfn75a2",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:44:50.426Z"
+    },
+    {
+      "id": "h-bfs05t-mrfn74p5",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:44:49.673Z"
+    },
+    {
+      "id": "h-hk22ya-mrfn73yq",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:44:48.722Z"
+    },
+    {
+      "id": "h-xw7pzc-mrfn0fcx",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:39:36.897Z"
+    },
+    {
+      "id": "h-6o1vcv-mrfmxr72",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:37:32.270Z"
+    },
+    {
+      "id": "h-y7xopt-mrfmxqev",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:37:31.255Z"
+    },
+    {
+      "id": "h-h3a2er-mrfmup0k",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:35:09.476Z"
+    },
+    {
+      "id": "h-ns60qe-mrfmuo2k",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:35:08.252Z"
+    },
+    {
+      "id": "h-4laqke-mrfmpiuk",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 1000,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:31:08.204Z"
+    },
+    {
+      "id": "h-qb7k3s-mrfml411",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:27:42.373Z"
+    },
+    {
+      "id": "h-aq2t8y-mrfmip2e",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:25:49.670Z"
+    },
+    {
+      "id": "h-cye0zm-mrfmio46",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 500,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:25:48.438Z"
+    },
+    {
+      "id": "h-qxdk0u-mrfmbwjr",
+      "playerId": "p-tn065x-mqnx5xum",
+      "playerName": "TEAM LIVIO",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:20:32.775Z"
+    },
+    {
+      "id": "h-ldi454-mrfmax8c",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:19:47.004Z"
+    },
+    {
+      "id": "h-49cuop-mrfmax3v",
+      "playerId": "p-ew73d7-mrflwo3q",
+      "playerName": "TEAM MAGGI",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:19:46.843Z"
+    },
+    {
+      "id": "h-c8l05e-mrfmawdu",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:19:45.906Z"
+    },
+    {
+      "id": "h-ju2tg6-mrfmaw9n",
+      "playerId": "p-21cwb1-mrflwkz9",
+      "playerName": "TEAM MELIA",
+      "points": 250,
+      "reason": "pannello punti",
+      "at": "2026-07-11T00:19:45.755Z"
+    }
+  ]
+}
